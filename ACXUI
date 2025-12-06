@@ -6,15 +6,18 @@ local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
 local Arceus = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke") -- Added UI Outline
 local Intro = Instance.new("Frame")
 local UICorner_2 = Instance.new("UICorner")
 local Logo = Instance.new("ImageButton")
 local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
 local Title = Instance.new("TextLabel")
+local TitleUIStroke = Instance.new("UIStroke") -- Added Title Outline
 local Menu = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 local Toggle = Instance.new("ImageButton")
 local UICorner_3 = Instance.new("UICorner")
+local ToggleUIStroke = Instance.new("UIStroke") -- Added Toggle Outline
 local Enabled = Instance.new("Frame")
 local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
 local UICorner_4 = Instance.new("UICorner")
@@ -25,18 +28,22 @@ local Name = Instance.new("TextLabel")
 local UIGradient = Instance.new("UIGradient")
 local Button = Instance.new("ImageButton")
 local UICorner_6 = Instance.new("UICorner")
+local ButtonUIStroke = Instance.new("UIStroke") -- Added Button Outline
 local Name_2 = Instance.new("TextLabel")
 local UIGradient_2 = Instance.new("UIGradient")
 local tab = Instance.new("Frame")
 local Close = Instance.new("TextButton")
+local CloseUIStroke = Instance.new("UIStroke") -- Added Close Button Outline
 local ComboElem = Instance.new("ImageButton")
 local UICorner_7 = Instance.new("UICorner")
+local ComboElemUIStroke = Instance.new("UIStroke") -- Added ComboElem Outline
 local Name_3 = Instance.new("TextLabel")
 local UIGradient_3 = Instance.new("UIGradient")
 local Img = Instance.new("TextLabel")
 local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
 local ComboBox = Instance.new("ImageButton")
 local UICorner_8 = Instance.new("UICorner")
+local ComboBoxUIStroke = Instance.new("UIStroke") -- Added ComboBox Outline
 local Name_4 = Instance.new("TextLabel")
 local UIGradient_4 = Instance.new("UIGradient")
 local Img_2 = Instance.new("TextLabel")
@@ -45,101 +52,50 @@ local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
 -- New Input Box Instances:
 local InputBox = Instance.new("ImageButton")
 local UICorner_9 = Instance.new("UICorner")
+local InputBoxUIStroke = Instance.new("UIStroke") -- Added InputBox Outline
 local Name_5 = Instance.new("TextLabel")
 local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
-
--- Glass Effect Frames
-local GlassEffect = Instance.new("Frame")
-local UICorner_11 = Instance.new("UICorner")
-local GlassBlur = Instance.new("Frame")
-local UIGradient_6 = Instance.new("UIGradient")
-local UICorner_12 = Instance.new("UICorner")
-
--- Glass Border Effect
-local GlassBorder = Instance.new("Frame")
-local UICorner_13 = Instance.new("UICorner")
+local TextBoxUIStroke = Instance.new("UIStroke") -- Added TextBox Outline
 
 -- Properties:
 
 Arceus.Name = "Arceus"
 Arceus.Enabled = true
-Arceus.ResetOnSpawn = false
+Arceus.ResetOnSpawn = true
 Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Arceus.DisplayOrder = 999999999
 
--- Main Glass Container
 Main.Name = "Main"
 Main.Parent = Arceus
 Main.Active = true
 Main.Draggable = true
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Main.BackgroundTransparency = 0.4
+Main.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Main.BackgroundTransparency = 0.15 -- Added transparency
 Main.BorderSizePixel = 0
 Main.Position = UDim2.new(0.5, 0, -0.2, 0)
 Main.Size = UDim2.new(0.3, 0, 0.3, 0)
 
-UICorner.CornerRadius = UDim.new(0.03, 0)
+UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
 
--- Glass Effect Overlay
-GlassEffect.Name = "GlassEffect"
-GlassEffect.Parent = Main
-GlassEffect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-GlassEffect.BackgroundTransparency = 0.9
-GlassEffect.BorderSizePixel = 0
-GlassEffect.Size = UDim2.new(1, 0, 1, 0)
-GlassEffect.ZIndex = 0
-
-UICorner_11.CornerRadius = UICorner.CornerRadius
-UICorner_11.Parent = GlassEffect
-
-GlassBlur.Name = "GlassBlur"
-GlassBlur.Parent = GlassEffect
-GlassBlur.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-GlassBlur.BackgroundTransparency = 0.95
-GlassBlur.BorderSizePixel = 0
-GlassBlur.Size = UDim2.new(1, 0, 1, 0)
-
-UICorner_12.CornerRadius = UICorner.CornerRadius
-UICorner_12.Parent = GlassBlur
-
-UIGradient_6.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(240, 240, 240)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
-}
-UIGradient_6.Transparency = NumberSequence.new{
-    NumberSequenceKeypoint.new(0.00, 0.85),
-    NumberSequenceKeypoint.new(0.50, 0.90),
-    NumberSequenceKeypoint.new(1.00, 0.85)
-}
-UIGradient_6.Rotation = 45
-UIGradient_6.Parent = GlassBlur
-
--- Glass Border
-GlassBorder.Name = "GlassBorder"
-GlassBorder.Parent = Main
-GlassBorder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-GlassBorder.BackgroundTransparency = 0.8
-GlassBorder.BorderSizePixel = 0
-GlassBorder.Size = UDim2.new(1, 0, 1, 0)
-GlassBorder.ZIndex = 0
-
-UICorner_13.CornerRadius = UICorner.CornerRadius
-UICorner_13.Parent = GlassBorder
+-- Main UI Outline
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+UIStroke.Transparency = 0.7
+UIStroke.Parent = Main
 
 Intro.Name = "Intro"
 Intro.Parent = Main
-Intro.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Intro.BackgroundTransparency = 0.3
+Intro.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Intro.BackgroundTransparency = 0 -- Will be animated
 Intro.ClipsDescendants = true
 Intro.Size = UDim2.new(1, 0, 1, 0)
 Intro.ZIndex = 2
 
-UICorner_2.CornerRadius = UICorner.CornerRadius
+UICorner_2.CornerRadius = UDim.new(0.1, 0)
 UICorner_2.Parent = Intro
 
 Logo.Parent = Intro
@@ -151,7 +107,7 @@ Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
 Logo.Size = UDim2.new(0.75, 0, 0.75, 0)
 Logo.ZIndex = 2
 Logo.Image = "http://www.roblox.com/asset/?id=9178187770"
-Logo.ImageTransparency = 0
+Logo.ImageTransparency = 0 -- Will be animated
 Logo.ScaleType = Enum.ScaleType.Fit
 Logo.Active = false
 
@@ -165,17 +121,22 @@ Title.BackgroundTransparency = 1
 Title.BorderSizePixel = 0
 Title.Position = UDim2.new(0.975, 0, 0.075, 0)
 Title.Size = UDim2.new(0.85, 0, 0.155, 0)
-Title.Font = Enum.Font.GothamSemibold
-Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold)
+Title.Font = Enum.Font.TitilliumWeb
+Title.FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Bold)
 Title.RichText = true
 Title.Text = Script_Title
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14
-Title.TextTransparency = 0
 Title.TextWrapped = true
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.TextYAlignment = Enum.TextYAlignment.Center
+
+-- Title Outline
+TitleUIStroke.Thickness = 1
+TitleUIStroke.Color = Color3.fromRGB(255, 255, 255)
+TitleUIStroke.Transparency = 0.5
+TitleUIStroke.Parent = Title
 
 Menu.Name = "Menu"
 Menu.Parent = Main
@@ -189,28 +150,32 @@ Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
 Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
 Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
 Menu.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-Menu.ScrollBarImageTransparency = 0.7
 Menu.ScrollBarThickness = Menu.AbsoluteSize.X/25
+Menu.ScrollBarImageTransparency = 0.5 -- Added transparency to scrollbar
 
 UIListLayout.Parent = Menu
-UIListLayout.Padding = UDim.new(0.02, 0)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 Toggle.Name = "Toggle"
 Toggle.Visible = false
-Toggle.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Toggle.BackgroundTransparency = 0.5
-Toggle.AutoButtonColor = false
+Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+Toggle.BackgroundTransparency = 0.1 -- Added transparency
 Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_3.CornerRadius = UDim.new(0.15, 0)
+UICorner_3.CornerRadius = UDim.new(0.25, 0)
 UICorner_3.Parent = Toggle
+
+-- Toggle Outline
+ToggleUIStroke.Thickness = 1
+ToggleUIStroke.Color = Color3.fromRGB(255, 255, 255)
+ToggleUIStroke.Transparency = 0.7
+ToggleUIStroke.Parent = Toggle
 
 Enabled.Name = "Enabled"
 Enabled.Parent = Toggle
 Enabled.AnchorPoint = Vector2.new(1, 0.5)
-Enabled.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Enabled.BackgroundTransparency = 0.3
+Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Enabled.BackgroundTransparency = 0.1 -- Added transparency
 Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
 Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
 
@@ -223,7 +188,6 @@ Check.Name = "Check"
 Check.Parent = Enabled
 Check.AnchorPoint = Vector2.new(0.5, 0.5)
 Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Check.BackgroundTransparency = 0
 Check.Position = UDim2.new(0.5, 0, 0.5, 0)
 Check.Size = UDim2.new(0.65, 0, 0.65, 0)
 
@@ -240,30 +204,32 @@ Name.BackgroundTransparency = 1
 Name.BorderSizePixel = 0
 Name.Position = UDim2.new(0.05, 0, 0.5, 0)
 Name.Size = UDim2.new(0.75, 0, 0.8, 0)
-Name.Font = Enum.Font.Gotham
+Name.Font = Enum.Font.TitilliumWeb
 Name.Text = "Script"
 Name.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name.TextScaled = true
 Name.TextSize = 14
-Name.TextTransparency = 0
 Name.TextWrapped = true
 Name.TextXAlignment = Enum.TextXAlignment.Left
 Name.TextYAlignment = Enum.TextYAlignment.Bottom
 
-UIGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 220, 220))
-}
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient.Transparency = NumberSequence.new(0.2) -- Added transparency
 UIGradient.Parent = Toggle
 
 Button.Name = "Button"
-Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Button.BackgroundTransparency = 0.5
-Button.AutoButtonColor = false
+Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+Button.BackgroundTransparency = 0.1 -- Added transparency
 Button.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_6.CornerRadius = UDim.new(0.15, 0)
+UICorner_6.CornerRadius = UDim.new(0.25, 0)
 UICorner_6.Parent = Button
+
+-- Button Outline
+ButtonUIStroke.Thickness = 1
+ButtonUIStroke.Color = Color3.fromRGB(255, 255, 255)
+ButtonUIStroke.Transparency = 0.7
+ButtonUIStroke.Parent = Button
 
 Name_2.Name = "Name"
 Name_2.Parent = Button
@@ -273,20 +239,17 @@ Name_2.BackgroundTransparency = 1
 Name_2.BorderSizePixel = 0
 Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
 Name_2.Size = UDim2.new(0.95, 0, 0.82, 0)
-Name_2.Font = Enum.Font.Gotham
+Name_2.Font = Enum.Font.TitilliumWeb
 Name_2.Text = "Enabled"
 Name_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_2.TextScaled = true
 Name_2.TextSize = 14
-Name_2.TextTransparency = 0
 Name_2.TextWrapped = true
 Name_2.TextXAlignment = Enum.TextXAlignment.Left
 Name_2.TextYAlignment = Enum.TextYAlignment.Bottom
 
-UIGradient_2.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 220, 220))
-}
+UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_2.Transparency = NumberSequence.new(0.2) -- Added transparency
 UIGradient_2.Parent = Button
 
 tab.Name = "Tab"
@@ -300,24 +263,34 @@ Close.BackgroundTransparency = 1
 Close.BorderSizePixel = 0
 Close.Position = UDim2.new(0.8, 0, 0.1, 0)
 Close.Size = UDim2.new(0.15, 0, 0.125, 0)
-Close.Font = Enum.Font.GothamBold
-Close.Text = "✕"
+Close.Font = Enum.Font.FredokaOne
+Close.Text = "X"
 Close.TextColor3 = Color3.fromRGB(255, 0, 0)
 Close.TextScaled = true
 Close.TextSize = 14
-Close.TextTransparency = 0
 Close.TextWrapped = true
 Close.TextXAlignment = Enum.TextXAlignment.Right
 Close.Parent = Main
 
+-- Close Button Outline
+CloseUIStroke.Thickness = 1
+CloseUIStroke.Color = Color3.fromRGB(255, 0, 0)
+CloseUIStroke.Transparency = 0.5
+CloseUIStroke.Parent = Close
+
 ComboElem.Name = "ComboElem"
-ComboElem.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-ComboElem.BackgroundTransparency = 0.5
-ComboElem.AutoButtonColor = false
+ComboElem.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboElem.BackgroundTransparency = 0.1 -- Added transparency
 ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_7.CornerRadius = UDim.new(0.15, 0)
+UICorner_7.CornerRadius = UDim.new(0.25, 0)
 UICorner_7.Parent = ComboElem
+
+-- ComboElem Outline
+ComboElemUIStroke.Thickness = 1
+ComboElemUIStroke.Color = Color3.fromRGB(255, 255, 255)
+ComboElemUIStroke.Transparency = 0.7
+ComboElemUIStroke.Parent = ComboElem
 
 Name_3.Name = "Name"
 Name_3.Parent = ComboElem
@@ -327,21 +300,18 @@ Name_3.BackgroundTransparency = 1
 Name_3.BorderSizePixel = 0
 Name_3.Position = UDim2.new(0.05, 0, 0.5, 0)
 Name_3.Size = UDim2.new(0.75, 0, 0.8, 0)
-Name_3.Font = Enum.Font.Gotham
+Name_3.Font = Enum.Font.TitilliumWeb
 Name_3.Text = "Enabled"
 Name_3.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_3.TextScaled = true
 Name_3.TextSize = 14
-Name_3.TextTransparency = 0
 Name_3.TextWrapped = true
 Name_3.TextXAlignment = Enum.TextXAlignment.Left
 Name_3.TextYAlignment = Enum.TextYAlignment.Bottom
 
-UIGradient_3.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 220, 220))
-}
+UIGradient_3.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
 UIGradient_3.Rotation = 180
+UIGradient_3.Transparency = NumberSequence.new(0.2) -- Added transparency
 UIGradient_3.Parent = ComboElem
 
 Img.Name = "Img"
@@ -353,10 +323,9 @@ Img.BorderSizePixel = 0
 Img.Position = UDim2.new(0.975, 0, 0.5, 0)
 Img.Rotation = 90
 Img.Size = UDim2.new(0.75, 0, 0.75, 0)
-Img.Font = Enum.Font.GothamBold
-Img.Text = "›"
+Img.Font = Enum.Font.FredokaOne
+Img.Text = "^"
 Img.TextColor3 = Color3.fromRGB(255, 255, 255)
-Img.TextTransparency = 0
 Img.TextScaled = true
 Img.TextSize = 14
 Img.TextWrapped = true
@@ -364,13 +333,18 @@ Img.TextWrapped = true
 UIAspectRatioConstraint_4.Parent = Img
 
 ComboBox.Name = "ComboBox"
-ComboBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-ComboBox.BackgroundTransparency = 0.5
-ComboBox.AutoButtonColor = false
+ComboBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboBox.BackgroundTransparency = 0.1 -- Added transparency
 ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_8.CornerRadius = UDim.new(0.15, 0)
+UICorner_8.CornerRadius = UDim.new(0.25, 0)
 UICorner_8.Parent = ComboBox
+
+-- ComboBox Outline
+ComboBoxUIStroke.Thickness = 1
+ComboBoxUIStroke.Color = Color3.fromRGB(255, 255, 255)
+ComboBoxUIStroke.Transparency = 0.7
+ComboBoxUIStroke.Parent = ComboBox
 
 Name_4.Name = "Name"
 Name_4.Parent = ComboBox
@@ -380,20 +354,17 @@ Name_4.BackgroundTransparency = 1.000
 Name_4.BorderSizePixel = 0
 Name_4.Position = UDim2.new(0.05, 0, 0.5, 0)
 Name_4.Size = UDim2.new(0.75, 0, 0.8, 0)
-Name_4.Font = Enum.Font.Gotham
+Name_4.Font = Enum.Font.TitilliumWeb
 Name_4.Text = "Enabled"
 Name_4.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_4.TextScaled = true
 Name_4.TextSize = 14
-Name_4.TextTransparency = 0
 Name_4.TextWrapped = true
 Name_4.TextXAlignment = Enum.TextXAlignment.Left
 Name_4.TextYAlignment = Enum.TextYAlignment.Bottom
 
-UIGradient_4.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 220, 220))
-}
+UIGradient_4.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_4.Transparency = NumberSequence.new(0.2) -- Added transparency
 UIGradient_4.Parent = ComboBox
 
 Img_2.Name = "Img"
@@ -405,10 +376,9 @@ Img_2.BorderSizePixel = 0
 Img_2.Rotation = 180
 Img_2.Position = UDim2.new(0.975, 0, 0.5, 0)
 Img_2.Size = UDim2.new(0.75, 0, 0.75, 0)
-Img_2.Font = Enum.Font.GothamBold
-Img_2.Text = "›"
+Img_2.Font = Enum.Font.FredokaOne
+Img_2.Text = "^"
 Img_2.TextColor3 = Color3.fromRGB(255, 0, 0)
-Img_2.TextTransparency = 0
 Img_2.TextScaled = true
 Img_2.TextSize = 14
 Img_2.TextWrapped = true
@@ -417,13 +387,19 @@ UIAspectRatioConstraint_5.Parent = Img_2
 
 -- Input Box Properties:
 InputBox.Name = "InputBox"
-InputBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-InputBox.BackgroundTransparency = 0.5
+InputBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+InputBox.BackgroundTransparency = 0.1 -- Added transparency
 InputBox.Size = UDim2.new(0.95, 0, 0, 50)
 InputBox.AutoButtonColor = false
 
-UICorner_9.CornerRadius = UDim.new(0.15, 0)
+UICorner_9.CornerRadius = UDim.new(0.25, 0)
 UICorner_9.Parent = InputBox
+
+-- InputBox Outline
+InputBoxUIStroke.Thickness = 1
+InputBoxUIStroke.Color = Color3.fromRGB(255, 255, 255)
+InputBoxUIStroke.Transparency = 0.7
+InputBoxUIStroke.Parent = InputBox
 
 Name_5.Name = "Name"
 Name_5.Parent = InputBox
@@ -433,31 +409,28 @@ Name_5.BackgroundTransparency = 1
 Name_5.BorderSizePixel = 0
 Name_5.Position = UDim2.new(0.05, 0, 0.5, 0)
 Name_5.Size = UDim2.new(0.75, 0, 0.8, 0)
-Name_5.Font = Enum.Font.Gotham
+Name_5.Font = Enum.Font.TitilliumWeb
 Name_5.Text = "Input Box"
 Name_5.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_5.TextScaled = true
 Name_5.TextSize = 14
-Name_5.TextTransparency = 0
 Name_5.TextWrapped = true
 Name_5.TextXAlignment = Enum.TextXAlignment.Left
 Name_5.TextYAlignment = Enum.TextYAlignment.Bottom
 
-UIGradient_5.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 220, 220))
-}
+UIGradient_5.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_5.Transparency = NumberSequence.new(0.2) -- Added transparency
 UIGradient_5.Parent = InputBox
 
 TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
 TextBox.AnchorPoint = Vector2.new(1, 0.5)
 TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-TextBox.BackgroundTransparency = 0.3
+TextBox.BackgroundTransparency = 0.2 -- Increased transparency
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
 TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
-TextBox.Font = Enum.Font.Gotham
+TextBox.Font = Enum.Font.TitilliumWeb
 TextBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
 TextBox.PlaceholderText = "Enter text..."
 TextBox.Text = ""
@@ -466,186 +439,190 @@ TextBox.TextScaled = true
 TextBox.TextSize = 14
 TextBox.TextWrapped = true
 
-UICorner_10.CornerRadius = UDim.new(0.15, 0)
+UICorner_10.CornerRadius = UDim.new(0.2, 0)
 UICorner_10.Parent = TextBox
+
+-- TextBox Outline
+TextBoxUIStroke.Thickness = 1
+TextBoxUIStroke.Color = Color3.fromRGB(255, 255, 255)
+TextBoxUIStroke.Transparency = 0.5
+TextBoxUIStroke.Parent = TextBox
 
 -- SCRIPT
 
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 
--- Hover animations for interactive elements
-local function setupHoverEffect(button)
+-- Helper function for smooth fade animations
+local function fadeIn(obj, duration)
+    local tween = TweenService:Create(obj, TweenInfo.new(duration or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = obj.BackgroundTransparency - 0.2
+    })
+    tween:Play()
+    return tween
+end
+
+local function fadeOut(obj, duration)
+    local tween = TweenService:Create(obj, TweenInfo.new(duration or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = obj.BackgroundTransparency + 0.2
+    })
+    tween:Play()
+    return tween
+end
+
+-- Smooth hover effects for all interactive elements
+local function setupHoverEffects(button)
     local originalTransparency = button.BackgroundTransparency
+    local originalStrokeTransparency = button:FindFirstChildWhichIsA("UIStroke") and button:FindFirstChildWhichIsA("UIStroke").Transparency or 0.7
     
     button.MouseEnter:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = originalTransparency - 0.1
+        TweenService:Create(button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = math.max(0, originalTransparency - 0.05)
         }):Play()
+        
+        local stroke = button:FindFirstChildWhichIsA("UIStroke")
+        if stroke then
+            TweenService:Create(stroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = math.max(0, originalStrokeTransparency - 0.2)
+            }):Play()
+        end
     end)
     
     button.MouseLeave:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TweenService:Create(button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             BackgroundTransparency = originalTransparency
         }):Play()
+        
+        local stroke = button:FindFirstChildWhichIsA("UIStroke")
+        if stroke then
+            TweenService:Create(stroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = originalStrokeTransparency
+            }):Play()
+        end
     end)
 end
 
 -- Apply hover effects to all interactive elements
 local function applyHoverEffects()
-    local elements = {Toggle, Button, ComboElem, ComboBox, InputBox}
-    for _, element in ipairs(elements) do
-        setupHoverEffect(element)
+    for _, element in pairs({Toggle, Button, ComboElem, ComboBox, InputBox}) do
+        setupHoverEffects(element)
     end
 end
 
--- Apply to cloned elements later
-coroutine.wrap(applyHoverEffects)()
-
--- Subtle pulse animation for the glass effect
-local pulseConnection
-local function startPulseAnimation()
-    if pulseConnection then pulseConnection:Disconnect() end
-    
-    pulseConnection = RunService.Heartbeat:Connect(function(delta)
-        local time = tick()
-        local pulse = math.sin(time * 2) * 0.02
-        GlassBlur.BackgroundTransparency = 0.95 + pulse
-    end)
-end
-
+-- Enhanced close animation with fade effects
 Close.MouseButton1Click:Connect(function()
     Logo.Active = true
     
-    -- Stop pulse animation when closing
-    if pulseConnection then
-        pulseConnection:Disconnect()
-        pulseConnection = nil
-    end
-    
-    -- Fade out animations
-    TweenService:Create(Intro, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    -- Fade in intro background
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         BackgroundTransparency = 0
-    }):Play()
-    
-    TweenService:Create(Title, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        TextTransparency = 1
-    }):Play()
-    
-    TweenService:Create(Close, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        TextTransparency = 1
     }):Play()
 
     task.wait(0.3)
     
-    -- Logo slide animation
-    TweenService:Create(Logo, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {
+    -- Animate logo with fade
+    local logoSizeTween = TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         Size = UDim2.fromScale(0.75, 0.75),
         Position = UDim2.fromScale(0.5, 0.5)
-    }):Play()
+    })
+    logoSizeTween:Play()
 
-    task.wait(0.4)
+    task.wait(0.3)
     
-    -- Main frame shrink animation
-    TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {
+    -- Shrink main window with fade
+    local mainSizeTween = TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         Size = UDim2.fromScale(0.1, 0.175)
-    }):Play()
+    })
+    mainSizeTween:Play()
 
-    task.wait(0.4)
+    task.wait(0.3)
     
-    -- Hide all elements except Intro
+    -- Fade out all elements except intro
     for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro and obj ~= GlassEffect and obj ~= GlassBorder and obj ~= GlassBlur then
+        if obj:IsA("GuiObject") and obj ~= Intro then
+            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                TweenService:Create(obj, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    TextTransparency = 1
+                }):Play()
+            end
             obj.Visible = false
         end
     end
 
-    -- Final fade effects
-    TweenService:Create(Logo, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        ImageTransparency = 0.6
+    -- Fade effects for logo and background
+    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        ImageTransparency = 0.8
     }):Play()
     
-    TweenService:Create(Intro, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 1
+    }):Play()
+    
+    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         BackgroundTransparency = 0.8
     }):Play()
     
-    TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.7
-    }):Play()
-    
-    TweenService:Create(GlassEffect, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.95
-    }):Play()
-    
-    TweenService:Create(GlassBorder, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.9
+    -- Fade out UI stroke
+    TweenService:Create(UIStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Transparency = 0.9
     }):Play()
 end)
 
+-- Enhanced open animation with fade effects
 Logo.MouseButton1Click:Connect(function()
     Logo.Active = false
     
-    -- Restart pulse animation when opening
-    startPulseAnimation()
-    
-    -- Fade in animations
-    TweenService:Create(Logo, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    -- Reset transparencies
+    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         ImageTransparency = 0
     }):Play()
     
-    TweenService:Create(Intro, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.3
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0
     }):Play()
     
-    TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.4
+    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.15
     }):Play()
     
-    TweenService:Create(GlassEffect, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.9
-    }):Play()
-    
-    TweenService:Create(GlassBorder, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0.8
+    -- Fade in UI stroke
+    TweenService:Create(UIStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Transparency = 0.7
     }):Play()
 
     task.wait(0.3)
     
-    -- Main frame expand animation
-    TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    -- Expand main window
+    local mainSizeTween = TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         Size = UDim2.fromScale(0.3, 0.3)
-    }):Play()
+    })
+    mainSizeTween:Play()
 
-    task.wait(0.4)
+    task.wait(0.3)
     
-    -- Logo slide to corner animation
-    TweenService:Create(Logo, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    -- Move logo to corner
+    local logoTween = TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         Size = UDim2.fromScale(0.175, 0.175),
         Position = UDim2.fromScale(0.075, 0.15)
-    }):Play()
+    })
+    logoTween:Play()
 
-    task.wait(0.4)
-    
-    -- Show all elements
+    -- Show and fade in all elements
     for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro and obj ~= GlassEffect and obj ~= GlassBorder and obj ~= GlassBlur then
+        if obj:IsA("GuiObject") and obj ~= Intro then
             obj.Visible = true
+            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                obj.TextTransparency = 1
+                TweenService:Create(obj, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    TextTransparency = 0
+                }):Play()
+            end
         end
     end
-    
-    -- Fade in title and close button
-    TweenService:Create(Title, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        TextTransparency = 0
-    }):Play()
-    
-    TweenService:Create(Close, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        TextTransparency = 0
-    }):Play()
 
     task.wait(0.3)
     
-    -- Final fade out of intro
-    TweenService:Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    -- Fade out intro background
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         BackgroundTransparency = 1
     }):Play()
 end)
@@ -682,36 +659,50 @@ local function AddSpace(parent)
     elements += 1
 end
 
+-- Add fade animation when adding new elements
 function lib:AddToggle(name, funct, enabled, ...)
     local newTog = Toggle:Clone()
     local args = {...}
     
-    -- Apply hover effect to cloned toggle
-    setupHoverEffect(newTog)
+    -- Setup hover effects
+    setupHoverEffects(newTog)
     
     newTog.MouseButton1Click:Connect(function()
         enabled = not enabled
+        
+        -- Animate the check mark
         local check = newTog:WaitForChild("Enabled"):WaitForChild("Check")
-        check.Visible = enabled
-        
-        -- Animate toggle state change
-        TweenService:Create(check, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        local tween = TweenService:Create(check, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             BackgroundColor3 = enabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
-        }):Play()
+        })
+        tween:Play()
         
+        check.Visible = enabled
         funct(enabled, unpack(args))
     end)
 
-    local check = newTog:WaitForChild("Enabled"):WaitForChild("Check")
-    check.Visible = enabled
-    check.BackgroundColor3 = enabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+    newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
     newTog:WaitForChild("Name").Text = name
 
     newTog.Size = UDim2.new(0.95, 0, 0, element_height)
     newTog.Name = name
     newTog.Parent = Menu
     newTog.LayoutOrder = elements
+    newTog.Visible = false
+    
+    -- Fade in animation
+    newTog.BackgroundTransparency = 1
+    newTog.Name.TextTransparency = 1
     newTog.Visible = true
+    
+    local fadeTween = TweenService:Create(newTog, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.1
+    })
+    fadeTween:Play()
+    
+    TweenService:Create(newTog.Name, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
 
     elements += 1
     AddSpace(Menu)
@@ -723,19 +714,19 @@ function lib:AddButton(name, funct, ...)
     local newBut = Button:Clone()
     local args = {...}
     
-    -- Apply hover effect to cloned button
-    setupHoverEffect(newBut)
+    -- Setup hover effects
+    setupHoverEffects(newBut)
     
     newBut.MouseButton1Click:Connect(function()
         -- Click animation
         TweenService:Create(newBut, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.3
+            BackgroundTransparency = 0
         }):Play()
         
         task.wait(0.1)
         
-        TweenService:Create(newBut, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.5
+        TweenService:Create(newBut, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1
         }):Play()
         
         funct(unpack(args))
@@ -746,7 +737,21 @@ function lib:AddButton(name, funct, ...)
     newBut.Name = name
     newBut.Parent = Menu
     newBut.LayoutOrder = elements
+    newBut.Visible = false
+    
+    -- Fade in animation
+    newBut.BackgroundTransparency = 1
+    newBut.Name.TextTransparency = 1
     newBut.Visible = true
+    
+    local fadeTween = TweenService:Create(newBut, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.1
+    })
+    fadeTween:Play()
+    
+    TweenService:Create(newBut.Name, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
 
     elements += 1
     AddSpace(Menu)
@@ -758,8 +763,8 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
     local newInput = InputBox:Clone()
     local args = {...}
     
-    -- Apply hover effect to cloned input box
-    setupHoverEffect(newInput)
+    -- Setup hover effects
+    setupHoverEffects(newInput)
     
     newInput:WaitForChild("Name").Text = name
     if placeholder then
@@ -771,51 +776,69 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
     
     local textBox = newInput.TextBox
     
-    -- Add focus/blur animations to text box
-    textBox.Focused:Connect(function()
-        TweenService:Create(textBox, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.1
-        }):Play()
-    end)
-    
-    textBox.FocusLost:Connect(function()
-        TweenService:Create(textBox, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.3
-        }):Play()
-    end)
-    
     -- Function to handle text submission
     local function submitText()
         local text = textBox.Text
         funct(text, unpack(args))
     end
     
-    -- Submit on Enter key
+    -- Submit on Enter key with animation
     textBox.FocusLost:Connect(function(enterPressed)
         if enterPressed then
+            -- Animate text box on submit
+            TweenService:Create(textBox, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.1
+            }):Play()
             submitText()
+            task.wait(0.1)
+            TweenService:Create(textBox, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.2
+            }):Play()
         end
     end)
     
-    -- Submit on clicking outside the text box
-    textBox.FocusLost:Connect(submitText)
+    -- Animate on focus
+    textBox.Focused:Connect(function()
+        TweenService:Create(textBox, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1
+        }):Play()
+        TweenService:Create(textBox:FindFirstChildWhichIsA("UIStroke"), TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Transparency = 0.3
+        }):Play()
+    end)
     
-    newInput.MouseButton1Click:Connect(function()
-        if not textBox:IsFocused() then
-            textBox:CaptureFocus()
-        end
+    textBox.FocusLost:Connect(function()
+        TweenService:Create(textBox, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.2
+        }):Play()
+        TweenService:Create(textBox:FindFirstChildWhichIsA("UIStroke"), TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
     end)
     
     newInput.Size = UDim2.new(0.95, 0, 0, element_height)
     newInput.Name = name
     newInput.Parent = Menu
     newInput.LayoutOrder = elements
+    newInput.Visible = false
+    
+    -- Fade in animation
+    newInput.BackgroundTransparency = 1
+    newInput.Name.TextTransparency = 1
     newInput.Visible = true
+    
+    local fadeTween = TweenService:Create(newInput, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.1
+    })
+    fadeTween:Play()
+    
+    TweenService:Create(newInput.Name, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
     
     elements += 1
     AddSpace(Menu)
     
-    -- Return the input box and text box for external control
     local inputObj = {
         Frame = newInput,
         TextBox = textBox,
@@ -842,21 +865,27 @@ function lib:AddComboBox(text, options, funct, ...)
     local elems = {}
     local args = {...}
     
-    -- Apply hover effect to cloned combo box
-    setupHoverEffect(newCombo)
+    -- Setup hover effects
+    setupHoverEffects(newCombo)
 
     local function setBoxState()
         local img = newCombo:WaitForChild("Img")
-        TweenService:Create(img, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TweenService:Create(img, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             Rotation = enabled and 0 or 180
         }):Play()
         
         for _, elem in ipairs(elems) do
-            elem.Visible = enabled
             if enabled then
-                TweenService:Create(elem, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundTransparency = 0.5
+                elem.Visible = true
+                TweenService:Create(elem, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    BackgroundTransparency = 0.1
                 }):Play()
+            else
+                TweenService:Create(elem, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    BackgroundTransparency = 1
+                }):Play()
+                task.wait(0.15)
+                elem.Visible = false
             end
         end
     end
@@ -871,8 +900,21 @@ function lib:AddComboBox(text, options, funct, ...)
     newCombo.Name = #options > 0 and options[1] or ""
     newCombo.Parent = Menu
     newCombo.LayoutOrder = elements
-    newCombo.Parent = Menu
+    newCombo.Visible = false
+    
+    -- Fade in animation
+    newCombo.BackgroundTransparency = 1
+    newCombo.Name.TextTransparency = 1
     newCombo.Visible = true
+    
+    local fadeTween = TweenService:Create(newCombo, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.1
+    })
+    fadeTween:Play()
+    
+    TweenService:Create(newCombo.Name, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
 
     elements += 1
     AddSpace(Menu)
@@ -881,14 +923,15 @@ function lib:AddComboBox(text, options, funct, ...)
         local newElem = ComboElem:Clone()
         table.insert(elems, newElem)
         
-        -- Apply hover effect to combo elements
-        setupHoverEffect(newElem)
+        -- Setup hover effects for dropdown items
+        setupHoverEffects(newElem)
 
         newElem.MouseButton1Click:Connect(function()
-            newCombo:WaitForChild("Name").Text = text .. ": " .. name
+            TweenService:Create(newCombo.Name, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Text = text .. ": " .. name
+            }):Play()
             enabled = false
             setBoxState()
-
             funct(name, unpack(args))
         end)
 
@@ -898,7 +941,7 @@ function lib:AddComboBox(text, options, funct, ...)
         newElem.Parent = Menu
         newElem.LayoutOrder = elements
         newElem.Visible = false
-        newElem.BackgroundTransparency = 0.8
+        newElem.BackgroundTransparency = 1
 
         elements += 1
         AddSpace(Menu)
@@ -928,6 +971,7 @@ function lib:SetCloseBtnColor(r, g, b)
     Close.TextColor3 = Color3.fromRGB(r, g, b)
     Img_2.TextColor3 = Color3.fromRGB(r, g, b)
     Check.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    CloseUIStroke.Color = Color3.fromRGB(r, g, b)
 end
 
 function lib:SetButtonsColor(r, g ,b)
@@ -945,106 +989,100 @@ end
 
 function lib:SetTheme(theme)
     if theme == "Default" then
-        -- Keep default glass theme
+        -- Keep default colors
     elseif theme == "TomorrowNightBlue" then
         lib:SetButtonsColor(74, 208, 238)
         lib:SetCloseBtnColor(74, 208, 238)
         lib:SetBackgroundColor(5, 16, 58)
         lib:SetInputBoxColor(74, 208, 238)
+        UIStroke.Color = Color3.fromRGB(74, 208, 238)
     elseif theme == "HighContrast" then
         lib:SetBackgroundColor(0, 0, 0)
         lib:SetButtonsColor(0, 0, 0)
         lib:SetCloseBtnColor(255, 255, 0)
         lib:SetInputBoxColor(0, 0, 0)
+        UIStroke.Color = Color3.fromRGB(255, 255, 255)
     elseif theme == "Aqua" then
         lib:SetBackgroundColor(44, 62, 82)
         lib:SetButtonsColor(52, 74, 95)
         lib:SetCloseBtnColor(26, 189, 158)
         lib:SetInputBoxColor(52, 74, 95)
+        UIStroke.Color = Color3.fromRGB(26, 189, 158)
     elseif theme == "Ocean" then
         lib:SetBackgroundColor(26, 32, 58)
         lib:SetButtonsColor(38, 45, 71)
         lib:SetCloseBtnColor(86, 76, 251)
         lib:SetInputBoxColor(38, 45, 71)
+        UIStroke.Color = Color3.fromRGB(86, 76, 251)
     else
         error("Theme not found.")
     end
 end
 
--- INIT
+-- INIT with enhanced animations
 
 -- Initial fade in animation
 Main.BackgroundTransparency = 1
-GlassEffect.BackgroundTransparency = 1
-GlassBorder.BackgroundTransparency = 1
-GlassBlur.BackgroundTransparency = 1
-Logo.ImageTransparency = 1
-Title.TextTransparency = 1
-Close.TextTransparency = 1
 Intro.BackgroundTransparency = 1
+Logo.ImageTransparency = 1
+UIStroke.Transparency = 1
 
--- Main frame slide in animation
-TweenService:Create(Main, TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    Position = UDim2.fromScale(0.5, 0.5)
+-- Apply hover effects to all base elements
+applyHoverEffects()
+
+-- Main entrance animation
+Main:TweenPosition(
+    UDim2.fromScale(0.5, 0.5),
+    Enum.EasingDirection.Out,
+    Enum.EasingStyle.Quad,
+    1, true, nil
+)
+
+TweenService:Create(Main, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    BackgroundTransparency = 0.15
 }):Play()
 
-task.wait(0.3)
-
--- Fade in glass effects
-TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.4
+TweenService:Create(UIStroke, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    Transparency = 0.7
 }):Play()
 
-TweenService:Create(GlassEffect, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.9
-}):Play()
+task.wait(0.5)
 
-TweenService:Create(GlassBorder, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.8
-}):Play()
-
-TweenService:Create(GlassBlur, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.95
+TweenService:Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    BackgroundTransparency = 0
 }):Play()
 
 TweenService:Create(Logo, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
     ImageTransparency = 0
 }):Play()
 
-TweenService:Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.3
-}):Play()
+task.wait(1.5)
 
-task.wait(1.2)
-
--- Logo animation to corner
 Logo:TweenSizeAndPosition(
     UDim2.fromScale(0.175, 0.175),
     UDim2.fromScale(0.075, 0.15),
-    Enum.EasingDirection.In,
-    Enum.EasingStyle.Back,
-    0.8, true, nil
+    Enum.EasingDirection.Out,
+    Enum.EasingStyle.Quad,
+    1, true, nil
 )
 
--- Fade in title and close button
-task.wait(0.8)
-TweenService:Create(Title, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    TextTransparency = 0
-}):Play()
+task.wait(1)
 
-TweenService:Create(Close, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    TextTransparency = 0
-}):Play()
-
-task.wait(0.5)
-
--- Final fade out of intro
+-- Fade out intro background
 TweenService:Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
     BackgroundTransparency = 1
 }):Play()
 
--- Start pulse animation
-task.wait(0.5)
-startPulseAnimation()
+-- Fade in UI elements
+for _, obj in pairs(Main:GetChildren()) do
+    if obj:IsA("GuiObject") and obj ~= Intro and obj ~= Logo then
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+            obj.TextTransparency = 1
+            TweenService:Create(obj, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                TextTransparency = 0
+            }):Play()
+        end
+    end
+end
 
 return lib
