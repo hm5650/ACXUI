@@ -79,7 +79,7 @@ UICorner.Parent = Main
 -- Outline stroke for Main (UIStroke)
 local MainStroke = Instance.new("UIStroke")
 MainStroke.Parent = Main
-MainStroke.Color = Color3.fromRGB(18, 18, 18)
+MainStroke.Color = Color3.fromRGB(255, 255, 0)
 MainStroke.Thickness = 2
 MainStroke.Transparency = 0.45
 
@@ -135,14 +135,14 @@ Menu.Parent = Main
 Menu.Active = true
 Menu.AnchorPoint = Vector2.new(0.5, 1)
 Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Menu.BackgroundTransparency = 1
+Menu.BackgroundTransparency = 0.5
 Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Menu.BorderSizePixel = 0
 Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
 Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
 Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
 Menu.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-Menu.ScrollBarThickness = 8
+Menu.ScrollBarThickness = 1
 
 UIListLayout.Parent = Menu
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -161,9 +161,9 @@ UICorner_3.Parent = Toggle
 local function addStroke(parent, thickness, transparency)
 	local s = Instance.new("UIStroke")
 	s.Parent = parent
-	s.Thickness = thickness or 1
+	s.Thickness = 0.5
 	s.Transparency = transparency or 0.6
-	s.Color = Color3.fromRGB(18,18,18)
+	s.Color = Color3.fromRGB(255, 255, 0)
 	return s
 end
 
