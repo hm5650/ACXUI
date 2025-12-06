@@ -1,711 +1,297 @@
--- Arceus X UI Library
 local lib = {}
 
--- Constants
-local SCRIPT_TITLE = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
-local ELEMENT_HEIGHT_MULTIPLIER = 50
-local THEMES = {
-	Default = {},
-	TomorrowNightBlue = {
-		buttons = {74, 208, 238},
-		closeBtn = {74, 208, 238},
-		background = {5, 16, 58},
-		inputBox = {74, 208, 238}
-	},
-	HighContrast = {
-		background = {0, 0, 0},
-		buttons = {0, 0, 0},
-		closeBtn = {255, 255, 0},
-		inputBox = {0, 0, 0}
-	},
-	Aqua = {
-		background = {44, 62, 82},
-		buttons = {52, 74, 95},
-		closeBtn = {26, 189, 158},
-		inputBox = {52, 74, 95}
-	},
-	Ocean = {
-		background = {26, 32, 58},
-		buttons = {38, 45, 71},
-		closeBtn = {86, 76, 251},
-		inputBox = {38, 45, 71}
-	}
-}
+local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
 
 -- Services
 local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
--- Utility Functions
-local function createColor3(r, g, b)
-	return Color3.fromRGB(r, g, b)
+-- Instances
+local Arceus = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local Shadow = Instance.new("ImageLabel") -- For soft shadow
+local Intro = Instance.new("Frame")
+local IntroCorner = Instance.new("UICorner")
+local Logo = Instance.new("ImageButton")
+local Title = Instance.new("TextLabel")
+local Close = Instance.new("TextButton")
+local Menu = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+
+-- Templates (Cloned Later)
+local ToggleTemplate = Instance.new("TextButton")
+local ButtonTemplate = Instance.new("TextButton")
+local ComboBoxTemplate = Instance.new("Frame")
+local ComboElemTemplate = Instance.new("TextButton")
+local InputBoxTemplate = Instance.new("Frame")
+
+-- Setup ScreenGui
+Arceus.Name = "ArceusX_Modern"
+Arceus.ResetOnSpawn = false
+Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Arceus.DisplayOrder = 999999999
+
+-- Main Frame (Semi-transparent + modern)
+Main.Name = "Main"
+Main.Parent = Arceus
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+Main.BackgroundTransparency = 0.05
+Main.Position = UDim2.new(0.5, 0, -0.3, 0)
+Main.Size = UDim2.new(0.35, 0, 0.5, 0)
+Main.Active = true
+Main.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 16)
+UICorner.Parent = Main
+
+-- Soft Drop Shadow (Roblox doesn't have real shadows, so we fake it)
+Shadow.Name = "Shadow"
+Shadow.Parent = Main
+Shadow.BackgroundTransparency = 1
+Shadow.Position = UDim2.new(0, -15, 0, -15)
+Shadow.Size = UDim2.new(1, 30, 1, 30)
+Shadow.ZIndex = 0
+Shadow.Image = "rbxassetid://6014261993"
+Shadow.ImageColor3 = Color3.new(0, 0, 0)
+Shadow.ImageTransparency = 0.6
+Shadow.ScaleType = Enum.ScaleType.Slice
+Shadow.SliceCenter = Rect.new(49, 49, 450, 450)
+
+-- Intro Frame (Logo Splash)
+Intro.Name = "Intro"
+Intro.Parent = Main
+Intro.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+Intro.BackgroundTransparency = 1
+Intro.Size = UDim2.new(1, 0, 1, 0)
+Intro.ZIndex = 10
+
+IntroCorner.CornerRadius = UDim.new(0, 16)
+IntroCorner.Parent = Intro
+
+Logo.Parent = Intro
+Logo.BackgroundTransparency = 1
+Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
+Logo.AnchorPoint = Vector2.new(0.5, 0.5)
+Logo.Size = UDim2.new(0.4, 0, 0.4, 0)
+Logo.Image = "http://www.roblox.com/asset/?id=9178187770"
+
+-- Title
+Title.Name = "Title"
+Title.Parent = Main
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 20, 0, 12)
+Title.Size = UDim2.new(1, -70, 0, 40)
+Title.Font = Enum.Font.GothamBold
+Title.Text = Script_Title
+Title.RichText = true
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextSize = 18
+
+-- Close Button
+Close.Parent = Main
+Close.BackgroundTransparency = 1
+Close.Position = UDim2.new(1, -50, 0, 10)
+Close.Size = UDim2.new(0, 40, 0, 40)
+Close.Font = Enum.Font.GothamBold
+Close.Text = "×"
+Close.TextColor3 = Color3.fromRGB(255, 100, 100)
+Close.TextSize = 28
+
+-- Menu (Scrolling Area)
+Menu.Parent = Main
+Menu.BackgroundTransparency = 1
+Menu.Position = UDim2.new(0, 15, 0, 70)
+Menu.Size = UDim2.new(1, -30, 1, -90)
+Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
+Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Menu.ScrollBarThickness = 4
+Menu.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
+
+UIListLayout.Parent = Menu
+UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Toggle Template
+ToggleTemplate.Name = "ToggleTemplate"
+ToggleTemplate.Size = UDim2.new(1, 0, 0, 50)
+ToggleTemplate.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+ToggleTemplate.Text = ""
+ToggleTemplate.AutoButtonColor = false
+
+local togCorner = Instance.new("UICorner", ToggleTemplate)
+togCorner.CornerRadius = UDim.new(0, 12)
+
+local togName = Instance.new("TextLabel", ToggleTemplate)
+togName.BackgroundTransparency = 1
+togName.Position = UDim2.new(0, 15, 0, 0)
+togName.Size = UDim2.new(1, -80, 1, 0)
+togName.Font = Enum.Font.Gotham
+togName.TextColor3 = Color3.fromRGB(220, 220, 220)
+togName.TextXAlignment = Enum.TextXAlignment.Left
+togName.Text = "Toggle Name"
+togName.TextSize = 16
+
+local togIndicator = Instance.new("Frame", ToggleTemplate)
+togIndicator.Name = "Indicator"
+togIndicator.AnchorPoint = Vector2.new(1, 0.5)
+togIndicator.Position = UDim2.new(1, -15, 0.5, 0)
+togIndicator.Size = UDim2.new(0, 50, 0, 28)
+togIndicator.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+togIndicator.BorderSizePixel = 0
+
+local indCorner = Instance.new("UICorner", togIndicator)
+indCorner.CornerRadius = UDim.new(1, 0)
+
+local circle = Instance.new("Frame", togIndicator)
+circle.Name = "Circle"
+circle.Size = UDim2.new(0, 22, 0, 22)
+circle.Position = UDim2.new(0, 3, 0.5, 0)
+circle.AnchorPoint = Vector2.new(0, 0.5)
+circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+local circCorner = Instance.new("UICorner", circle)
+circCorner.CornerRadius = UDim.new(1, 0)
+
+-- Button Template
+ButtonTemplate.Name = "ButtonTemplate"
+ButtonTemplate.Size = UDim2.new(1, 0, 0, 50)
+ButtonTemplate.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+ButtonTemplate.Text = "Button"
+ButtonTemplate.Font = Enum.Font.GothamBold
+ButtonTemplate.TextColor3 = Color3.new(1, 1, 1)
+ButtonTemplate.TextSize = 16
+
+local btnCorner = Instance.new("UICorner", ButtonTemplate)
+btnCorner.CornerRadius = UDim.new(0, 12)
+
+-- Input Box Template
+InputBoxTemplate.Name = "InputBoxTemplate"
+InputBoxTemplate.Size = UDim2.new(1, 0, 0, 50)
+InputBoxTemplate.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+
+local ibCorner = Instance.new("UICorner", InputBoxTemplate)
+ibCorner.CornerRadius = UDim.new(0, 12)
+
+local ibLabel = Instance.new("TextLabel", InputBoxTemplate)
+ibLabel.Text = "Input:"
+ibLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+ibLabel.BackgroundTransparency = 1
+ibLabel.Size = UDim2.new(0.4, 0, 1, 0)
+ibLabel.Position = UDim2.new(0, 15, 0, 0)
+ibLabel.TextXAlignment = Enum.TextXAlignment.Left
+ibLabel.Font = Enum.Font.Gotham
+ibLabel.TextSize = 15
+
+local ibBox = Instance.new("TextBox", InputBoxTemplate)
+ibBox.AnchorPoint = Vector2.new(1, 0.5)
+ibBox.Position = UDim2.new(1, -15, 0.5, 0)
+ibBox.Size = UDim2.new(0.55, 0, 0, 34)
+ibBox.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+ibBox.TextColor3 = Color3.new(1, 1, 1)
+ibBox.PlaceholderText = "Enter text..."
+ibBox.Font = Enum.Font.Gotham
+ibBox.TextSize = 14
+
+local ibBoxCorner = Instance.new("UICorner", ibBox)
+ibBoxCorner.CornerRadius = UDim.new(0, 8)
+
+-- Fade In Animation
+local function FadeIn()
+    Main.Position = UDim2.new(0.5, 0, -0.3, 0)
+    Main.BackgroundTransparency = 1
+    Shadow.ImageTransparency = 1
+    Intro.BackgroundTransparency = 0
+
+    TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        BackgroundTransparency = 0.05
+    }):Play()
+    TweenService:Create(Shadow, TweenInfo.new(0.8), {ImageTransparency = 0.6}):Play()
+    TweenService:Create(Logo, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0.15, 0, 0.15, 0),
+        Position = UDim2.new(0, 20, 0, 15)
+    }):Play()
+
+    task.wait(0.6)
+    TweenService:Create(Intro, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
 end
 
-local function getUIParent()
-	local success, parent = pcall(gethui)
-	return success and parent or game:GetService("CoreGui")
-end
-
-local function tween(object, properties, duration, easingStyle, easingDirection)
-	local tweenInfo = TweenInfo.new(duration or 0.25, easingStyle or Enum.EasingStyle.Quad, easingDirection or Enum.EasingDirection.In)
-	return TweenService:Create(object, tweenInfo, properties)
-end
-
--- UI Creation Functions
-local function createBaseUI()
-	local Arceus = Instance.new("ScreenGui")
-	Arceus.Name = "Arceus"
-	Arceus.Enabled = true
-	Arceus.ResetOnSpawn = true
-	Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	Arceus.DisplayOrder = 999999999
-
-	local Main = Instance.new("Frame")
-	Main.Name = "Main"
-	Main.Parent = Arceus
-	Main.Active = true
-	Main.Draggable = true
-	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = createColor3(40, 40, 40)
-	Main.BorderSizePixel = 0
-	Main.Position = UDim2.new(0.5, 0, -0.2, 0)
-	Main.Size = UDim2.new(0.3, 0, 0.3, 0)
-
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.1, 0)
-	UICorner.Parent = Main
-
-	-- Intro Frame
-	local Intro = Instance.new("Frame")
-	Intro.Name = "Intro"
-	Intro.Parent = Main
-	Intro.BackgroundColor3 = createColor3(40, 40, 40)
-	Intro.ClipsDescendants = true
-	Intro.Size = UDim2.new(1, 0, 1, 0)
-	Intro.ZIndex = 2
-
-	local UICorner_2 = Instance.new("UICorner")
-	UICorner_2.CornerRadius = UDim.new(0.1, 0)
-	UICorner_2.Parent = Intro
-
-	-- Logo
-	local Logo = Instance.new("ImageButton")
-	Logo.Name = "Logo"
-	Logo.Parent = Intro
-	Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-	Logo.BackgroundTransparency = 1
-	Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Logo.Size = UDim2.new(0.75, 0, 0.75, 0)
-	Logo.ZIndex = 2
-	Logo.Image = "http://www.roblox.com/asset/?id=9178187770"
-	Logo.ScaleType = Enum.ScaleType.Fit
-
-	Instance.new("UIAspectRatioConstraint", Logo)
-
-	-- Title
-	local Title = Instance.new("TextLabel")
-	Title.Name = "Title"
-	Title.Parent = Main
-	Title.AnchorPoint = Vector2.new(1, 0)
-	Title.BackgroundTransparency = 1
-	Title.Position = UDim2.new(0.975, 0, 0.075, 0)
-	Title.Size = UDim2.new(0.85, 0, 0.155, 0)
-	Title.Font = Enum.Font.TitilliumWeb
-	Title.FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Bold)
-	Title.RichText = true
-	Title.Text = SCRIPT_TITLE
-	Title.TextColor3 = createColor3(255, 255, 255)
-	Title.TextScaled = true
-	Title.TextXAlignment = Enum.TextXAlignment.Left
-
-	-- Menu
-	local Menu = Instance.new("ScrollingFrame")
-	Menu.Name = "Menu"
-	Menu.Parent = Main
-	Menu.Active = true
-	Menu.AnchorPoint = Vector2.new(0.5, 1)
-	Menu.BackgroundTransparency = 1
-	Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
-	Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
-	Menu.ScrollBarImageColor3 = createColor3(255, 255, 255)
-
-	local UIListLayout = Instance.new("UIListLayout")
-	UIListLayout.Parent = Menu
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-	-- Close Button
-	local Close = Instance.new("TextButton")
-	Close.Name = "Close"
-	Close.Parent = Main
-	Close.BackgroundTransparency = 1
-	Close.Position = UDim2.new(0.8, 0, 0.1, 0)
-	Close.Size = UDim2.new(0.15, 0, 0.125, 0)
-	Close.Font = Enum.Font.FredokaOne
-	Close.Text = "X"
-	Close.TextColor3 = createColor3(255, 0, 0)
-	Close.TextScaled = true
-	Close.TextXAlignment = Enum.TextXAlignment.Right
-
-	return Arceus, Main, Intro, Logo, Title, Menu, Close
-end
-
-local function createToggleTemplate()
-	local Toggle = Instance.new("ImageButton")
-	Toggle.Name = "Toggle"
-	Toggle.BackgroundColor3 = createColor3(55, 55, 55)
-	Toggle.Size = UDim2.new(0.95, 0, 0, 50)
-	Toggle.Visible = false
-
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.25, 0)
-	UICorner.Parent = Toggle
-
-	-- Enabled indicator
-	local Enabled = Instance.new("Frame")
-	Enabled.Name = "Enabled"
-	Enabled.Parent = Toggle
-	Enabled.AnchorPoint = Vector2.new(1, 0.5)
-	Enabled.BackgroundColor3 = createColor3(50, 50, 50)
-	Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
-	Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
-
-	Instance.new("UIAspectRatioConstraint", Enabled)
-
-	local UICorner_2 = Instance.new("UICorner")
-	UICorner_2.CornerRadius = UDim.new(0.3, 0)
-	UICorner_2.Parent = Enabled
-
-	-- Check mark
-	local Check = Instance.new("Frame")
-	Check.Name = "Check"
-	Check.Parent = Enabled
-	Check.AnchorPoint = Vector2.new(0.5, 0.5)
-	Check.BackgroundColor3 = createColor3(255, 0, 0)
-	Check.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Check.Size = UDim2.new(0.65, 0, 0.65, 0)
-
-	Instance.new("UIAspectRatioConstraint", Check)
-
-	local UICorner_3 = Instance.new("UICorner")
-	UICorner_3.CornerRadius = UDim.new(0.3, 0)
-	UICorner_3.Parent = Check
-
-	-- Name label
-	local Name = Instance.new("TextLabel")
-	Name.Name = "Name"
-	Name.Parent = Toggle
-	Name.AnchorPoint = Vector2.new(0, 0.5)
-	Name.BackgroundTransparency = 1
-	Name.Position = UDim2.new(0.05, 0, 0.5, 0)
-	Name.Size = UDim2.new(0.75, 0, 0.8, 0)
-	Name.Font = Enum.Font.TitilliumWeb
-	Name.Text = "Script"
-	Name.TextColor3 = createColor3(255, 255, 255)
-	Name.TextScaled = true
-	Name.TextXAlignment = Enum.TextXAlignment.Left
-	Name.TextYAlignment = Enum.TextYAlignment.Bottom
-
-	-- Gradient
-	local UIGradient = Instance.new("UIGradient")
-	UIGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, createColor3(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, createColor3(180, 180, 180))
-	})
-	UIGradient.Parent = Toggle
-
-	return Toggle
-end
-
-local function createButtonTemplate()
-	local Button = Instance.new("ImageButton")
-	Button.Name = "Button"
-	Button.BackgroundColor3 = createColor3(55, 55, 55)
-	Button.Size = UDim2.new(0.95, 0, 0, 50)
-
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.25, 0)
-	UICorner.Parent = Button
-
-	local Name = Instance.new("TextLabel")
-	Name.Name = "Name"
-	Name.Parent = Button
-	Name.AnchorPoint = Vector2.new(0, 0.5)
-	Name.BackgroundTransparency = 1
-	Name.Position = UDim2.new(0.05, 0, 0.5, 0)
-	Name.Size = UDim2.new(0.95, 0, 0.82, 0)
-	Name.Font = Enum.Font.TitilliumWeb
-	Name.Text = "Button"
-	Name.TextColor3 = createColor3(255, 255, 255)
-	Name.TextScaled = true
-	Name.TextXAlignment = Enum.TextXAlignment.Left
-	Name.TextYAlignment = Enum.TextYAlignment.Bottom
-
-	local UIGradient = Instance.new("UIGradient")
-	UIGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, createColor3(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, createColor3(180, 180, 180))
-	})
-	UIGradient.Parent = Button
-
-	return Button
-end
-
-local function createComboBoxTemplate()
-	local ComboBox = Instance.new("ImageButton")
-	ComboBox.Name = "ComboBox"
-	ComboBox.BackgroundColor3 = createColor3(55, 55, 55)
-	ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
-
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.25, 0)
-	UICorner.Parent = ComboBox
-
-	local Name = Instance.new("TextLabel")
-	Name.Name = "Name"
-	Name.Parent = ComboBox
-	Name.AnchorPoint = Vector2.new(0, 0.5)
-	Name.BackgroundTransparency = 1
-	Name.Position = UDim2.new(0.05, 0, 0.5, 0)
-	Name.Size = UDim2.new(0.75, 0, 0.8, 0)
-	Name.Font = Enum.Font.TitilliumWeb
-	Name.Text = "ComboBox"
-	Name.TextColor3 = createColor3(255, 255, 255)
-	Name.TextScaled = true
-	Name.TextXAlignment = Enum.TextXAlignment.Left
-	Name.TextYAlignment = Enum.TextYAlignment.Bottom
-
-	local UIGradient = Instance.new("UIGradient")
-	UIGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, createColor3(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, createColor3(180, 180, 180))
-	})
-	UIGradient.Parent = ComboBox
-
-	-- Arrow icon
-	local Img = Instance.new("TextLabel")
-	Img.Name = "Img"
-	Img.Parent = ComboBox
-	Img.AnchorPoint = Vector2.new(1, 0.5)
-	Img.BackgroundTransparency = 1
-	Img.Rotation = 180
-	Img.Position = UDim2.new(0.975, 0, 0.5, 0)
-	Img.Size = UDim2.new(0.75, 0, 0.75, 0)
-	Img.Font = Enum.Font.FredokaOne
-	Img.Text = "^"
-	Img.TextColor3 = createColor3(255, 0, 0)
-	Img.TextScaled = true
-
-	Instance.new("UIAspectRatioConstraint", Img)
-
-	return ComboBox
-end
-
-local function createInputBoxTemplate()
-	local InputBox = Instance.new("ImageButton")
-	InputBox.Name = "InputBox"
-	InputBox.BackgroundColor3 = createColor3(55, 55, 55)
-	InputBox.Size = UDim2.new(0.95, 0, 0, 50)
-	InputBox.AutoButtonColor = false
-
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.25, 0)
-	UICorner.Parent = InputBox
-
-	local Name = Instance.new("TextLabel")
-	Name.Name = "Name"
-	Name.Parent = InputBox
-	Name.AnchorPoint = Vector2.new(0, 0.5)
-	Name.BackgroundTransparency = 1
-	Name.Position = UDim2.new(0.05, 0, 0.5, 0)
-	Name.Size = UDim2.new(0.75, 0, 0.8, 0)
-	Name.Font = Enum.Font.TitilliumWeb
-	Name.Text = "Input Box"
-	Name.TextColor3 = createColor3(255, 255, 255)
-	Name.TextScaled = true
-	Name.TextXAlignment = Enum.TextXAlignment.Left
-	Name.TextYAlignment = Enum.TextYAlignment.Bottom
-
-	local UIGradient = Instance.new("UIGradient")
-	UIGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, createColor3(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, createColor3(180, 180, 180))
-	})
-	UIGradient.Parent = InputBox
-
-	-- Text input field
-	local TextBox = Instance.new("TextBox")
-	TextBox.Name = "TextBox"
-	TextBox.Parent = InputBox
-	TextBox.AnchorPoint = Vector2.new(1, 0.5)
-	TextBox.BackgroundColor3 = createColor3(40, 40, 40)
-	TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
-	TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
-	TextBox.Font = Enum.Font.TitilliumWeb
-	TextBox.PlaceholderColor3 = createColor3(180, 180, 180)
-	TextBox.PlaceholderText = "Enter text..."
-	TextBox.Text = ""
-	TextBox.TextColor3 = createColor3(255, 255, 255)
-	TextBox.TextScaled = true
-
-	local UICorner_2 = Instance.new("UICorner")
-	UICorner_2.CornerRadius = UDim.new(0.2, 0)
-	UICorner_2.Parent = TextBox
-
-	return InputBox
-end
-
--- UI Instance Templates
-local ToggleTemplate = createToggleTemplate()
-local ButtonTemplate = createButtonTemplate()
-local ComboBoxTemplate = createComboBoxTemplate()
-local InputBoxTemplate = createInputBoxTemplate()
-
--- UI Elements
-local Arceus, Main, Intro, Logo, Title, Menu, Close = createBaseUI()
-local elementHeight = 0
-local elements = 0
-
--- Animation Functions
-local function closeUI()
-	Logo.Active = true
-	tween(Intro, {BackgroundTransparency = 0}):Play()
-
-	task.wait(0.3)
-	Logo:TweenSizeAndPosition(
-		UDim2.fromScale(0.75, 0.75),
-		UDim2.fromScale(0.5, 0.5),
-		Enum.EasingDirection.Out,
-		Enum.EasingStyle.Quad,
-		0.25
-	)
-
-	task.wait(0.3)
-	Main:TweenSize(
-		UDim2.fromScale(0.1, 0.175),
-		Enum.EasingDirection.Out,
-		Enum.EasingStyle.Quad,
-		0.25
-	)
-
-	task.wait(0.3)
-	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro then
-			obj.Visible = false
-		end
-	end
-
-	tween(Logo, {ImageTransparency = 0.8}):Play()
-	tween(Intro, {BackgroundTransparency = 1}):Play()
-	tween(Main, {BackgroundTransparency = 0.8}):Play()
-end
-
-local function openUI()
-	Logo.Active = false
-	tween(Logo, {ImageTransparency = 0}):Play()
-	tween(Intro, {BackgroundTransparency = 0}):Play()
-	tween(Main, {BackgroundTransparency = 0}):Play()
-
-	task.wait(0.3)
-	Main:TweenSize(
-		UDim2.fromScale(0.3, 0.3),
-		Enum.EasingDirection.Out,
-		Enum.EasingStyle.Quad,
-		0.25
-	)
-
-	task.wait(0.3)
-	Logo:TweenSizeAndPosition(
-		UDim2.fromScale(0.175, 0.175),
-		UDim2.fromScale(0.075, 0.15),
-		Enum.EasingDirection.Out,
-		Enum.EasingStyle.Quad,
-		0.25
-	)
-
-	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro then
-			obj.Visible = true
-		end
-	end
-
-	task.wait(0.3)
-	tween(Intro, {BackgroundTransparency = 1}):Play()
-end
-
--- Event Connections
-Close.MouseButton1Click:Connect(closeUI)
-Logo.MouseButton1Click:Connect(openUI)
-
--- UI Setup
-local success, err = pcall(function()
-	Arceus.Parent = getUIParent()
+-- Close Animation
+Close.MouseButton1Click:Connect(function()
+    TweenService:Create(Intro, TweenInfo.new(0.4), {BackgroundTransparency = 0}):Play()
+    task.wait(0.3)
+    TweenService:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {
+        Position = UDim2.new(0.5, 0, -0.3, 0),
+        BackgroundTransparency = 1
+    }):Play()
+    TweenService:Create(Shadow, TweenInfo.new(0.6), {ImageTransparency = 1}):Play()
 end)
 
-if not success then
-	Arceus.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+-- Open via Logo Click (if minimized)
+Logo.MouseButton1Click:Connect(FadeIn)
+
+-- Parent to gethui() or PlayerGui
+local function GetParent()
+    local hui = gethui and gethui() or game:GetService("CoreGui")
+    return (pcall(function() Arceus.Parent = hui end) and hui) or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+end
+Arceus.Parent = GetParent()
+
+-- Public Functions
+function lib:AddToggle(name, callback, default)
+    local toggle = ToggleTemplate:Clone()
+    toggle.Parent = Menu
+    toggle:FindFirstChild("TextLabel").Text = name
+
+    local indicator = toggle.Indicator
+    local circle = indicator.Circle
+    local enabled = default or false
+
+    local function update()
+        TweenService:Create(indicator, TweenInfo.new(0.3), {
+            BackgroundColor3 = enabled and Color3.fromRGB(255, 80, 80) or Color3.fromRGB(60, 60, 80)
+        }):Play()
+        TweenService:Create(circle, TweenInfo.new(0.3), {
+            Position = enabled and UDim2.new(1, -25, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)
+        }):Play()
+    end
+
+    toggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        update()
+        callback(enabled)
+    end)
+
+    if enabled then update() end
+    return toggle
 end
 
--- Initialize element height based on menu size
-elementHeight = ELEMENT_HEIGHT_MULTIPLIER * Menu.AbsoluteSize.Y / 210
-
--- Helper Functions
-local function createSpace(parent)
-	local space = Instance.new("Frame")
-	space.Name = "Space"
-	space.BackgroundTransparency = 1
-	space.Size = UDim2.new(0.95, 0, 0.025, 0)
-	space.Parent = parent
-	space.LayoutOrder = elements
-	space.Visible = true
-
-	elements += 1
+function lib:AddButton(name, callback)
+    local btn = ButtonTemplate:Clone()
+    btn.Parent = Menu
+    btn.Text = name
+    btn.MouseButton1Click:Connect(callback)
+    return btn
 end
 
--- Library Functions
-function lib:AddToggle(name, callback, initialState, ...)
-	local toggle = ToggleTemplate:Clone()
-	local args = {...}
+function lib:AddInput(name, placeholder, callback)
+    local input = InputBoxTemplate:Clone()
+    input.Parent = Menu
+    input:FindFirstChild("TextLabel").Text = name .. ":"
+    local box = input.TextBox
+    box.PlaceholderText = placeholder or "Enter text..."
 
-	toggle.MouseButton1Click:Connect(function()
-		initialState = not initialState
-		local check = toggle.Enabled.Check
-		check.Visible = initialState
-		callback(initialState, table.unpack(args))
-	end)
+    box.FocusLost:Connect(function(enter)
+        if enter then callback(box.Text) end
+    end)
 
-	toggle.Enabled.Check.Visible = initialState
-	toggle.Name.Text = name
-	toggle.Size = UDim2.new(0.95, 0, 0, elementHeight)
-	toggle.Name = name
-	toggle.Parent = Menu
-	toggle.LayoutOrder = elements
-	toggle.Visible = true
-
-	elements += 1
-	createSpace(Menu)
-
-	return toggle
+    return { Frame = input, TextBox = box, SetText = function(t) box.Text = t end }
 end
 
-function lib:AddButton(name, callback, ...)
-	local button = ButtonTemplate:Clone()
-	local args = {...}
-
-	button.MouseButton1Click:Connect(function()
-		callback(table.unpack(args))
-	end)
-
-	button.Name.Text = name
-	button.Size = UDim2.new(0.95, 0, 0, elementHeight)
-	button.Name = name
-	button.Parent = Menu
-	button.LayoutOrder = elements
-	button.Visible = true
-
-	elements += 1
-	createSpace(Menu)
-
-	return button
-end
-
-function lib:AddInputBox(name, callback, placeholder, default, ...)
-	local inputBox = InputBoxTemplate:Clone()
-	local args = {...}
-	local textBox = inputBox.TextBox
-
-	inputBox.Name.Text = name
-	if placeholder then
-		textBox.PlaceholderText = placeholder
-	end
-	if default then
-		textBox.Text = default
-	end
-
-	local function submitText()
-		callback(textBox.Text, table.unpack(args))
-	end
-
-	textBox.FocusLost:Connect(function(enterPressed)
-		if enterPressed then
-			submitText()
-		end
-	end)
-
-	inputBox.Size = UDim2.new(0.95, 0, 0, elementHeight)
-	inputBox.Name = name
-	inputBox.Parent = Menu
-	inputBox.LayoutOrder = elements
-	inputBox.Visible = true
-
-	elements += 1
-	createSpace(Menu)
-
-	return {
-		Frame = inputBox,
-		TextBox = textBox,
-		GetText = function() return textBox.Text end,
-		SetText = function(text) textBox.Text = text or "" end,
-		Clear = function() textBox.Text = "" end,
-		SetPlaceholder = function(placeholderText)
-			textBox.PlaceholderText = placeholderText or "Enter text..."
-		end
-	}
-end
-
-function lib:AddComboBox(name, options, callback, ...)
-	local comboBox = ComboBoxTemplate:Clone()
-	local isOpen = false
-	local comboElements = {}
-	local args = {...}
-
-	local function updateComboBoxState()
-		comboBox.Img.Rotation = isOpen and 0 or 180
-		for _, element in ipairs(comboElements) do
-			element.Visible = isOpen
-		end
-	end
-
-	comboBox.MouseButton1Click:Connect(function()
-		isOpen = not isOpen
-		updateComboBoxState()
-	end)
-
-	comboBox.Name.Text = name .. ": " .. (#options > 0 and options[1] or "")
-	comboBox.Size = UDim2.new(0.95, 0, 0, elementHeight)
-	comboBox.Name = #options > 0 and options[1] or ""
-	comboBox.Parent = Menu
-	comboBox.LayoutOrder = elements
-	comboBox.Visible = true
-
-	elements += 1
-	createSpace(Menu)
-
-	for _, option in ipairs(options) do
-		local element = Instance.new("ImageButton")
-		element.Name = option
-		element.BackgroundColor3 = createColor3(55, 55, 55)
-		element.Size = UDim2.new(0.95, 0, 0, elementHeight)
-		element.Visible = false
-
-		local UICorner = Instance.new("UICorner")
-		UICorner.CornerRadius = UDim.new(0.25, 0)
-		UICorner.Parent = element
-
-		local label = Instance.new("TextLabel")
-		label.Name = "Name"
-		label.Parent = element
-		label.AnchorPoint = Vector2.new(0, 0.5)
-		label.BackgroundTransparency = 1
-		label.Position = UDim2.new(0.05, 0, 0.5, 0)
-		label.Size = UDim2.new(0.75, 0, 0.8, 0)
-		label.Font = Enum.Font.TitilliumWeb
-		label.Text = option
-		label.TextColor3 = createColor3(255, 255, 255)
-		label.TextScaled = true
-		label.TextXAlignment = Enum.TextXAlignment.Left
-		label.TextYAlignment = Enum.TextYAlignment.Bottom
-
-		element.MouseButton1Click:Connect(function()
-			comboBox.Name.Text = name .. ": " .. option
-			isOpen = false
-			updateComboBoxState()
-			callback(option, table.unpack(args))
-		end)
-
-		element.Parent = Menu
-		element.LayoutOrder = elements
-		table.insert(comboElements, element)
-
-		elements += 1
-		createSpace(Menu)
-	end
-
-	return comboBox
-end
-
--- Customization Functions
-function lib:SetTitle(text)
-	Title.Text = text
-end
-
-function lib:SetIcon(imageUrl)
-	Logo.Image = imageUrl
-end
-
-function lib:SetBackgroundColor(r, g, b)
-	local color = createColor3(r, g, b)
-	Main.BackgroundColor3 = color
-	Intro.BackgroundColor3 = color
-end
-
-function lib:SetTitleColor(r, g, b)
-	Title.TextColor3 = createColor3(r, g, b)
-end
-
-function lib:SetCloseBtnColor(r, g, b)
-	local color = createColor3(r, g, b)
-	Close.TextColor3 = color
-	ComboBoxTemplate.Img.TextColor3 = color
-	ToggleTemplate.Enabled.Check.BackgroundColor3 = color
-end
-
-function lib:SetButtonsColor(r, g, b)
-	local color = createColor3(r, g, b)
-	ToggleTemplate.BackgroundColor3 = color
-	ButtonTemplate.BackgroundColor3 = color
-	ComboBoxTemplate.BackgroundColor3 = color
-	InputBoxTemplate.BackgroundColor3 = color
-end
-
-function lib:SetInputBoxColor(r, g, b)
-	local color = createColor3(r, g, b)
-	InputBoxTemplate.BackgroundColor3 = color
-	InputBoxTemplate.TextBox.BackgroundColor3 = createColor3(
-		math.max(0, r - 15),
-		math.max(0, g - 15),
-		math.max(0, b - 15)
-	)
-end
-
-function lib:SetTheme(themeName)
-	local theme = THEMES[themeName]
-	if not theme then
-		error("Theme '" .. themeName .. "' not found")
-	end
-
-	if theme.buttons then
-		self:SetButtonsColor(table.unpack(theme.buttons))
-	end
-	if theme.closeBtn then
-		self:SetCloseBtnColor(table.unpack(theme.closeBtn))
-	end
-	if theme.background then
-		self:SetBackgroundColor(table.unpack(theme.background))
-	end
-	if theme.inputBox then
-		self:SetInputBoxColor(table.unpack(theme.inputBox))
-	end
-end
-
--- Initial Animation
-Main:TweenPosition(
-	UDim2.fromScale(0.5, 0.5),
-	Enum.EasingDirection.In,
-	Enum.EasingStyle.Quad,
-	1
-)
-
-task.wait(1.5)
-Logo:TweenSizeAndPosition(
-	UDim2.fromScale(0.175, 0.175),
-	UDim2.fromScale(0.075, 0.15),
-	Enum.EasingDirection.In,
-	Enum.EasingStyle.Quad,
-	1
-)
-
-task.wait(1.5)
-tween(Intro, {BackgroundTransparency = 1}, 1):Play()
+-- Init Fade In
+FadeIn()
 
 return lib
