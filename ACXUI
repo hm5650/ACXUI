@@ -52,9 +52,6 @@ local UICorner_10 = Instance.new("UICorner")
 
 -- UI Outline Effect
 local MainOutline = Instance.new("UIStroke")
-local ButtonOutline = Instance.new("UIStroke")
-local ToggleOutline = Instance.new("UIStroke")
-local ComboBoxOutline = Instance.new("UIStroke")
 local InputBoxOutline = Instance.new("UIStroke")
 
 -- Properties:
@@ -158,13 +155,6 @@ Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 Toggle.BackgroundTransparency = 0.1
 Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
--- Add outline to Toggle
-ToggleOutline.Name = "ToggleOutline"
-ToggleOutline.Parent = Toggle
-ToggleOutline.Color = Color3.fromRGB(100, 100, 100)
-ToggleOutline.Thickness = 1.5
-ToggleOutline.Transparency = 0.4
-
 UICorner_3.CornerRadius = UDim.new(0.2, 0)
 UICorner_3.Parent = Toggle
 
@@ -218,13 +208,6 @@ Button.Name = "Button"
 Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 Button.BackgroundTransparency = 0.1
 Button.Size = UDim2.new(0.95, 0, 0, 50)
-
--- Add outline to Button
-ButtonOutline.Name = "ButtonOutline"
-ButtonOutline.Parent = Button
-ButtonOutline.Color = Color3.fromRGB(100, 100, 100)
-ButtonOutline.Thickness = 1.5
-ButtonOutline.Transparency = 0.4
 
 UICorner_6.CornerRadius = UDim.new(0.2, 0)
 UICorner_6.Parent = Button
@@ -323,13 +306,6 @@ ComboBox.Name = "ComboBox"
 ComboBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 ComboBox.BackgroundTransparency = 0.1
 ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
-
--- Add outline to ComboBox
-ComboBoxOutline.Name = "ComboBoxOutline"
-ComboBoxOutline.Parent = ComboBox
-ComboBoxOutline.Color = Color3.fromRGB(100, 100, 100)
-ComboBoxOutline.Thickness = 1.5
-ComboBoxOutline.Transparency = 0.4
 
 UICorner_8.CornerRadius = UDim.new(0.2, 0)
 UICorner_8.Parent = ComboBox
@@ -582,32 +558,26 @@ local function applyHoverEffects()
 	-- These will be applied when elements are created
 	Toggle.MouseEnter:Connect(function()
 		fadeIn(Toggle, 0.15, {BackgroundTransparency = 0})
-		fadeIn(ToggleOutline, 0.15, {Transparency = 0.2})
 	end)
 	
 	Toggle.MouseLeave:Connect(function()
 		fadeIn(Toggle, 0.15, {BackgroundTransparency = 0.1})
-		fadeIn(ToggleOutline, 0.15, {Transparency = 0.4})
 	end)
 	
 	Button.MouseEnter:Connect(function()
 		fadeIn(Button, 0.15, {BackgroundTransparency = 0})
-		fadeIn(ButtonOutline, 0.15, {Transparency = 0.2})
 	end)
 	
 	Button.MouseLeave:Connect(function()
 		fadeIn(Button, 0.15, {BackgroundTransparency = 0.1})
-		fadeIn(ButtonOutline, 0.15, {Transparency = 0.4})
 	end)
 	
 	ComboBox.MouseEnter:Connect(function()
 		fadeIn(ComboBox, 0.15, {BackgroundTransparency = 0})
-		fadeIn(ComboBoxOutline, 0.15, {Transparency = 0.2})
 	end)
 	
 	ComboBox.MouseLeave:Connect(function()
 		fadeIn(ComboBox, 0.15, {BackgroundTransparency = 0.1})
-		fadeIn(ComboBoxOutline, 0.15, {Transparency = 0.4})
 	end)
 	
 	InputBox.MouseEnter:Connect(function()
@@ -667,10 +637,6 @@ function lib:AddToggle(name, funct, enabled, ...)
 	local newTog = Toggle:Clone()
 	local args = {...}
 	
-	-- Add outline to cloned toggle
-	local outline = ToggleOutline:Clone()
-	outline.Parent = newTog
-	
 	newTog.MouseButton1Click:Connect(function()
 		enabled = not enabled
 		local check = newTog:WaitForChild("Enabled"):WaitForChild("Check")
@@ -715,23 +681,13 @@ function lib:AddButton(name, funct, ...)
 	local newBut = Button:Clone()
 	local args = {...}
 	
-	-- Add outline to cloned button
-	local outline = ButtonOutline:Clone()
-	outline.Parent = newBut
-	
 	-- Add click animation
 	newBut.MouseButton1Down:Connect(function()
 		fadeIn(newBut, 0.1, {BackgroundTransparency = 0.3})
-		if outline then
-			fadeIn(outline, 0.1, {Transparency = 0.6})
-		end
 	end)
 	
 	newBut.MouseButton1Up:Connect(function()
 		fadeIn(newBut, 0.1, {BackgroundTransparency = 0.1})
-		if outline then
-			fadeIn(outline, 0.1, {Transparency = 0.4})
-		end
 	end)
 
 	newBut.MouseButton1Click:Connect(function()
@@ -862,9 +818,6 @@ function lib:AddComboBox(text, options, funct, ...)
 	local elems = {}
 	local args = {...}
 	
-	-- Add outline to cloned combobox
-	local outline = ComboBoxOutline:Clone()
-	outline.Parent = newCombo
 
 	local function setBoxState()
 		local img = newCombo:WaitForChild("Img")
@@ -987,15 +940,12 @@ end
 
 function lib:SetOutlineColor(r, g, b)
 	MainOutline.Color = Color3.fromRGB(r, g, b)
-	ToggleOutline.Color = Color3.fromRGB(r, g, b)
-	ButtonOutline.Color = Color3.fromRGB(r, g, b)
-	ComboBoxOutline.Color = Color3.fromRGB(r, g, b)
 	InputBoxOutline.Color = Color3.fromRGB(r, g, b)
 end
 
 function lib:SetTheme(theme)
 	if theme == "Default" then
-		lib:SetOutlineColor(80, 80, 80)
+		lib:SetOutlineColor(40, 40, 40))
 		lib:SetButtonsColor(55, 55, 55)
 		lib:SetCloseBtnColor(255, 0, 0)
 		lib:SetBackgroundColor(40, 40, 40)
