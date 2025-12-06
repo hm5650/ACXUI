@@ -1,540 +1,866 @@
--- Modernized Arceus X UI Lib
--- Features: whole GUI fade-in, ordered element animations, invisible scrollbar,
--- glow-flash click animation, soft shadow, transparent background, draggable main frame.
-
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
 local lib = {}
-local elementHeightBase = 50
 
--- Helper for parent (safe gethui fallback)
-local function uiparent()
-    local ok, gethui_result = pcall(function() return gethui() end)
-    if ok and typeof(gethui_result) == "Instance" then
-        return gethui_result
-    end
-    local core = game:GetService("CoreGui")
-    if core then return core end
-    return Players.LocalPlayer:WaitForChild("PlayerGui")
-end
+local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
 
--- Root ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ArceusX_UI"
-ScreenGui.ResetOnSpawn = true
-ScreenGui.DisplayOrder = 999999999
-ScreenGui.Parent = uiparent()
+-- Animation presets
+local FadeIn = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local FadeOut = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+local SlideIn = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out, 0.2)
+local SlideOut = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0.2)
+local ScaleUp = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local ScaleDown = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
 
--- Soft shadow behind main (slightly bigger, translucent)
-local Shadow = Instance.new("Frame")
-Shadow.Name = "Shadow"
-Shadow.AnchorPoint = Vector2.new(0.5,0.5)
-Shadow.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Shadow.BackgroundTransparency = 0.75 -- subtle shadow
-Shadow.BorderSizePixel = 0
-Shadow.Size = UDim2.new(0.305, 6, 0.305, 6)
-Shadow.Position = UDim2.new(0.5, 0, 0.5, 10)
-Shadow.ZIndex = 1
-Shadow.Parent = ScreenGui
-local shadowCorner = Instance.new("UICorner", Shadow)
-shadowCorner.CornerRadius = UDim.new(0.08, 0)
-
--- Main container
+-- Instances with enhanced properties
+local Arceus = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIGradient_Main = Instance.new("UIGradient")
+local UIStroke = Instance.new("UIStroke")
+local DropShadow = Instance.new("ImageLabel")
+
+local Intro = Instance.new("Frame")
+local UICorner_2 = Instance.new("UICorner")
+local Logo = Instance.new("ImageButton")
+local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+local Title = Instance.new("TextLabel")
+local Menu = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local Close = Instance.new("TextButton")
+
+-- Element templates
+local Toggle = Instance.new("ImageButton")
+local Button = Instance.new("ImageButton")
+local ComboBox = Instance.new("ImageButton")
+local ComboElem = Instance.new("ImageButton")
+local InputBox = Instance.new("ImageButton")
+local tab = Instance.new("Frame")
+
+-- Properties with enhanced visuals
+
+Arceus.Name = "Arceus"
+Arceus.Enabled = true
+Arceus.ResetOnSpawn = true
+Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Arceus.DisplayOrder = 999999999
+
+-- Main Frame with transparency and gradient
 Main.Name = "Main"
-Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Main.BackgroundTransparency = 0.45 -- transparent background
-Main.BorderSizePixel = 0
-Main.Size = UDim2.new(0.30, 0, 0.30, 0)
-Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-Main.ZIndex = 2
+Main.Parent = Arceus
 Main.Active = true
 Main.Draggable = true
-Main.Parent = ScreenGui
-local mainCorner = Instance.new("UICorner", Main)
-mainCorner.CornerRadius = UDim.new(0.08, 0)
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+Main.BackgroundTransparency = 0.1
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.5, 0, -0.2, 0)
+Main.Size = UDim2.new(0.3, 0, 0.3, 0)
+Main.ZIndex = 1
 
--- Inner overlay for subtle glass effect (thin lighter stroke)
-local TopStroke = Instance.new("UIStroke", Main)
-TopStroke.LineJoinMode = Enum.LineJoinMode.Round
-TopStroke.Thickness = 1
-TopStroke.Transparency = 0.8
-TopStroke.Color = Color3.fromRGB(255,255,255)
+-- Gradient background
+UIGradient_Main.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+}
+UIGradient_Main.Rotation = 45
+UIGradient_Main.Parent = Main
 
--- Intro logo container (centered then moves to corner)
-local Intro = Instance.new("Frame", Main)
+-- Rounded corners
+UICorner.CornerRadius = UDim.new(0.08, 0)
+UICorner.Parent = Main
+
+-- Subtle stroke
+UIStroke.Color = Color3.fromRGB(60, 60, 80)
+UIStroke.Thickness = 2
+UIStroke.Transparency = 0.3
+UIStroke.Parent = Main
+
+-- Drop shadow effect
+DropShadow.Name = "DropShadow"
+DropShadow.Parent = Main
+DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+DropShadow.BackgroundTransparency = 1
+DropShadow.BorderSizePixel = 0
+DropShadow.Position = UDim2.new(0.5, 4, 0.5, 4)
+DropShadow.Size = UDim2.new(1, 8, 1, 8)
+DropShadow.ZIndex = 0
+DropShadow.Image = "rbxassetid://1316045217"
+DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+DropShadow.ImageTransparency = 0.7
+DropShadow.ScaleType = Enum.ScaleType.Slice
+DropShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+
+-- Intro screen with blur effect
 Intro.Name = "Intro"
-Intro.AnchorPoint = Vector2.new(0.5,0.5)
-Intro.BackgroundTransparency = 1
-Intro.BorderSizePixel = 0
+Intro.Parent = Main
+Intro.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+Intro.BackgroundTransparency = 0.05
+Intro.ClipsDescendants = true
 Intro.Size = UDim2.new(1, 0, 1, 0)
-Intro.ZIndex = 3
+Intro.ZIndex = 2
 
-local Logo = Instance.new("ImageButton", Intro)
-Logo.Name = "Logo"
+UICorner_2.CornerRadius = UDim.new(0.08, 0)
+UICorner_2.Parent = Intro
+
+Logo.Parent = Intro
 Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-Logo.Size = UDim2.new(0.75, 0, 0.75, 0)
-Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
+Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Logo.BackgroundTransparency = 1
+Logo.BorderSizePixel = 0
+Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
+Logo.Size = UDim2.new(0.75, 0, 0.75, 0)
+Logo.ZIndex = 3
 Logo.Image = "http://www.roblox.com/asset/?id=9178187770"
-Logo.AutoButtonColor = false
+Logo.ImageTransparency = 0
 Logo.ScaleType = Enum.ScaleType.Fit
-Logo.ZIndex = 4
+Logo.Active = false
 
-local logoAspect = Instance.new("UIAspectRatioConstraint", Logo)
-logoAspect.AspectRatio = 1
+UIAspectRatioConstraint.Parent = Logo
 
--- Title (moved to top-left on open)
-local Title = Instance.new("TextLabel", Main)
+-- Title with glow effect
 Title.Name = "Title"
-Title.AnchorPoint = Vector2.new(0, 0)
+Title.Parent = Main
+Title.AnchorPoint = Vector2.new(1, 0)
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Title.BackgroundTransparency = 1
-Title.Text = "Arceus X <font color=\"rgb(255,0,0)\">|</font> Ui Lib"
-Title.RichText = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.TextYAlignment = Enum.TextYAlignment.Center
-Title.Position = UDim2.new(0.08, 0, 0.06, 0)
-Title.Size = UDim2.new(0.8, 0, 0.12, 0)
+Title.BorderSizePixel = 0
+Title.Position = UDim2.new(0.975, 0, 0.075, 0)
+Title.Size = UDim2.new(0.85, 0, 0.155, 0)
 Title.Font = Enum.Font.TitilliumWeb
 Title.FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Bold)
+Title.RichText = true
+Title.Text = Script_Title
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
-Title.TextColor3 = Color3.fromRGB(235,235,235)
-Title.ZIndex = 5
-Title.TextTransparency = 1 -- start invisible for fade-in
+Title.TextSize = 14
+Title.TextWrapped = true
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextYAlignment = Enum.TextYAlignment.Center
+Title.ZIndex = 2
 
--- Close button
-local Close = Instance.new("TextButton", Main)
+-- Add text shadow
+local TitleShadow = Title:Clone()
+TitleShadow.Name = "TitleShadow"
+TitleShadow.Parent = Main
+TitleShadow.Position = Title.Position + UDim2.new(0, 2, 0, 2)
+TitleShadow.TextColor3 = Color3.fromRGB(0, 0, 0)
+TitleShadow.TextTransparency = 0.7
+TitleShadow.ZIndex = 1
+
+-- Enhanced Menu
+Menu.Name = "Menu"
+Menu.Parent = Main
+Menu.Active = true
+Menu.AnchorPoint = Vector2.new(0.5, 1)
+Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Menu.BackgroundTransparency = 1
+Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Menu.BorderSizePixel = 0
+Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
+Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
+Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
+Menu.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
+Menu.ScrollBarThickness = Menu.AbsoluteSize.X/25
+Menu.ZIndex = 2
+
+UIListLayout.Parent = Menu
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0.015, 0)
+
+-- Enhanced Close Button
 Close.Name = "Close"
-Close.Text = "X"
-Close.Font = Enum.Font.FredokaOne
-Close.TextXAlignment = Enum.TextXAlignment.Center
-Close.TextYAlignment = Enum.TextYAlignment.Center
-Close.AnchorPoint = Vector2.new(1, 0)
+Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Close.BackgroundTransparency = 1
 Close.BorderSizePixel = 0
-Close.Position = UDim2.new(0.98, -6, 0.04, 0)
-Close.Size = UDim2.new(0.08, 0, 0.10, 0)
+Close.Position = UDim2.new(0.8, 0, 0.1, 0)
+Close.Size = UDim2.new(0.15, 0, 0.125, 0)
+Close.Font = Enum.Font.FredokaOne
+Close.Text = "✕"
+Close.TextColor3 = Color3.fromRGB(255, 80, 80)
 Close.TextScaled = true
-Close.TextColor3 = Color3.fromRGB(255, 85, 85)
-Close.ZIndex = 6
-Close.TextTransparency = 1
+Close.TextSize = 14
+Close.TextWrapped = true
+Close.TextXAlignment = Enum.TextXAlignment.Right
+Close.ZIndex = 2
+Close.Parent = Main
 
--- Menu ScrollingFrame
-local Menu = Instance.new("ScrollingFrame", Main)
-Menu.Name = "Menu"
-Menu.AnchorPoint = Vector2.new(0.5, 0)
-Menu.Position = UDim2.new(0.5, 0, 0.22, 0)
-Menu.Size = UDim2.new(0.92, 0, 0.72, 0)
-Menu.BackgroundTransparency = 1
-Menu.BorderSizePixel = 0
-Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
-Menu.ScrollBarThickness = 6
-Menu.ScrollBarImageTransparency = 1 -- invisible scrollbar as requested
-Menu.ZIndex = 5
-Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
+-- Enhanced Toggle Button
+Toggle.Name = "Toggle"
+Toggle.Visible = false
+Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+Toggle.BackgroundTransparency = 0.1
+Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
-local listLayout = Instance.new("UIListLayout", Menu)
-listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-listLayout.Padding = UDim.new(0.02, 0)
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0.2, 0)
+ToggleCorner.Parent = Toggle
 
--- Templates container (not parented to ScreenGui)
-local Templates = Instance.new("Folder")
-Templates.Name = "Templates"
-Templates.Parent = ScreenGui
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = Color3.fromRGB(60, 60, 80)
+ToggleStroke.Thickness = 1
+ToggleStroke.Transparency = 0.5
+ToggleStroke.Parent = Toggle
 
--- Toggle template
-local ToggleTemplate = Instance.new("ImageButton")
-ToggleTemplate.Name = "ToggleTemplate"
-ToggleTemplate.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-ToggleTemplate.BackgroundColor3 = Color3.fromRGB(40,40,40)
-ToggleTemplate.BorderSizePixel = 0
-ToggleTemplate.AutoButtonColor = false
+local Enabled = Instance.new("Frame")
+Enabled.Name = "Enabled"
+Enabled.Parent = Toggle
+Enabled.AnchorPoint = Vector2.new(1, 0.5)
+Enabled.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
+Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
 
-local togCorner = Instance.new("UICorner", ToggleTemplate)
-togCorner.CornerRadius = UDim.new(0.25, 0)
+local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
+UIAspectRatioConstraint_2.Parent = Enabled
 
-local togName = Instance.new("TextLabel", ToggleTemplate)
-togName.Name = "Name"
-togName.BackgroundTransparency = 1
-togName.TextXAlignment = Enum.TextXAlignment.Left
-togName.TextYAlignment = Enum.TextYAlignment.Center
-togName.Position = UDim2.new(0.05, 0, 0, 0)
-togName.Size = UDim2.new(0.65, 0, 1, 0)
-togName.Font = Enum.Font.TitilliumWeb
-togName.TextScaled = true
-togName.TextColor3 = Color3.fromRGB(240,240,240)
+local UICorner_4 = Instance.new("UICorner")
+UICorner_4.CornerRadius = UDim.new(0.3, 0)
+UICorner_4.Parent = Enabled
 
-local togCheckFrame = Instance.new("Frame", ToggleTemplate)
-togCheckFrame.Name = "CheckFrame"
-togCheckFrame.AnchorPoint = Vector2.new(1, 0.5)
-togCheckFrame.Position = UDim2.new(0.95, 0, 0.5, 0)
-togCheckFrame.Size = UDim2.new(0.20, 0, 0.6, 0)
-togCheckFrame.BackgroundTransparency = 1
+local Check = Instance.new("Frame")
+Check.Name = "Check"
+Check.Parent = Enabled
+Check.AnchorPoint = Vector2.new(0.5, 0.5)
+Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Check.Position = UDim2.new(0.5, 0, 0.5, 0)
+Check.Size = UDim2.new(0.65, 0, 0.65, 0)
 
-local check = Instance.new("Frame", togCheckFrame)
-check.Name = "Check"
-check.AnchorPoint = Vector2.new(0.5, 0.5)
-check.Position = UDim2.new(0.5, 0, 0.5, 0)
-check.Size = UDim2.new(0.7, 0, 0.9, 0)
-check.BackgroundColor3 = Color3.fromRGB(200,50,50)
-check.Visible = false
-local checkCorner = Instance.new("UICorner", check)
-checkCorner.CornerRadius = UDim.new(0.3, 0)
+local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
+UIAspectRatioConstraint_3.Parent = Check
 
--- Button template
-local ButtonTemplate = Instance.new("ImageButton")
-ButtonTemplate.Name = "ButtonTemplate"
-ButtonTemplate.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-ButtonTemplate.BackgroundColor3 = Color3.fromRGB(40,40,40)
-ButtonTemplate.AutoButtonColor = false
-ButtonTemplate.BorderSizePixel = 0
-local btnCorner = Instance.new("UICorner", ButtonTemplate)
-btnCorner.CornerRadius = UDim.new(0.25, 0)
-local btnName = Instance.new("TextLabel", ButtonTemplate)
-btnName.Name = "Name"
-btnName.BackgroundTransparency = 1
-btnName.TextXAlignment = Enum.TextXAlignment.Left
-btnName.TextYAlignment = Enum.TextYAlignment.Center
-btnName.Position = UDim2.new(0.05, 0, 0, 0)
-btnName.Size = UDim2.new(0.9, 0, 1, 0)
-btnName.Font = Enum.Font.TitilliumWeb
-btnName.TextScaled = true
-btnName.TextColor3 = Color3.fromRGB(240,240,240)
+local UICorner_5 = Instance.new("UICorner")
+UICorner_5.CornerRadius = UDim.new(0.3, 0)
+UICorner_5.Parent = Check
 
--- Combo templates (collapsed list)
-local ComboTemplate = ToggleTemplate:Clone()
-ComboTemplate.Name = "ComboElementTemplate"
-local ComboItemTemplate = ButtonTemplate:Clone()
-ComboItemTemplate.Name = "ComboItemTemplate"
+local Name = Instance.new("TextLabel")
+Name.Name = "Name"
+Name.Parent = Toggle
+Name.AnchorPoint = Vector2.new(0, 0.5)
+Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name.BackgroundTransparency = 1
+Name.BorderSizePixel = 0
+Name.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name.Font = Enum.Font.TitilliumWeb
+Name.Text = "Toggle"
+Name.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name.TextScaled = true
+Name.TextSize = 14
+Name.TextWrapped = true
+Name.TextXAlignment = Enum.TextXAlignment.Left
+Name.TextYAlignment = Enum.TextYAlignment.Bottom
 
--- InputBox template
-local InputTemplate = ComboTemplate:Clone()
-InputTemplate.Name = "InputTemplate"
-local inputBox = Instance.new("TextBox", InputTemplate)
-inputBox.Name = "TextBox"
-inputBox.AnchorPoint = Vector2.new(1, 0.5)
-inputBox.Position = UDim2.new(0.95, 0, 0.5, 0)
-inputBox.Size = UDim2.new(0.35, 0, 0.6, 0)
-inputBox.BackgroundColor3 = Color3.fromRGB(30,30,30)
-inputBox.BorderSizePixel = 0
-inputBox.Text = ""
-inputBox.PlaceholderText = "Enter text..."
-inputBox.TextColor3 = Color3.fromRGB(240,240,240)
-inputBox.Font = Enum.Font.TitilliumWeb
-inputBox.TextScaled = true
-local inputCorner = Instance.new("UICorner", inputBox)
-inputCorner.CornerRadius = UDim.new(0.2, 0)
+-- Enhanced Button
+Button.Name = "Button"
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+Button.BackgroundTransparency = 0.1
+Button.Size = UDim2.new(0.95, 0, 0, 50)
 
--- Put templates in Templates folder
-ToggleTemplate.Parent = Templates
-ButtonTemplate.Parent = Templates
-ComboTemplate.Parent = Templates
-ComboItemTemplate.Parent = Templates
-InputTemplate.Parent = Templates
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0.2, 0)
+ButtonCorner.Parent = Button
 
--- Internal state
-local elements = 0
+local ButtonStroke = Instance.new("UIStroke")
+ButtonStroke.Color = Color3.fromRGB(60, 60, 80)
+ButtonStroke.Thickness = 1
+ButtonStroke.Transparency = 0.5
+ButtonStroke.Parent = Button
 
--- Utility tweens
-local function tween(obj, props, t, style, dir)
-    style = style or Enum.EasingStyle.Quad
-    dir = dir or Enum.EasingDirection.Out
-    local info = TweenInfo.new(t or 0.25, style, dir)
-    return TweenService:Create(obj, info, props)
+local Name_2 = Instance.new("TextLabel")
+Name_2.Name = "Name"
+Name_2.Parent = Button
+Name_2.AnchorPoint = Vector2.new(0, 0.5)
+Name_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_2.BackgroundTransparency = 1
+Name_2.BorderSizePixel = 0
+Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_2.Size = UDim2.new(0.95, 0, 0.82, 0)
+Name_2.Font = Enum.Font.TitilliumWeb
+Name_2.Text = "Button"
+Name_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_2.TextScaled = true
+Name_2.TextSize = 14
+Name_2.TextWrapped = true
+Name_2.TextXAlignment = Enum.TextXAlignment.Left
+Name_2.TextYAlignment = Enum.TextYAlignment.Bottom
+
+-- Enhanced Input Box
+InputBox.Name = "InputBox"
+InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+InputBox.BackgroundTransparency = 0.1
+InputBox.Size = UDim2.new(0.95, 0, 0, 50)
+InputBox.AutoButtonColor = false
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0.2, 0)
+InputCorner.Parent = InputBox
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Color = Color3.fromRGB(60, 60, 80)
+InputStroke.Thickness = 1
+InputStroke.Transparency = 0.5
+InputStroke.Parent = InputBox
+
+local Name_5 = Instance.new("TextLabel")
+Name_5.Name = "Name"
+Name_5.Parent = InputBox
+Name_5.AnchorPoint = Vector2.new(0, 0.5)
+Name_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_5.BackgroundTransparency = 1
+Name_5.BorderSizePixel = 0
+Name_5.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_5.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_5.Font = Enum.Font.TitilliumWeb
+Name_5.Text = "Input Box"
+Name_5.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_5.TextScaled = true
+Name_5.TextSize = 14
+Name_5.TextWrapped = true
+Name_5.TextXAlignment = Enum.TextXAlignment.Left
+Name_5.TextYAlignment = Enum.TextYAlignment.Bottom
+
+local TextBox = Instance.new("TextBox")
+TextBox.Name = "TextBox"
+TextBox.Parent = InputBox
+TextBox.AnchorPoint = Vector2.new(1, 0.5)
+TextBox.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+TextBox.BackgroundTransparency = 0.1
+TextBox.BorderSizePixel = 0
+TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
+TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
+TextBox.Font = Enum.Font.TitilliumWeb
+TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+TextBox.PlaceholderText = "Enter text..."
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.TextScaled = true
+TextBox.TextSize = 14
+TextBox.TextWrapped = true
+
+local TextBoxCorner = Instance.new("UICorner")
+TextBoxCorner.CornerRadius = UDim.new(0.15, 0)
+TextBoxCorner.Parent = TextBox
+
+-- Enhanced ComboBox
+ComboBox.Name = "ComboBox"
+ComboBox.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+ComboBox.BackgroundTransparency = 0.1
+ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
+
+local ComboCorner = Instance.new("UICorner")
+ComboCorner.CornerRadius = UDim.new(0.2, 0)
+ComboCorner.Parent = ComboBox
+
+local ComboStroke = Instance.new("UIStroke")
+ComboStroke.Color = Color3.fromRGB(60, 60, 80)
+ComboStroke.Thickness = 1
+ComboStroke.Transparency = 0.5
+ComboStroke.Parent = ComboBox
+
+local Name_4 = Instance.new("TextLabel")
+Name_4.Name = "Name"
+Name_4.Parent = ComboBox
+Name_4.AnchorPoint = Vector2.new(0, 0.5)
+Name_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_4.BackgroundTransparency = 1
+Name_4.BorderSizePixel = 0
+Name_4.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_4.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_4.Font = Enum.Font.TitilliumWeb
+Name_4.Text = "ComboBox"
+Name_4.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_4.TextScaled = true
+Name_4.TextSize = 14
+Name_4.TextWrapped = true
+Name_4.TextXAlignment = Enum.TextXAlignment.Left
+Name_4.TextYAlignment = Enum.TextYAlignment.Bottom
+
+local Img_2 = Instance.new("TextLabel")
+Img_2.Name = "Img"
+Img_2.Parent = ComboBox
+Img_2.AnchorPoint = Vector2.new(1, 0.5)
+Img_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Img_2.BackgroundTransparency = 1
+Img_2.BorderSizePixel = 0
+Img_2.Rotation = 180
+Img_2.Position = UDim2.new(0.975, 0, 0.5, 0)
+Img_2.Size = UDim2.new(0.75, 0, 0.75, 0)
+Img_2.Font = Enum.Font.FredokaOne
+Img_2.Text = "▾"
+Img_2.TextColor3 = Color3.fromRGB(255, 80, 80)
+Img_2.TextScaled = true
+Img_2.TextSize = 14
+Img_2.TextWrapped = true
+
+local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
+UIAspectRatioConstraint_5.Parent = Img_2
+
+-- Enhanced Combo Element
+ComboElem.Name = "ComboElem"
+ComboElem.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+ComboElem.BackgroundTransparency = 0.1
+ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
+
+local ElemCorner = Instance.new("UICorner")
+ElemCorner.CornerRadius = UDim.new(0.15, 0)
+ElemCorner.Parent = ComboElem
+
+local ElemStroke = Instance.new("UIStroke")
+ElemStroke.Color = Color3.fromRGB(50, 50, 70)
+ElemStroke.Thickness = 1
+ElemStroke.Transparency = 0.5
+ElemStroke.Parent = ComboElem
+
+local Name_3 = Instance.new("TextLabel")
+Name_3.Name = "Name"
+Name_3.Parent = ComboElem
+Name_3.AnchorPoint = Vector2.new(0, 0.5)
+Name_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_3.BackgroundTransparency = 1
+Name_3.BorderSizePixel = 0
+Name_3.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_3.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_3.Font = Enum.Font.TitilliumWeb
+Name_3.Text = "Option"
+Name_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_3.TextScaled = true
+Name_3.TextSize = 14
+Name_3.TextWrapped = true
+Name_3.TextXAlignment = Enum.TextXAlignment.Left
+Name_3.TextYAlignment = Enum.TextYAlignment.Bottom
+
+-- Tab (spacer)
+tab.Name = "Tab"
+tab.Visible = false
+tab.BackgroundTransparency = 1
+tab.Size = UDim2.new(0.95, 0, 0.015, 0)
+
+-- Animation Functions
+local TweenService = game:GetService("TweenService")
+
+local function fadeIn(object, transparency)
+    local tween = TweenService:Create(object, FadeIn, {BackgroundTransparency = transparency or 0.1})
+    tween:Play()
+    return tween
 end
 
--- Glow flash function (for click)
-local function glowFlash(guiObject, color)
-    -- ensure a UIStroke exists
-    local stroke = guiObject:FindFirstChildOfClass("UIStroke")
-    if not stroke then
-        stroke = Instance.new("UIStroke")
-        stroke.Parent = guiObject
-        stroke.Thickness = 3
-        stroke.Transparency = 1
-        stroke.Color = color or Color3.fromRGB(75,210,255)
-    end
-    stroke.Transparency = 1
-    local t1 = tween(stroke, {Transparency = 0}, 0.12)
-    local t2 = tween(stroke, {Transparency = 1}, 0.3)
-    t1:Play()
-    t1.Completed:Wait()
-    t2:Play()
+local function fadeOut(object, transparency)
+    local tween = TweenService:Create(object, FadeOut, {BackgroundTransparency = transparency or 0.8})
+    tween:Play()
+    return tween
 end
 
--- Sequential show of menu children (staggered)
-local function showMenuItemsSequentially()
-    local children = Menu:GetChildren()
-    table.sort(children, function(a,b)
-        return (a.LayoutOrder or 0) < (b.LayoutOrder or 0)
-    end)
-    local delayTime = 0
-    for i, child in ipairs(children) do
-        if child:IsA("GuiObject") then
-            child.PropsInitial = child.PropsInitial or {}
-            -- start invisible and slightly lower
-            child.Position = child.Position + UDim2.new(0,0,0.03,0)
-            child.Visible = true
-            child.BackgroundTransparency = 1
-            child.TextTransparency = child:FindFirstChildWhichIsA("TextLabel") and 1 or (child.TextTransparency or 1)
-            delayTime = delayTime + 0.06
-            -- schedule tweens
-            spawn(function()
-                task.wait(delayTime)
-                tween(child, {BackgroundTransparency = 0}, 0.18):Play()
-                -- if has text labels, tween text
-                for _, v in ipairs(child:GetDescendants()) do
-                    if v:IsA("TextLabel") or v:IsA("TextBox") or v:IsA("TextButton") then
-                        tween(v, {TextTransparency = 0}, 0.18):Play()
-                    end
-                end
-                tween(child, {Position = child.Position - UDim2.new(0,0,0.03,0)}, 0.18):Play()
-            end)
+local function slideIn(object, position)
+    local tween = TweenService:Create(object, SlideIn, {Position = position})
+    tween:Play()
+    return tween
+end
+
+local function scaleUp(object, size)
+    local tween = TweenService:Create(object, ScaleUp, {Size = size})
+    tween:Play()
+    return tween
+end
+
+local function scaleDown(object, size)
+    local tween = TweenService:Create(object, ScaleDown, {Size = size})
+    tween:Play()
+    return tween
+end
+
+-- Enhanced Close Button Animation
+Close.MouseButton1Click:Connect(function()
+    Logo.Active = true
+    
+    -- Fade in intro with blur effect
+    fadeIn(Intro, 0.05)
+    
+    task.wait(0.2)
+    
+    -- Logo animation
+    scaleUp(Logo, UDim2.fromScale(0.75, 0.75))
+    
+    task.wait(0.25)
+    
+    -- Scale down main window
+    scaleDown(Main, UDim2.fromScale(0.1, 0.175))
+    
+    task.wait(0.25)
+    
+    -- Hide all elements with fade out
+    for _, obj in pairs(Main:GetChildren()) do
+        if obj:IsA("GuiObject") and obj ~= Intro and obj ~= Logo and obj ~= DropShadow then
+            fadeOut(obj, 1):Play()
+            task.wait(0.02)
         end
     end
+    
+    task.wait(0.1)
+    
+    -- Final fade effects
+    fadeOut(Logo, 0.8)
+    fadeOut(Intro, 1)
+    fadeOut(Main, 0.9)
+    fadeOut(DropShadow, 1)
+end)
+
+-- Enhanced Logo Click Animation
+Logo.MouseButton1Click:Connect(function()
+    Logo.Active = false
+    
+    -- Fade in effects
+    fadeIn(Logo, 0)
+    fadeIn(Intro, 0.05)
+    fadeIn(Main, 0.1)
+    fadeIn(DropShadow, 0.7)
+    
+    task.wait(0.2)
+    
+    -- Scale up main window
+    scaleUp(Main, UDim2.fromScale(0.3, 0.3))
+    
+    task.wait(0.25)
+    
+    -- Logo to corner animation
+    scaleDown(Logo, UDim2.fromScale(0.175, 0.175))
+    
+    -- Show all elements with fade in
+    for _, obj in pairs(Main:GetChildren()) do
+        if obj:IsA("GuiObject") and obj ~= Intro and obj ~= Logo and obj ~= DropShadow then
+            obj.Visible = true
+            fadeIn(obj)
+            task.wait(0.02)
+        end
+    end
+    
+    task.wait(0.2)
+    
+    -- Fade out intro
+    fadeOut(Intro, 1)
+end)
+
+-- Enhanced Hover Effects
+local function setupHoverEffect(button)
+    local originalColor = button.BackgroundColor3
+    local hoverColor = Color3.fromRGB(
+        math.min(255, originalColor.R * 255 + 15),
+        math.min(255, originalColor.G * 255 + 15),
+        math.min(255, originalColor.B * 255 + 15)
+    )
+    
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, FadeIn, {BackgroundColor3 = hoverColor}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, FadeIn, {BackgroundColor3 = originalColor}):Play()
+    end)
 end
 
--- Public API: AddToggle
+-- Setup hover effects for template elements
+setupHoverEffect(Toggle)
+setupHoverEffect(Button)
+setupHoverEffect(ComboBox)
+setupHoverEffect(ComboElem)
+setupHoverEffect(InputBox)
+
+-- Parent setup function
+local function uiparent()
+    local success, parent = pcall(function()
+        return gethui()
+    end)
+    
+    if not success then
+        return game:GetService("CoreGui")
+    end
+    
+    return parent
+end
+
+local success, err = pcall(function()
+    Arceus.Parent = uiparent()
+end)
+
+if not success then
+    Arceus.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+end
+
+-- Initialize
+local element_height = 50 * Menu.AbsoluteSize.Y / 210
+local elements = 0
+
+local function AddSpace(parent)
+    local space = tab:Clone()
+    space.Parent = parent
+    space.LayoutOrder = elements
+    space.Visible = true
+    elements += 1
+end
+
+-- Enhanced UI Functions
 function lib:AddToggle(name, funct, enabled, ...)
+    local newTog = Toggle:Clone()
     local args = {...}
-    local newTog = Templates.ToggleTemplate:Clone()
-    newTog.Name = name
-    newTog.LayoutOrder = elements
-    newTog.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-    newTog.Parent = Menu
-    newTog.Visible = false
-
-    newTog:WaitForChild("Name").Text = name
-    local checkFrame = newTog:WaitForChild("CheckFrame")
-    local check = checkFrame:WaitForChild("Check")
-    check.Visible = enabled and true or false
-
+    
+    -- Apply hover effect
+    setupHoverEffect(newTog)
+    
     newTog.MouseButton1Click:Connect(function()
         enabled = not enabled
+        
+        -- Animate toggle state change
+        local check = newTog:WaitForChild("Enabled"):WaitForChild("Check")
+        local tween = TweenService:Create(check, ScaleUp, {
+            Size = enabled and UDim2.fromScale(0.65, 0.65) or UDim2.fromScale(0, 0)
+        })
+        tween:Play()
+        
         check.Visible = enabled
-        -- glow flash on click
-        glowFlash(newTog, Color3.fromRGB(100,200,255))
-        -- call user function protected
-        local ok, err = pcall(function() funct(enabled, unpack(args)) end)
-        if not ok then warn("Toggle callback error:", err) end
+        funct(enabled, unpack(args))
     end)
-
-    elements = elements + 1
+    
+    newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
+    newTog:WaitForChild("Name").Text = name
+    
+    newTog.Size = UDim2.new(0.95, 0, 0, element_height)
+    newTog.Name = name
+    newTog.Parent = Menu
+    newTog.LayoutOrder = elements
+    newTog.Visible = true
+    
+    elements += 1
+    AddSpace(Menu)
+    
     return newTog
 end
 
--- Public API: AddButton
 function lib:AddButton(name, funct, ...)
+    local newBut = Button:Clone()
     local args = {...}
-    local newBtn = Templates.ButtonTemplate:Clone()
-    newBtn.Name = name
-    newBtn.LayoutOrder = elements
-    newBtn.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-    newBtn.Parent = Menu
-    newBtn.Visible = false
-
-    newBtn:WaitForChild("Name").Text = name
-
-    newBtn.MouseButton1Click:Connect(function()
-        glowFlash(newBtn, Color3.fromRGB(150, 100, 255)) -- glow color
-        local ok, err = pcall(function() funct(unpack(args)) end)
-        if not ok then warn("Button callback error:", err) end
+    
+    -- Apply hover effect
+    setupHoverEffect(newBut)
+    
+    newBut.MouseButton1Click:Connect(function()
+        -- Button press animation
+        TweenService:Create(newBut, ScaleDown, {Size = newBut.Size - UDim2.new(0, 2, 0, 2)}):Play()
+        task.wait(0.1)
+        TweenService:Create(newBut, ScaleUp, {Size = newBut.Size}):Play()
+        
+        funct(unpack(args))
     end)
-
-    elements = elements + 1
-    return newBtn
+    
+    newBut:WaitForChild("Name").Text = name
+    newBut.Size = UDim2.new(0.95, 0, 0, element_height)
+    newBut.Name = name
+    newBut.Parent = Menu
+    newBut.LayoutOrder = elements
+    newBut.Visible = true
+    
+    elements += 1
+    AddSpace(Menu)
+    
+    return newBut
 end
 
--- Public API: AddInputBox
 function lib:AddInputBox(name, funct, placeholder, default, ...)
+    local newInput = InputBox:Clone()
     local args = {...}
-    local newInp = Templates.InputTemplate:Clone()
-    newInp.Name = name
-    newInp.LayoutOrder = elements
-    newInp.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-    newInp.Parent = Menu
-    newInp.Visible = false
-
-    local label = newInp:WaitForChild("Name")
-    local textBox = newInp:WaitForChild("TextBox")
-
-    label.Text = name
-    if placeholder then textBox.PlaceholderText = placeholder end
-    if default then textBox.Text = default end
-
-    local function submitText()
-        local input = textBox.Text
-        glowFlash(newInp, Color3.fromRGB(255,200,100))
-        local ok, err = pcall(function() funct(input, unpack(args)) end)
-        if not ok then warn("Input callback error:", err) end
+    
+    -- Apply hover effect
+    setupHoverEffect(newInput)
+    
+    newInput:WaitForChild("Name").Text = name
+    if placeholder then
+        newInput.TextBox.PlaceholderText = placeholder
     end
-
-    textBox.FocusLost:Connect(function(enter)
-        if enter then submitText() end
+    if default then
+        newInput.TextBox.Text = default
+    end
+    
+    local textBox = newInput.TextBox
+    
+    -- Enhanced text box focus effects
+    textBox.Focused:Connect(function()
+        TweenService:Create(textBox, FadeIn, {BackgroundColor3 = Color3.fromRGB(45, 45, 60)}):Play()
     end)
-
-    newInp.MouseButton1Click:Connect(function()
+    
+    textBox.FocusLost:Connect(function(enterPressed)
+        TweenService:Create(textBox, FadeIn, {BackgroundColor3 = Color3.fromRGB(35, 35, 45)}):Play()
+        if enterPressed then
+            funct(textBox.Text, unpack(args))
+        end
+    end)
+    
+    newInput.MouseButton1Click:Connect(function()
         if not textBox:IsFocused() then
             textBox:CaptureFocus()
         end
     end)
-
-    elements = elements + 1
-    return {
-        Frame = newInp,
+    
+    newInput.Size = UDim2.new(0.95, 0, 0, element_height)
+    newInput.Name = name
+    newInput.Parent = Menu
+    newInput.LayoutOrder = elements
+    newInput.Visible = true
+    
+    elements += 1
+    AddSpace(Menu)
+    
+    -- Return control object
+    local inputObj = {
+        Frame = newInput,
         TextBox = textBox,
-        GetText = function() return textBox.Text end,
-        SetText = function(t) textBox.Text = t or "" end,
-        Clear = function() textBox.Text = "" end,
-        SetPlaceholder = function(p) textBox.PlaceholderText = p or "" end
-    }
-end
-
--- Public API: AddComboBox (simple collapsing list)
-function lib:AddComboBox(labelText, options, callback, ...)
-    local args = {...}
-    local main = Templates.ComboElementTemplate:Clone()
-    main.Name = labelText
-    main.LayoutOrder = elements
-    main.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-    main.Parent = Menu
-    main.Visible = false
-
-    local label = main:WaitForChild("Name")
-    label.Text = labelText .. ": " .. (options[1] or "")
-
-    local opened = false
-    local items = {}
-
-    main.MouseButton1Click:Connect(function()
-        opened = not opened
-        glowFlash(main, Color3.fromRGB(120,255,200))
-        for _, it in ipairs(items) do
-            it.Visible = opened
+        GetText = function()
+            return textBox.Text
+        end,
+        SetText = function(newText)
+            textBox.Text = newText or ""
+        end,
+        Clear = function()
+            textBox.Text = ""
+        end,
+        SetPlaceholder = function(placeholderText)
+            textBox.PlaceholderText = placeholderText or "Enter text..."
         end
-    end)
-
-    elements = elements + 1
-
-    for i, opt in ipairs(options) do
-        local item = Templates.ComboItemTemplate:Clone()
-        item.Name = opt
-        item.LayoutOrder = elements
-        item.Size = UDim2.new(0.95, 0, 0, elementHeightBase)
-        item.Parent = Menu
-        item.Visible = false
-
-        item:WaitForChild("Name").Text = opt
-        item.MouseButton1Click:Connect(function()
-            label.Text = labelText .. ": " .. opt
-            opened = false
-            for _, it in ipairs(items) do it.Visible = false end
-            glowFlash(item, Color3.fromRGB(200,120,255))
-            local ok, err = pcall(function() callback(opt, unpack(args)) end)
-            if not ok then warn("Combo callback error:", err) end
-        end)
-
-        table.insert(items, item)
-        elements = elements + 1
-    end
-
-    return main
+    }
+    
+    return inputObj
 end
 
--- Styling / Setters
-function lib:SetTitle(txt)
-    Title.Text = txt or Title.Text
-end
-
-function lib:SetIcon(img)
-    Logo.Image = img or Logo.Image
-end
-
-function lib:SetBackgroundColor(r,g,b)
-    Main.BackgroundColor3 = Color3.fromRGB(r,g,b)
-end
-
-function lib:SetTitleColor(r,g,b)
-    Title.TextColor3 = Color3.fromRGB(r,g,b)
-end
-
-function lib:SetCloseBtnColor(r,g,b)
-    Close.TextColor3 = Color3.fromRGB(r,g,b)
-end
-
--- Close interactions: collapse to mini (keeps logo centered)
-Close.MouseButton1Click:Connect(function()
-    glowFlash(Close, Color3.fromRGB(255,100,100))
-    -- shrink main and hide menu items
-    tween(Main, {Size = UDim2.new(0.10,0,0.175,0)}, 0.25):Play()
-    tween(Shadow, {Size = UDim2.new(0.105,6,0.185,6)}, 0.25):Play()
-    for _,obj in pairs(Menu:GetChildren()) do
-        if obj:IsA("GuiObject") then
-            tween(obj, {BackgroundTransparency = 1}, 0.18):Play()
-            for _,v in ipairs(obj:GetDescendants()) do
-                if v:IsA("TextLabel") or v:IsA("TextBox") then
-                    tween(v, {TextTransparency = 1}, 0.18):Play()
-                end
+function lib:AddComboBox(text, options, funct, ...)
+    local newCombo = ComboBox:Clone()
+    local enabled = false
+    local elems = {}
+    local args = {...}
+    
+    -- Apply hover effect
+    setupHoverEffect(newCombo)
+    
+    local function setBoxState()
+        local img = newCombo:WaitForChild("Img")
+        TweenService:Create(img, FadeIn, {Rotation = enabled and 0 or 180}):Play()
+        
+        for i, elem in ipairs(elems) do
+            if enabled then
+                elem.Visible = true
+                TweenService:Create(elem, FadeIn, {Position = UDim2.new(0, 0, 0, (i * element_height) + (i * 5))}):Play()
+            else
+                TweenService:Create(elem, FadeOut, {Position = UDim2.new(0, 0, 0, 0)}):Play()
+                task.wait(0.05)
+                elem.Visible = false
             end
         end
     end
-end)
-
--- Logo click expands UI
-Logo.MouseButton1Click:Connect(function()
-    glowFlash(Logo, Color3.fromRGB(80,200,255))
-    tween(Main, {Size = UDim2.new(0.30,0,0.30,0)}, 0.28):Play()
-    tween(Shadow, {Size = UDim2.new(0.305,6,0.305,6)}, 0.28):Play()
-    -- Reveal menu items sequentially
-    showMenuItemsSequentially()
-end)
-
--- Initialization animation (whole GUI fade-in + logo move)
-do
-    -- start invisible
-    Main.BackgroundTransparency = 1
-    Shadow.BackgroundTransparency = 1
-    Title.TextTransparency = 1
-    Close.TextTransparency = 1
-    Logo.ImageTransparency = 1
-
-    -- small initial offset (slide up)
-    Main.Position = UDim2.new(0.5, 0, 0.58, 0)
-    Shadow.Position = UDim2.new(0.5, 0, 0.58, 10)
-
-    -- Fade in main + shadow
-    task.spawn(function()
-        tween(Shadow, {BackgroundTransparency = 0.75}, 0.5, Enum.EasingStyle.Quad):Play()
-        tween(Main, {BackgroundTransparency = 0.45, Position = UDim2.new(0.5, 0, 0.5, 0)}, 0.6, Enum.EasingStyle.Quart):Play()
-        tween(Logo, {ImageTransparency = 0}, 0.45):Play()
-        task.wait(0.18)
-        tween(Title, {TextTransparency = 0}, 0.3):Play()
-        tween(Close, {TextTransparency = 0}, 0.3):Play()
-        -- After main open, shrink logo to corner and show menu items staggered
-        task.wait(1.0)
-        Logo:TweenSizeAndPosition(UDim2.fromScale(0.175,0.175), UDim2.fromScale(0.085,0.15), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.35, true)
-        task.wait(0.28)
-        showMenuItemsSequentially()
+    
+    newCombo.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        setBoxState()
     end)
+    
+    newCombo:WaitForChild("Name").Text = text .. ": " .. (#options > 0 and options[1] or "")
+    newCombo.Size = UDim2.new(0.95, 0, 0, element_height)
+    newCombo.Name = #options > 0 and options[1] or ""
+    newCombo.Parent = Menu
+    newCombo.LayoutOrder = elements
+    newCombo.Visible = true
+    
+    elements += 1
+    AddSpace(Menu)
+    
+    for _, name in ipairs(options) do
+        local newElem = ComboElem:Clone()
+        table.insert(elems, newElem)
+        
+        -- Apply hover effect
+        setupHoverEffect(newElem)
+        
+        newElem.MouseButton1Click:Connect(function()
+            newCombo:WaitForChild("Name").Text = text .. ": " .. name
+            enabled = false
+            setBoxState()
+            
+            funct(name, unpack(args))
+        end)
+        
+        newElem:WaitForChild("Name").Text = name
+        newElem.Size = UDim2.new(0.95, 0, 0, element_height)
+        newElem.Name = name
+        newElem.Parent = Menu
+        newElem.LayoutOrder = elements
+        newElem.Visible = false
+        
+        elements += 1
+        AddSpace(Menu)
+    end
+    
+    return newCombo
 end
 
--- Ensure the canvas size updates as elements are added
-local function updateCanvasSize()
-    -- small delay to allow LayoutOrder changes
-    task.spawn(function()
-        task.wait(0.05)
-        Menu.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 8)
-    end)
+-- Enhanced Theme Functions
+function lib:SetTitle(txt)
+    Title.Text = txt
+    TitleShadow.Text = txt
 end
 
--- Hook into descendant added events of Menu to update canvas
-listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateCanvasSize)
+function lib:SetIcon(img)
+    Logo.Image = img
+end
 
--- Return library
-return setmetatable(lib, {
-    __index = lib,
-    __call = function(_, ...) return lib end
-})
+function lib:SetBackgroundColor(r, g, b)
+    Main.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    Intro.BackgroundColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetTitleColor(r, g, b)
+    Title.TextColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetCloseBtnColor(r, g, b)
+    Close.TextColor3 = Color3.fromRGB(r, g, b)
+    Img_2.TextColor3 = Color3.fromRGB(r, g, b)
+    Check.BackgroundColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetButtonsColor(r, g, b)
+    local color = Color3.fromRGB(r, g, b)
+    Toggle.BackgroundColor3 = color
+    Button.BackgroundColor3 = color
+    ComboElem.BackgroundColor3 = color
+    ComboBox.BackgroundColor3 = color
+    InputBox.BackgroundColor3 = color
+end
+
+function lib:SetInputBoxColor(r, g, b)
+    InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    TextBox.BackgroundColor3 = Color3.fromRGB(
+        math.max(0, r-15), 
+        math.max(0, g-15), 
+        math.max(0, b-15)
+    )
+end
+
+function lib:SetTransparency(level)
+    Main.BackgroundTransparency = level
+    Toggle.BackgroundTransparency = level
+    Button.BackgroundTransparency = level
+    ComboBox.BackgroundTransparency = level
+    InputBox.BackgroundTransparency = level
+    DropShadow.ImageTransparency = level + 0.2
+end
+
+function lib:EnableShadow(enabled)
+    DropShadow.Visible = enabled
+end
+
+function lib:SetTheme(theme)
+    if theme == "Default" then
+        -- Keep current settings
+    elseif theme == "Glass" then
+        lib:SetTransparency(0.3)
+        lib:SetButtonsColor(60, 60, 80)
+        lib:SetCloseBtnColor(100, 200, 255)
+        lib:SetBackgroundColor(20, 25, 40)
+        lib:EnableShadow(true)
+    elseif theme == "Dark" then
+        lib:SetTransparency(0.1)
+        lib:SetButtonsColor(30, 30, 40)
+        lib:Set
