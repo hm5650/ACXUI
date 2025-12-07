@@ -1,52 +1,65 @@
 local lib = {}
 
-local Script_Title = "Arceus X <font color="rgb(255, 0, 0)">|</font> TCMD UI"
+local Script_Title = "Arceus X <font color=\"rgb(74, 208, 238)\">|</font> TCMD Style"
 
 -- Instances:
 local Arceus = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
+local Border = Instance.new("UIStroke")
+local PulseOutline = Instance.new("UIStroke")
 local Intro = Instance.new("Frame")
 local UICorner_2 = Instance.new("UICorner")
 local Logo = Instance.new("ImageButton")
 local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
 local Title = Instance.new("TextLabel")
+local Menu = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
 local Header = Instance.new("Frame")
 local HeaderBackground = Instance.new("Frame")
 local HeaderCorner = Instance.new("UICorner")
+local TitleContainer = Instance.new("Frame")
+local Toggle = Instance.new("ImageButton")
+local UICorner_3 = Instance.new("UICorner")
+local ToggleBorder = Instance.new("UIStroke")
+local Enabled = Instance.new("Frame")
+local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
+local UICorner_4 = Instance.new("UICorner")
+local Check = Instance.new("Frame")
+local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
+local UICorner_5 = Instance.new("UICorner")
+local Name = Instance.new("TextLabel")
+local Button = Instance.new("ImageButton")
+local UICorner_6 = Instance.new("UICorner")
+local ButtonBorder = Instance.new("UIStroke")
+local Name_2 = Instance.new("TextLabel")
+local tab = Instance.new("Frame")
 local Close = Instance.new("TextButton")
 local CloseCorner = Instance.new("UICorner")
-local Menu = Instance.new("ScrollingFrame")
-local UIListLayout = Instance.new("UIListLayout")
-local Toggle = Instance.new("Frame")
-local ToggleCorner = Instance.new("UICorner")
-local ToggleStroke = Instance.new("UIStroke")
-local Enabled = Instance.new("Frame")
-local EnabledCorner = Instance.new("UICorner")
-local Check = Instance.new("Frame")
-local CheckCorner = Instance.new("UICorner")
-local Name = Instance.new("TextLabel")
-local UIGradient = Instance.new("UIGradient")
-local Button = Instance.new("Frame")
-local ButtonCorner = Instance.new("UICorner")
-local ButtonStroke = Instance.new("UIStroke")
-local Name_2 = Instance.new("TextLabel")
-local ButtonGradient = Instance.new("UIGradient")
-
--- Input Box
-local InputBox = Instance.new("Frame")
-local InputCorner = Instance.new("UICorner")
-local InputStroke = Instance.new("UIStroke")
+local ComboElem = Instance.new("ImageButton")
+local UICorner_7 = Instance.new("UICorner")
+local ComboElemBorder = Instance.new("UIStroke")
+local Name_3 = Instance.new("TextLabel")
+local Img = Instance.new("TextLabel")
+local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
+local ComboBox = Instance.new("ImageButton")
+local UICorner_8 = Instance.new("UICorner")
+local ComboBoxBorder = Instance.new("UIStroke")
+local Name_4 = Instance.new("TextLabel")
+local Img_2 = Instance.new("TextLabel")
+local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
+local InputBox = Instance.new("ImageButton")
+local UICorner_9 = Instance.new("UICorner")
+local InputBoxBorder = Instance.new("UIStroke")
 local Name_5 = Instance.new("TextLabel")
-local InputGradient = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
-local TextCorner = Instance.new("UICorner")
+local UICorner_10 = Instance.new("UICorner")
+local TextBoxBorder = Instance.new("UIStroke")
 
 -- Properties:
-Arceus.Name = "ArceusX_TCMD"
+Arceus.Name = "Arceus"
 Arceus.Enabled = true
-Arceus.ResetOnSpawn = true
+Arceus.ResetOnSpawn = false
 Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Arceus.DisplayOrder = 999999999
 
@@ -56,18 +69,66 @@ Main.Active = true
 Main.Draggable = false
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+Main.BackgroundTransparency = 0.1
 Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.35, 0, 0.3, 0)
+Main.Position = UDim2.new(0.5, 0, -0.2, 0)
 Main.Size = UDim2.new(0.3, 0, 0.4, 0)
 Main.ClipsDescendants = true
 
 UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = Main
 
-UIStroke.Color = Color3.fromRGB(80, 80, 90)
-UIStroke.Thickness = 1
-UIStroke.Transparency = 0.5
-UIStroke.Parent = Main
+Border.Color = Color3.fromRGB(80, 80, 90)
+Border.Thickness = 1
+Border.Transparency = 0.5
+Border.Parent = Main
+
+PulseOutline.Color = Color3.fromRGB(150, 150, 150)
+PulseOutline.Thickness = 2
+PulseOutline.Transparency = 1
+PulseOutline.Parent = Main
+
+Header.Name = "Header"
+Header.Size = UDim2.new(1, 0, 0.12, 0)
+Header.Position = UDim2.new(0, 0, 0, 0)
+Header.BackgroundTransparency = 1
+Header.ZIndex = 10
+Header.Parent = Main
+
+HeaderBackground.Name = "HeaderBackground"
+HeaderBackground.Size = UDim2.new(1, 0, 1, 0)
+HeaderBackground.Position = UDim2.new(0, 0, 0, 0)
+HeaderBackground.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+HeaderBackground.BackgroundTransparency = 0.2
+HeaderBackground.BorderSizePixel = 0
+HeaderBackground.ZIndex = 1
+HeaderBackground.Parent = Header
+
+HeaderCorner.CornerRadius = UDim.new(0, 8)
+HeaderCorner.Parent = HeaderBackground
+
+TitleContainer.Name = "TitleContainer"
+TitleContainer.Size = UDim2.new(0.7, 0, 0.8, 0)
+TitleContainer.Position = UDim2.new(0.1, 0, 0.1, 0)
+TitleContainer.BackgroundTransparency = 1
+TitleContainer.ZIndex = 2
+TitleContainer.Parent = Header
+
+Title.Name = "Title"
+Title.Parent = TitleContainer
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1
+Title.BorderSizePixel = 0
+Title.Font = Enum.Font.GothamSemibold
+Title.RichText = true
+Title.Text = Script_Title
+Title.TextColor3 = Color3.fromRGB(220, 220, 220)
+Title.TextScaled = true
+Title.TextSize = 14
+Title.TextWrapped = true
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextYAlignment = Enum.TextYAlignment.Center
 
 Intro.Name = "Intro"
 Intro.Parent = Main
@@ -93,338 +154,507 @@ Logo.Active = false
 
 UIAspectRatioConstraint.Parent = Logo
 
--- Header for dragging (TCMD Style)
-Header.Name = "Header"
-Header.Size = UDim2.new(1, 0, 0.12, 0)
-Header.Position = UDim2.new(0, 0, 0, 0)
-Header.BackgroundTransparency = 1
-Header.ZIndex = 10
-Header.Parent = Main
+Menu.Name = "Menu"
+Menu.Parent = Main
+Menu.Active = true
+Menu.AnchorPoint = Vector2.new(0.5, 1)
+Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Menu.BackgroundTransparency = 1
+Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Menu.BorderSizePixel = 0
+Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
+Menu.Size = UDim2.new(0.95, 0, 0.78, 0)
+Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
+Menu.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+Menu.ScrollBarThickness = 4
 
-HeaderBackground.Size = UDim2.new(1, 0, 1, 0)
-HeaderBackground.Position = UDim2.new(0, 0, 0, 0)
-HeaderBackground.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
-HeaderBackground.BackgroundTransparency = 0.2
-HeaderBackground.BorderSizePixel = 0
-HeaderBackground.ZIndex = 1
-HeaderBackground.Parent = Header
+UIListLayout.Parent = Menu
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 15)
 
-HeaderCorner.CornerRadius = UDim.new(0, 8)
-HeaderCorner.Parent = HeaderBackground
+Toggle.Name = "Toggle"
+Toggle.Visible = false
+Toggle.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+Toggle.BackgroundTransparency = 0.9
+Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
-Title.Name = "Title"
-Title.Parent = Header
-Title.AnchorPoint = Vector2.new(0, 0.5)
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0.05, 0, 0.5, 0)
-Title.Size = UDim2.new(0.75, 0, 0.8, 0)
-Title.Font = Enum.Font.GothamSemibold
-Title.FontFace = Font.new("rbxasset://fonts/families/Gotham.json", Enum.FontWeight.Semibold)
-Title.RichText = true
-Title.Text = Script_Title
-Title.TextColor3 = Color3.fromRGB(220, 220, 220)
-Title.TextScaled = true
-Title.TextSize = 14
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.TextYAlignment = Enum.TextYAlignment.Center
-Title.ZIndex = 2
+UICorner_3.CornerRadius = UDim.new(0, 4)
+UICorner_3.Parent = Toggle
+
+ToggleBorder.Color = Color3.fromRGB(80, 80, 90)
+ToggleBorder.Thickness = 1
+ToggleBorder.Transparency = 0.5
+ToggleBorder.Parent = Toggle
+
+Enabled.Name = "Enabled"
+Enabled.Parent = Toggle
+Enabled.AnchorPoint = Vector2.new(1, 0.5)
+Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+Enabled.Position = UDim2.new(0.95, 0, 0.5, 0)
+Enabled.Size = UDim2.new(0.15, 0, 0.6, 0)
+
+UIAspectRatioConstraint_2.Parent = Enabled
+
+UICorner_4.CornerRadius = UDim.new(0, 4)
+UICorner_4.Parent = Enabled
+
+Check.Name = "Check"
+Check.Parent = Enabled
+Check.AnchorPoint = Vector2.new(0.5, 0.5)
+Check.BackgroundColor3 = Color3.fromRGB(74, 208, 238)
+Check.Position = UDim2.new(0.5, 0, 0.5, 0)
+Check.Size = UDim2.new(0.65, 0, 0.65, 0)
+
+UIAspectRatioConstraint_3.Parent = Check
+
+UICorner_5.CornerRadius = UDim.new(0, 2)
+UICorner_5.Parent = Check
+
+Name.Name = "Name"
+Name.Parent = Toggle
+Name.AnchorPoint = Vector2.new(0, 0.5)
+Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name.BackgroundTransparency = 1
+Name.BorderSizePixel = 0
+Name.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name.Font = Enum.Font.Gotham
+Name.Text = "Toggle"
+Name.TextColor3 = Color3.fromRGB(200, 200, 210)
+Name.TextScaled = true
+Name.TextSize = 14
+Name.TextWrapped = true
+Name.TextXAlignment = Enum.TextXAlignment.Left
+Name.TextYAlignment = Enum.TextYAlignment.Center
+
+Button.Name = "Button"
+Button.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+Button.BackgroundTransparency = 0.9
+Button.Size = UDim2.new(0.95, 0, 0, 50)
+
+UICorner_6.CornerRadius = UDim.new(0, 4)
+UICorner_6.Parent = Button
+
+ButtonBorder.Color = Color3.fromRGB(80, 80, 90)
+ButtonBorder.Thickness = 1
+ButtonBorder.Transparency = 0.5
+ButtonBorder.Parent = Button
+
+Name_2.Name = "Name"
+Name_2.Parent = Button
+Name_2.AnchorPoint = Vector2.new(0, 0.5)
+Name_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_2.BackgroundTransparency = 1
+Name_2.BorderSizePixel = 0
+Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_2.Size = UDim2.new(0.95, 0, 0.8, 0)
+Name_2.Font = Enum.Font.Gotham
+Name_2.Text = "Button"
+Name_2.TextColor3 = Color3.fromRGB(200, 200, 210)
+Name_2.TextScaled = true
+Name_2.TextSize = 14
+Name_2.TextWrapped = true
+Name_2.TextXAlignment = Enum.TextXAlignment.Left
+Name_2.TextYAlignment = Enum.TextYAlignment.Center
+
+tab.Name = "Tab"
+tab.Visible = false
+tab.BackgroundTransparency = 1
+tab.Size = UDim2.new(0.95, 0, 0.025, 0)
 
 Close.Name = "Close"
-Close.Size = UDim2.new(0.1, 0, 0.7, 0)
-Close.Position = UDim2.new(0.88, 0, 0.15, 0)
 Close.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
 Close.BackgroundTransparency = 0.7
 Close.BorderSizePixel = 0
+Close.Position = UDim2.new(0.88, 0, 0.15, 0)
+Close.Size = UDim2.new(0.1, 0, 0.7, 0)
 Close.Font = Enum.Font.GothamBold
 Close.Text = "×"
 Close.TextColor3 = Color3.fromRGB(220, 220, 220)
-Close.TextScaled = true
 Close.TextSize = 24
+Close.TextWrapped = true
 Close.ZIndex = 2
 Close.Parent = Header
 
 CloseCorner.CornerRadius = UDim.new(0.5, 0)
 CloseCorner.Parent = Close
 
-Menu.Name = "Menu"
-Menu.Parent = Main
-Menu.BackgroundTransparency = 1
-Menu.BorderSizePixel = 0
-Menu.Position = UDim2.new(0.025, 0, 0.13, 0)
-Menu.Size = UDim2.new(0.95, 0, 0.85, 0)
-Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
-Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
-Menu.ScrollBarThickness = 4
-Menu.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+ComboElem.Name = "ComboElem"
+ComboElem.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+ComboElem.BackgroundTransparency = 0.9
+ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
 
-UIListLayout.Parent = Menu
-UIListLayout.Padding = UDim.new(0, 8)
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UICorner_7.CornerRadius = UDim.new(0, 4)
+UICorner_7.Parent = ComboElem
 
--- TCMD Style Toggle
-Toggle.Name = "Toggle"
-Toggle.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-Toggle.BackgroundTransparency = 0.9
-Toggle.Size = UDim2.new(1, -10, 0, 45)
+ComboElemBorder.Color = Color3.fromRGB(80, 80, 90)
+ComboElemBorder.Thickness = 1
+ComboElemBorder.Transparency = 0.5
+ComboElemBorder.Parent = ComboElem
 
-ToggleCorner.CornerRadius = UDim.new(0, 6)
-ToggleCorner.Parent = Toggle
+Name_3.Name = "Name"
+Name_3.Parent = ComboElem
+Name_3.AnchorPoint = Vector2.new(0, 0.5)
+Name_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_3.BackgroundTransparency = 1
+Name_3.BorderSizePixel = 0
+Name_3.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_3.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_3.Font = Enum.Font.Gotham
+Name_3.Text = "Option"
+Name_3.TextColor3 = Color3.fromRGB(200, 200, 210)
+Name_3.TextScaled = true
+Name_3.TextSize = 14
+Name_3.TextWrapped = true
+Name_3.TextXAlignment = Enum.TextXAlignment.Left
+Name_3.TextYAlignment = Enum.TextYAlignment.Center
 
-ToggleStroke.Color = Color3.fromRGB(60, 60, 65)
-ToggleStroke.Thickness = 1
-ToggleStroke.Transparency = 0.7
-ToggleStroke.Parent = Toggle
+Img.Name = "Img"
+Img.Parent = ComboElem
+Img.AnchorPoint = Vector2.new(1, 0.5)
+Img.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Img.BackgroundTransparency = 1
+Img.BorderSizePixel = 0
+Img.Position = UDim2.new(0.95, 0, 0.5, 0)
+Img.Rotation = 90
+Img.Size = UDim2.new(0.15, 0, 0.6, 0)
+Img.Font = Enum.Font.GothamBold
+Img.Text = "›"
+Img.TextColor3 = Color3.fromRGB(200, 200, 210)
+Img.TextScaled = true
+Img.TextSize = 14
+Img.TextWrapped = true
 
-Enabled.Name = "Enabled"
-Enabled.Parent = Toggle
-Enabled.AnchorPoint = Vector2.new(1, 0.5)
-Enabled.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Enabled.Position = UDim2.new(0.95, 0, 0.5, 0)
-Enabled.Size = UDim2.new(0.12, 0, 0.6, 0)
-Enabled.Visible = false
+UIAspectRatioConstraint_4.Parent = Img
 
-EnabledCorner.CornerRadius = UDim.new(0.3, 0)
-EnabledCorner.Parent = Enabled
+ComboBox.Name = "ComboBox"
+ComboBox.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+ComboBox.BackgroundTransparency = 0.9
+ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
-Check.Name = "Check"
-Check.Parent = Enabled
-Check.AnchorPoint = Vector2.new(0.5, 0.5)
-Check.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Check.Position = UDim2.new(0.5, 0, 0.5, 0)
-Check.Size = UDim2.new(0.6, 0, 0.6, 0)
+UICorner_8.CornerRadius = UDim.new(0, 4)
+UICorner_8.Parent = ComboBox
 
-CheckCorner.CornerRadius = UDim.new(0.3, 0)
-CheckCorner.Parent = Check
+ComboBoxBorder.Color = Color3.fromRGB(80, 80, 90)
+ComboBoxBorder.Thickness = 1
+ComboBoxBorder.Transparency = 0.5
+ComboBoxBorder.Parent = ComboBox
 
-Name.Name = "Name"
-Name.Parent = Toggle
-Name.AnchorPoint = Vector2.new(0, 0.5)
-Name.BackgroundTransparency = 1
-Name.Position = UDim2.new(0.05, 0, 0.5, 0)
-Name.Size = UDim2.new(0.8, 0, 1, 0)
-Name.Font = Enum.Font.Gotham
-Name.Text = "Script"
-Name.TextColor3 = Color3.fromRGB(200, 200, 210)
-Name.TextScaled = true
-Name.TextSize = 14
-Name.TextXAlignment = Enum.TextXAlignment.Left
-Name.TextYAlignment = Enum.TextYAlignment.Center
+Name_4.Name = "Name"
+Name_4.Parent = ComboBox
+Name_4.AnchorPoint = Vector2.new(0, 0.5)
+Name_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_4.BackgroundTransparency = 1.000
+Name_4.BorderSizePixel = 0
+Name_4.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_4.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_4.Font = Enum.Font.Gotham
+Name_4.Text = "Dropdown"
+Name_4.TextColor3 = Color3.fromRGB(200, 200, 210)
+Name_4.TextScaled = true
+Name_4.TextSize = 14
+Name_4.TextWrapped = true
+Name_4.TextXAlignment = Enum.TextXAlignment.Left
+Name_4.TextYAlignment = Enum.TextYAlignment.Center
 
-UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
-UIGradient.Rotation = 90
-UIGradient.Parent = Toggle
+Img_2.Name = "Img"
+Img_2.Parent = ComboBox
+Img_2.AnchorPoint = Vector2.new(1, 0.5)
+Img_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Img_2.BackgroundTransparency = 1
+Img_2.BorderSizePixel = 0
+Img_2.Rotation = 180
+Img_2.Position = UDim2.new(0.95, 0, 0.5, 0)
+Img_2.Size = UDim2.new(0.15, 0, 0.6, 0)
+Img_2.Font = Enum.Font.GothamBold
+Img_2.Text = "›"
+Img_2.TextColor3 = Color3.fromRGB(74, 208, 238)
+Img_2.TextScaled = true
+Img_2.TextSize = 14
+Img_2.TextWrapped = true
 
--- TCMD Style Button
-Button.Name = "Button"
-Button.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-Button.BackgroundTransparency = 0.9
-Button.Size = UDim2.new(1, -10, 0, 45)
+UIAspectRatioConstraint_5.Parent = Img_2
 
-ButtonCorner.CornerRadius = UDim.new(0, 6)
-ButtonCorner.Parent = Button
-
-ButtonStroke.Color = Color3.fromRGB(60, 60, 65)
-ButtonStroke.Thickness = 1
-ButtonStroke.Transparency = 0.7
-ButtonStroke.Parent = Button
-
-Name_2.Name = "Name"
-Name_2.Parent = Button
-Name_2.AnchorPoint = Vector2.new(0, 0.5)
-Name_2.BackgroundTransparency = 1
-Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
-Name_2.Size = UDim2.new(0.95, 0, 1, 0)
-Name_2.Font = Enum.Font.Gotham
-Name_2.Text = "Button"
-Name_2.TextColor3 = Color3.fromRGB(200, 200, 210)
-Name_2.TextScaled = true
-Name_2.TextSize = 14
-Name_2.TextXAlignment = Enum.TextXAlignment.Left
-Name_2.TextYAlignment = Enum.TextYAlignment.Center
-
-ButtonGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
-ButtonGradient.Rotation = 90
-ButtonGradient.Parent = Button
-
--- TCMD Style InputBox
 InputBox.Name = "InputBox"
 InputBox.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
 InputBox.BackgroundTransparency = 0.9
-InputBox.Size = UDim2.new(1, -10, 0, 45)
+InputBox.Size = UDim2.new(0.95, 0, 0, 50)
 InputBox.AutoButtonColor = false
 
-InputCorner.CornerRadius = UDim.new(0, 6)
-InputCorner.Parent = InputBox
+UICorner_9.CornerRadius = UDim.new(0, 4)
+UICorner_9.Parent = InputBox
 
-InputStroke.Color = Color3.fromRGB(60, 60, 65)
-InputStroke.Thickness = 1
-InputStroke.Transparency = 0.7
-InputStroke.Parent = InputBox
+InputBoxBorder.Color = Color3.fromRGB(80, 80, 90)
+InputBoxBorder.Thickness = 1
+InputBoxBorder.Transparency = 0.5
+InputBoxBorder.Parent = InputBox
 
 Name_5.Name = "Name"
 Name_5.Parent = InputBox
 Name_5.AnchorPoint = Vector2.new(0, 0.5)
+Name_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name_5.BackgroundTransparency = 1
-Name_5.Position = UDim2.new(0.05, 0, 0.3, 0)
-Name_5.Size = UDim2.new(0.6, 0, 0.4, 0)
+Name_5.BorderSizePixel = 0
+Name_5.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_5.Size = UDim2.new(0.75, 0, 0.8, 0)
 Name_5.Font = Enum.Font.Gotham
 Name_5.Text = "Input Box"
 Name_5.TextColor3 = Color3.fromRGB(200, 200, 210)
 Name_5.TextScaled = true
-Name_5.TextSize = 12
+Name_5.TextSize = 14
+Name_5.TextWrapped = true
 Name_5.TextXAlignment = Enum.TextXAlignment.Left
 Name_5.TextYAlignment = Enum.TextYAlignment.Center
 
-InputGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
-InputGradient.Rotation = 90
-InputGradient.Parent = InputBox
-
+TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
-TextBox.AnchorPoint = Vector2.new(0, 0.5)
-TextBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+TextBox.AnchorPoint = Vector2.new(1, 0.5)
+TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+TextBox.BackgroundTransparency = 0
 TextBox.BorderSizePixel = 0
-TextBox.Position = UDim2.new(0.68, 0, 0.5, 0)
-TextBox.Size = UDim2.new(0.3, 0, 0.7, 0)
+TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
+TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
 TextBox.Font = Enum.Font.Gotham
-TextBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 150)
+TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 160)
 TextBox.PlaceholderText = "Enter text..."
 TextBox.Text = ""
-TextBox.TextColor3 = Color3.fromRGB(220, 220, 220)
+TextBox.TextColor3 = Color3.fromRGB(220, 220, 230)
 TextBox.TextScaled = true
-TextBox.TextXAlignment = Enum.TextXAlignment.Left
+TextBox.TextSize = 14
+TextBox.TextWrapped = true
 
-TextCorner.CornerRadius = UDim.new(0, 4)
-TextCorner.Parent = TextBox
+UICorner_10.CornerRadius = UDim.new(0, 4)
+UICorner_10.Parent = TextBox
 
--- Dragging System (TCMD Style)
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
+TextBoxBorder.Color = Color3.fromRGB(80, 80, 90)
+TextBoxBorder.Thickness = 1
+TextBoxBorder.Transparency = 0.5
+TextBoxBorder.Parent = TextBox
+
+-- Enhanced Dragging System
 local dragging = false
 local dragInput, dragStart, startPos
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local function updateInput(input)
     local delta = input.Position - dragStart
-    local newPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    local newPos = UDim2.new(
+        startPos.X.Scale, 
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale, 
+        startPos.Y.Offset + delta.Y
+    )
+    
     local viewportSize = workspace.CurrentCamera.ViewportSize
     local frameSize = Main.AbsoluteSize
-    newPos = UDim2.new(newPos.X.Scale, math.clamp(newPos.X.Offset, 0, viewportSize.X - frameSize.X), newPos.Y.Scale, math.clamp(newPos.Y.Offset, 0, viewportSize.Y - frameSize.Y))
+    
+    newPos = UDim2.new(
+        newPos.X.Scale,
+        math.clamp(newPos.X.Offset, 0, viewportSize.X - frameSize.X),
+        newPos.Y.Scale,
+        math.clamp(newPos.Y.Offset, 0, viewportSize.Y - frameSize.Y)
+    )
+    
     Main.Position = newPos
 end
 
 Header.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
         dragStart = input.Position
         startPos = Main.Position
+        
+        PulseOutline.Transparency = 0
+        TweenService:Create(PulseOutline, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Transparency = 1
+        }):Play()
+
+        local connection
+        connection = input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                connection:Disconnect()
+            end
+        end)
     end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        updateInput(input)
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+Header.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = false
     end
 end)
 
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        updateInput(input)
+    end
+end)
+
+-- Hover Effects
+local function addHoverEffects(button)
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.85,
+            BackgroundColor3 = Color3.fromRGB(55, 55, 60)
+        }):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.9,
+            BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+        }):Play()
+    end)
+end
+
 -- SCRIPT
+Close.MouseButton1Click:Connect(function()
+    Logo.Active = true
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
+
+    task.wait(0.3)
+    Logo:TweenSizeAndPosition(
+        UDim2.fromScale(0.75, 0.75),
+        UDim2.fromScale(0.5, 0.5),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.25, true, nil
+    )
+
+    task.wait(0.3)
+    Main:TweenSize(
+        UDim2.fromScale(0.1, 0.175),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.25, true, nil
+    )
+
+    task.wait(0.3)
+    for _, obj in pairs(Main:GetChildren()) do
+        if obj:IsA("GuiObject") and obj ~= Intro then
+            obj.Visible = false
+        end
+    end
+
+    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0.8}):Play()
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0.8}):Play()
+end)
+
+Logo.MouseButton1Click:Connect(function()
+    Logo.Active = false
+    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0}):Play()
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0.1}):Play()
+
+    task.wait(0.3)
+    Main:TweenSize(
+        UDim2.fromScale(0.3, 0.4),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.25, true, nil
+    )
+
+    task.wait(0.3)
+    Logo:TweenSizeAndPosition(
+        UDim2.fromScale(0.175, 0.175),
+        UDim2.fromScale(0.075, 0.15),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.25, true, nil
+    )
+
+    for _, obj in pairs(Main:GetChildren()) do
+        if obj:IsA("GuiObject") and obj ~= Intro then
+            obj.Visible = true
+        end
+    end
+
+    task.wait(0.3)
+    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
+end)
+
 local function uiparent()
-    local success, parent = pcall(function() return gethui() end)
-    if not success then return game:GetService("CoreGui") end
+    local success, parent = pcall(function()
+        return gethui()
+    end)
+
+    if not success then
+        return game:GetService("CoreGui")
+    end
+
     return parent
 end
 
-pcall(function() Arceus.Parent = uiparent() end)
-if not Arceus.Parent then Arceus.Parent = game:GetService("Players").LocalPlayer.PlayerGui end
+local success, err = pcall(function()
+    Arceus.Parent = uiparent()
+end)
 
-local element_height = 45
+if not success then
+    Arceus.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+end
+
+local element_height = 50 * Menu.AbsoluteSize.Y / 250
 local elements = 0
 
 local function AddSpace(parent)
-    local space = Instance.new("Frame")
-    space.Size = UDim2.new(1, 0, 0, 8)
-    space.BackgroundTransparency = 1
-    space.LayoutOrder = elements
+    local space = tab:Clone()
     space.Parent = parent
+    space.LayoutOrder = elements
+    space.Visible = true
+
     elements += 1
 end
 
 function lib:AddToggle(name, funct, enabled, ...)
     local newTog = Toggle:Clone()
     local args = {...}
+
+    addHoverEffects(newTog)
     
     newTog.MouseButton1Click:Connect(function()
         enabled = not enabled
-        newTog.Enabled.Visible = enabled
+        newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
         funct(enabled, unpack(args))
     end)
-    
-    newTog.Enabled.Visible = enabled
-    newTog.Name.Text = name
-    newTog.Size = UDim2.new(1, -10, 0, element_height)
+
+    newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
+    newTog:WaitForChild("Name").Text = name
+
+    newTog.Size = UDim2.new(0.95, 0, 0, element_height)
     newTog.Name = name
     newTog.Parent = Menu
     newTog.LayoutOrder = elements
     newTog.Visible = true
-    
+
     elements += 1
     AddSpace(Menu)
-    
-    -- Hover effects (TCMD Style)
-    newTog.MouseEnter:Connect(function()
-        TweenService:Create(newTog, TweenInfo.new(0.2), {
-            BackgroundTransparency = 0.85,
-            BackgroundColor3 = Color3.fromRGB(55, 55, 60)
-        }):Play()
-    end)
-    
-    newTog.MouseLeave:Connect(function()
-        TweenService:Create(newTog, TweenInfo.new(0.2), {
-            BackgroundTransparency = 0.9,
-            BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-        }):Play()
-    end)
-    
+
     return newTog
 end
 
 function lib:AddButton(name, funct, ...)
     local newBut = Button:Clone()
     local args = {...}
+
+    addHoverEffects(newBut)
     
     newBut.MouseButton1Click:Connect(function()
         funct(unpack(args))
     end)
-    
-    newBut.Name.Text = name
-    newBut.Size = UDim2.new(1, -10, 0, element_height)
+
+    newBut:WaitForChild("Name").Text = name
+    newBut.Size = UDim2.new(0.95, 0, 0, element_height)
     newBut.Name = name
     newBut.Parent = Menu
     newBut.LayoutOrder = elements
     newBut.Visible = true
-    
+
     elements += 1
     AddSpace(Menu)
-    
-    -- Hover effects
-    newBut.MouseEnter:Connect(function()
-        TweenService:Create(newBut, TweenInfo.new(0.2), {
-            BackgroundTransparency = 0.85,
-            BackgroundColor3 = Color3.fromRGB(55, 55, 60)
-        }):Play()
-    end)
-    
-    newBut.MouseLeave:Connect(function()
-        TweenService:Create(newBut, TweenInfo.new(0.2), {
-            BackgroundTransparency = 0.9,
-            BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-        }):Play()
-    end)
-    
+
     return newBut
 end
 
@@ -432,19 +662,30 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
     local newInput = InputBox:Clone()
     local args = {...}
     
-    newInput.Name.Text = name
-    if placeholder then newInput.TextBox.PlaceholderText = placeholder end
-    if default then newInput.TextBox.Text = default end
+    addHoverEffects(newInput)
+    
+    newInput:WaitForChild("Name").Text = name
+    if placeholder then
+        newInput.TextBox.PlaceholderText = placeholder
+    end
+    if default then
+        newInput.TextBox.Text = default
+    end
     
     local textBox = newInput.TextBox
+    
     local function submitText()
         local text = textBox.Text
         funct(text, unpack(args))
     end
     
     textBox.FocusLost:Connect(function(enterPressed)
-        if enterPressed then submitText() end
+        if enterPressed then
+            submitText()
+        end
     end)
+    
+    textBox.FocusLost:Connect(submitText)
     
     newInput.MouseButton1Click:Connect(function()
         if not textBox:IsFocused() then
@@ -452,7 +693,7 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
         end
     end)
     
-    newInput.Size = UDim2.new(1, -10, 0, element_height)
+    newInput.Size = UDim2.new(0.95, 0, 0, element_height)
     newInput.Name = name
     newInput.Parent = Menu
     newInput.LayoutOrder = elements
@@ -464,13 +705,80 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
     local inputObj = {
         Frame = newInput,
         TextBox = textBox,
-        GetText = function() return textBox.Text end,
-        SetText = function(newText) textBox.Text = newText or "" end,
-        Clear = function() textBox.Text = "" end,
-        SetPlaceholder = function(placeholderText) textBox.PlaceholderText = placeholderText or "Enter text..." end
+        GetText = function()
+            return textBox.Text
+        end,
+        SetText = function(newText)
+            textBox.Text = newText or ""
+        end,
+        Clear = function()
+            textBox.Text = ""
+        end,
+        SetPlaceholder = function(placeholderText)
+            textBox.PlaceholderText = placeholderText or "Enter text..."
+        end
     }
     
     return inputObj
+end
+
+function lib:AddComboBox(text, options, funct, ...)
+    local newCombo = ComboBox:Clone()
+    local enabled = false
+    local elems = {}
+    local args = {...}
+
+    addHoverEffects(newCombo)
+
+    local function setBoxState()
+        newCombo:WaitForChild("Img").Rotation = enabled and 0 or 180
+        for _, elem in ipairs(elems) do
+            elem.Visible = enabled
+        end
+    end
+
+    newCombo.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        setBoxState()
+    end)
+
+    newCombo:WaitForChild("Name").Text = text .. ": " .. (#options > 0 and options[1] or "")
+    newCombo.Size = UDim2.new(0.95, 0, 0, element_height)
+    newCombo.Name = #options > 0 and options[1] or ""
+    newCombo.Parent = Menu
+    newCombo.LayoutOrder = elements
+    newCombo.Parent = Menu
+    newCombo.Visible = true
+
+    elements += 1
+    AddSpace(Menu)
+
+    for _, name in ipairs(options) do
+        local newElem = ComboElem:Clone()
+        table.insert(elems, newElem)
+
+        addHoverEffects(newElem)
+
+        newElem.MouseButton1Click:Connect(function()
+            newCombo:WaitForChild("Name").Text = text .. ": " .. name
+            enabled = false
+            setBoxState()
+
+            funct(name, unpack(args))
+        end)
+
+        newElem:WaitForChild("Name").Text = name
+        newElem.Size = UDim2.new(0.95, 0, 0, element_height)
+        newElem.Name = name
+        newElem.Parent = Menu
+        newElem.LayoutOrder = elements
+        newElem.Visible = false
+
+        elements += 1
+        AddSpace(Menu)
+    end
+
+    return newCombo
 end
 
 function lib:SetTitle(txt)
@@ -481,10 +789,10 @@ function lib:SetIcon(img)
     Logo.Image = img
 end
 
-function lib:SetBackgroundColor(r, g, b)
+function lib:SetBackgroundColor(r, g ,b)
     Main.BackgroundColor3 = Color3.fromRGB(r, g, b)
     Intro.BackgroundColor3 = Color3.fromRGB(r, g, b)
-    HeaderBackground.BackgroundColor3 = Color3.fromRGB(math.max(0, r+10), math.max(0, g+10), math.max(0, b+10))
+    HeaderBackground.BackgroundColor3 = Color3.fromRGB(math.min(255, r + 10), math.min(255, g + 10), math.min(255, b + 10))
 end
 
 function lib:SetTitleColor(r, g, b)
@@ -493,67 +801,72 @@ end
 
 function lib:SetCloseBtnColor(r, g, b)
     Close.TextColor3 = Color3.fromRGB(r, g, b)
-    Enabled.BackgroundColor3 = Color3.fromRGB(r, g, b)
-    Check.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Img_2.TextColor3 = Color3.fromRGB(r, g, b)
+    Check.BackgroundColor3 = Color3.fromRGB(r, g, b)
 end
 
-function lib:SetButtonsColor(r, g, b)
+function lib:SetButtonsColor(r, g ,b)
     Toggle.BackgroundColor3 = Color3.fromRGB(r, g, b)
     Button.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    ComboElem.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    ComboBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
     InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
-    TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-10), math.max(0, g-10), math.max(0, b-10))
 end
 
--- Close functionality (TCMD Style)
-Close.MouseButton1Click:Connect(function()
-    Logo.Active = true
-    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 0}):Play()
-    
-    task.wait(0.3)
-    Main:TweenSizeAndPosition(UDim2.new(0, 0, 0.4, 0), UDim2.new(0.5, 0, 0.3, 0), "In", "Quad", 0.3)
-    
-    task.wait(0.3)
-    for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro then
-            obj.Visible = false
-        end
+function lib:SetInputBoxColor(r, g, b)
+    InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
+end
+
+function lib:SetTheme(theme)
+    if theme == "Default" then
+        lib:SetBackgroundColor(40, 40, 45)
+        lib:SetButtonsColor(35, 35, 40)
+        lib:SetCloseBtnColor(74, 208, 238)
+        lib:SetInputBoxColor(35, 35, 40)
+    elseif theme == "TomorrowNightBlue" then
+        lib:SetButtonsColor(74, 208, 238)
+        lib:SetCloseBtnColor(74, 208, 238)
+        lib:SetBackgroundColor(5, 16, 58)
+        lib:SetInputBoxColor(74, 208, 238)
+    elseif theme == "HighContrast" then
+        lib:SetBackgroundColor(0, 0, 0)
+        lib:SetButtonsColor(0, 0, 0)
+        lib:SetCloseBtnColor(255, 255, 0)
+        lib:SetInputBoxColor(0, 0, 0)
+    elseif theme == "Aqua" then
+        lib:SetBackgroundColor(44, 62, 82)
+        lib:SetButtonsColor(52, 74, 95)
+        lib:SetCloseBtnColor(26, 189, 158)
+        lib:SetInputBoxColor(52, 74, 95)
+    elseif theme == "Ocean" then
+        lib:SetBackgroundColor(26, 32, 58)
+        lib:SetButtonsColor(38, 45, 71)
+        lib:SetCloseBtnColor(86, 76, 251)
+        lib:SetInputBoxColor(38, 45, 71)
+    else
+        error("Theme not found.")
     end
-    
-    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {ImageTransparency = 0.8}):Play()
-    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.8}):Play()
-end)
+end
 
-Logo.MouseButton1Click:Connect(function()
-    Logo.Active = false
-    TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {ImageTransparency = 0}):Play()
-    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 0}):Play()
-    TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 0}):Play()
-    
-    task.wait(0.3)
-    Main:TweenSize(UDim2.new(0.3, 0, 0.4, 0), "Out", "Quad", 0.3)
-    
-    task.wait(0.3)
-    Logo:TweenSizeAndPosition(UDim2.new(0.175, 0.175), UDim2.new(0.075, 0.15), "Out", "Quad", 0.25)
-    
-    for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro then
-            obj.Visible = true
-        end
-    end
-    
-    task.wait(0.3)
-    TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {BackgroundTransparency = 1}):Play()
-end)
-
--- INIT (TCMD Style Animation)
-task.wait(0.1)
-Main:TweenPosition(UDim2.new(0.35, 0, 0.3, 0), "Out", "Quad", 0.5)
-
-task.wait(1.2)
-Logo:TweenSizeAndPosition(UDim2.new(0.175, 0.175), UDim2.new(0.075, 0.15), "In", "Quad", 0.8)
+-- INIT
+Main:TweenPosition(
+    UDim2.fromScale(0.5, 0.5),
+    Enum.EasingDirection.In,
+    Enum.EasingStyle.Quad,
+    1, true, nil
+)
 
 task.wait(1.5)
-TweenService:Create(Intro, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {BackgroundTransparency = 1}):Play()
+Logo:TweenSizeAndPosition(
+    UDim2.fromScale(0.175, 0.175),
+    UDim2.fromScale(0.075, 0.15),
+    Enum.EasingDirection.In,
+    Enum.EasingStyle.Quad,
+    1, true, nil
+)
+
+task.wait(1.5)
+TweenService:Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
 
 return lib
