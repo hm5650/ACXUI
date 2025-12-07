@@ -1,8 +1,6 @@
--- Arceus X UI Library (style updated to Silent Aim GUI look)
--- NOTE: API preserved. No functional features from Silent Aim were added.
 local lib = {}
 
-local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
+local Script_Title = "Silent Aim UI" -- Simplified title for minimalist look
 
 -- Instances:
 local Arceus = Instance.new("ScreenGui")
@@ -13,12 +11,6 @@ local UICorner_2 = Instance.new("UICorner")
 local Logo = Instance.new("ImageButton")
 local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
 local Title = Instance.new("TextLabel")
-
--- New TitleBar / Minimize (SilentAim style)
-local TitleBar = Instance.new("Frame")
-local Minimize = Instance.new("TextButton")
-
-local ContentFrame = Instance.new("Frame") -- container for Menu and other controls
 local Menu = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 local Toggle = Instance.new("ImageButton")
@@ -30,23 +22,23 @@ local Check = Instance.new("Frame")
 local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
 local UICorner_5 = Instance.new("UICorner")
 local Name = Instance.new("TextLabel")
-local UIGradient = Instance.new("UIGradient")
+-- Removed UIGradient
 local Button = Instance.new("ImageButton")
 local UICorner_6 = Instance.new("UICorner")
 local Name_2 = Instance.new("TextLabel")
-local UIGradient_2 = Instance.new("UIGradient")
+-- Removed UIGradient_2
 local tab = Instance.new("Frame")
 local Close = Instance.new("TextButton")
 local ComboElem = Instance.new("ImageButton")
 local UICorner_7 = Instance.new("UICorner")
 local Name_3 = Instance.new("TextLabel")
-local UIGradient_3 = Instance.new("UIGradient")
+-- Removed UIGradient_3
 local Img = Instance.new("TextLabel")
 local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
 local ComboBox = Instance.new("ImageButton")
 local UICorner_8 = Instance.new("UICorner")
 local Name_4 = Instance.new("TextLabel")
-local UIGradient_4 = Instance.new("UIGradient")
+-- Removed UIGradient_4
 local Img_2 = Instance.new("TextLabel")
 local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
 
@@ -54,11 +46,11 @@ local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
 local InputBox = Instance.new("ImageButton")
 local UICorner_9 = Instance.new("UICorner")
 local Name_5 = Instance.new("TextLabel")
-local UIGradient_5 = Instance.new("UIGradient")
+-- Removed UIGradient_5
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
 
--- Properties:
+-- Properties (STYLING MODIFICATIONS)
 
 Arceus.Name = "Arceus"
 Arceus.Enabled = true
@@ -71,23 +63,33 @@ Main.Parent = Arceus
 Main.Active = true
 Main.Draggable = true
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- darker flat color like Silent Aim
+Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Darker background
 Main.BorderSizePixel = 0
 Main.Position = UDim2.new(0.5, 0, -0.2, 0)
-Main.Size = UDim2.new(0.28, 0, 0.32, 0)
+Main.Size = UDim2.new(0.3, 0, 0.3, 0)
 
-UICorner.CornerRadius = UDim.new(0.035, 0)
+UICorner.CornerRadius = UDim.new(0.05, 0) -- Slightly reduced corner radius
 UICorner.Parent = Main
 
--- Intro/Logo (kept mostly as-is)
+task.spawn(function()
+	Main.BackgroundTransparency = 1
+	Title.TextTransparency = 1
+
+	for i = 1, 20 do
+		Main.BackgroundTransparency = 1 - (i/20)
+		Title.TextTransparency = 1 - (i/20)
+		task.wait(0.02)
+	end
+end)
+
 Intro.Name = "Intro"
 Intro.Parent = Main
-Intro.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Intro.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Darker background
 Intro.ClipsDescendants = true
 Intro.Size = UDim2.new(1, 0, 1, 0)
 Intro.ZIndex = 2
 
-UICorner_2.CornerRadius = UDim.new(0.1, 0)
+UICorner_2.CornerRadius = UDim.new(0.05, 0) -- Slightly reduced corner radius
 UICorner_2.Parent = Intro
 
 Logo.Parent = Intro
@@ -104,25 +106,16 @@ Logo.Active = false
 
 UIAspectRatioConstraint.Parent = Logo
 
--- TitleBar (SilentAim style)
-TitleBar.Name = "TitleBar"
-TitleBar.Parent = Main
-TitleBar.AnchorPoint = Vector2.new(0, 0)
-TitleBar.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-TitleBar.BorderSizePixel = 0
-TitleBar.Position = UDim2.new(0, 0, 0, 0)
-TitleBar.Size = UDim2.new(1, 0, 0, 28)
-
 Title.Name = "Title"
-Title.Parent = TitleBar
-Title.AnchorPoint = Vector2.new(0, 0)
-Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Title.BackgroundTransparency = 1
+Title.Parent = Main
+Title.AnchorPoint = Vector2.new(1, 0)
+Title.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Title bar color
+Title.BackgroundTransparency = 0 -- Make title bar visible
 Title.BorderSizePixel = 0
-Title.Position = UDim2.new(0.02, 0, 0, 0)
-Title.Size = UDim2.new(0.86, 0, 1, 0)
-Title.Font = Enum.Font.TitilliumWeb
-Title.FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Bold)
+Title.Position = UDim2.new(1, 0, 0, 0) -- Top right corner
+Title.Size = UDim2.new(1, 0, 0.155, 0) -- Full width title bar
+Title.Font = Enum.Font.Gotham -- Changed to Gotham for a more modern look
+Title.FontFace = Font.new("rbxasset://fonts/families/Gotham.json", Enum.FontWeight.Bold)
 Title.RichText = true
 Title.Text = Script_Title
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -132,95 +125,55 @@ Title.TextWrapped = true
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.TextYAlignment = Enum.TextYAlignment.Center
 
--- Minimize button (SilentAim style)
-Minimize.Name = "Minimize"
-Minimize.Parent = TitleBar
-Minimize.AnchorPoint = Vector2.new(1, 0)
-Minimize.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-Minimize.BorderSizePixel = 0
-Minimize.Position = UDim2.new(1, -56, 0, 0)
-Minimize.Size = UDim2.new(0, 28, 1, 0)
-Minimize.Font = Enum.Font.Gotham
-Minimize.Text = "_"
-Minimize.TextColor3 = Color3.fromRGB(255, 255, 255)
-Minimize.TextSize = 16
-Minimize.TextWrapped = true
-
--- Close button (kept, but moved into title bar)
-Close.Name = "Close"
-Close.Parent = TitleBar
-Close.AnchorPoint = Vector2.new(1, 0)
-Close.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-Close.BackgroundTransparency = 0
-Close.BorderSizePixel = 0
-Close.Position = UDim2.new(1, -28, 0, 0)
-Close.Size = UDim2.new(0, 28, 1, 0)
-Close.Font = Enum.Font.FredokaOne
-Close.Text = "X"
-Close.TextColor3 = Color3.fromRGB(255, 0, 0)
-Close.TextScaled = true
-Close.TextSize = 14
-Close.TextWrapped = true
-Close.TextXAlignment = Enum.TextXAlignment.Center
-
--- ContentFrame to contain menu and be toggled when minimizing
-ContentFrame.Name = "ContentFrame"
-ContentFrame.Parent = Main
-ContentFrame.AnchorPoint = Vector2.new(0, 0)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Position = UDim2.new(0, 0, 0, 28)
-ContentFrame.Size = UDim2.new(1, 0, 1, -28)
-
--- Menu moved under ContentFrame
 Menu.Name = "Menu"
-Menu.Parent = ContentFrame
+Menu.Parent = Main
 Menu.Active = true
 Menu.AnchorPoint = Vector2.new(0.5, 1)
 Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Menu.BackgroundTransparency = 1
 Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Menu.BorderSizePixel = 0
-Menu.Position = UDim2.new(0.5, 0, 0.97, 0)
-Menu.Size = UDim2.new(0.95, 0, 0.94, 0)
+Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
+Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
 Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
 Menu.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-Menu.ScrollBarThickness = 6
+Menu.ScrollBarThickness = Menu.AbsoluteSize.X/25
 
 UIListLayout.Parent = Menu
+--UIListLayout.Padding = UDim.new(0.025, 0)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0.015, 0)
 
--- Toggle element style
 Toggle.Name = "Toggle"
 Toggle.Visible = false
-Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Toggle.Size = UDim2.new(0.95, 0, 0, 44)
+--Toggle.Parent = Arceus
+Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Darker button background
+Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_3.CornerRadius = UDim.new(0.12, 0)
+UICorner_3.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_3.Parent = Toggle
 
 Enabled.Name = "Enabled"
 Enabled.Parent = Toggle
 Enabled.AnchorPoint = Vector2.new(1, 0.5)
-Enabled.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-Enabled.Position = UDim2.new(0.95, 0, 0.5, 0)
-Enabled.Size = UDim2.new(0.28, 0, 0.72, 0)
+Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
+Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
 
 UIAspectRatioConstraint_2.Parent = Enabled
 
-UICorner_4.CornerRadius = UDim.new(0.3, 0)
+UICorner_4.CornerRadius = UDim.new(0.25, 0) -- Smaller radius
 UICorner_4.Parent = Enabled
 
 Check.Name = "Check"
 Check.Parent = Enabled
 Check.AnchorPoint = Vector2.new(0.5, 0.5)
-Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Check.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Bright green accent color
 Check.Position = UDim2.new(0.5, 0, 0.5, 0)
 Check.Size = UDim2.new(0.65, 0, 0.65, 0)
 
 UIAspectRatioConstraint_3.Parent = Check
 
-UICorner_5.CornerRadius = UDim.new(0.3, 0)
+UICorner_5.CornerRadius = UDim.new(0.25, 0) -- Smaller radius
 UICorner_5.Parent = Check
 
 Name.Name = "Name"
@@ -229,102 +182,102 @@ Name.AnchorPoint = Vector2.new(0, 0.5)
 Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name.BackgroundTransparency = 1
 Name.BorderSizePixel = 0
-Name.Position = UDim2.new(0.04, 0, 0.5, 0)
-Name.Size = UDim2.new(0.68, 0, 0.9, 0)
-Name.Font = Enum.Font.TitilliumWeb
+Name.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name.Font = Enum.Font.Gotham -- Changed font
 Name.Text = "Script"
 Name.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name.TextScaled = true
 Name.TextSize = 14
 Name.TextWrapped = true
 Name.TextXAlignment = Enum.TextXAlignment.Left
-Name.TextYAlignment = Enum.TextYAlignment.Center
+Name.TextYAlignment = Enum.TextYAlignment.Center -- Center alignment
+-- Removed UIGradient
 
-UIGradient.Parent = Toggle
-UIGradient.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))
-}
-UIGradient.Transparency = NumberSequence.new(1) -- subtle/unused to keep compatibility
-
--- Button element
 Button.Name = "Button"
-Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Button.Size = UDim2.new(0.95, 0, 0, 44)
+--Button.Parent = Arceus
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Darker button background
+Button.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_6.CornerRadius = UDim.new(0.12, 0)
+UICorner_6.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_6.Parent = Button
 
 Name_2.Name = "Name"
 Name_2.Parent = Button
 Name_2.AnchorPoint = Vector2.new(0, 0.5)
+Name_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name_2.BackgroundTransparency = 1
 Name_2.BorderSizePixel = 0
-Name_2.Position = UDim2.new(0.04, 0, 0.5, 0)
-Name_2.Size = UDim2.new(0.92, 0, 0.9, 0)
-Name_2.Font = Enum.Font.TitilliumWeb
+Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_2.Size = UDim2.new(0.95, 0, 0.82, 0)
+Name_2.Font = Enum.Font.Gotham -- Changed font
 Name_2.Text = "Enabled"
 Name_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_2.TextScaled = true
 Name_2.TextSize = 14
 Name_2.TextWrapped = true
 Name_2.TextXAlignment = Enum.TextXAlignment.Left
-Name_2.TextYAlignment = Enum.TextYAlignment.Center
+Name_2.TextYAlignment = Enum.TextYAlignment.Center -- Center alignment
+-- Removed UIGradient_2
 
-UIGradient_2.Parent = Button
-UIGradient_2.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))
-}
-UIGradient_2.Transparency = NumberSequence.new(1)
-
--- Padding / Tab element
 tab.Name = "Tab"
 tab.Visible = false
+--tab.Parent = Arceus
 tab.BackgroundTransparency = 1
 tab.Size = UDim2.new(0.95, 0, 0.025, 0)
 
--- Combo elements
-ComboElem.Name = "ComboElem"
-ComboElem.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ComboElem.Size = UDim2.new(0.95, 0, 0, 44)
+Close.Name = "Close"
+Close.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Title bar color
+Close.BackgroundTransparency = 0
+Close.BorderSizePixel = 0
+Close.Position = UDim2.new(1, -20, 0, 0) -- Moved to title bar area
+Close.Size = UDim2.new(0, 20, 0.155, 0) -- Adjusted size
+Close.Font = Enum.Font.Gotham -- Changed font
+Close.Text = "_" -- Changed to minimize/restore button style
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextScaled = true
+Close.TextSize = 18 -- Increased size
+Close.TextWrapped = true
+Close.TextXAlignment = Enum.TextXAlignment.Center
+Close.Parent = Main
 
-UICorner_7.CornerRadius = UDim.new(0.12, 0)
+ComboElem.Name = "ComboElem"
+ComboElem.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Darker button background
+ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
+
+UICorner_7.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_7.Parent = ComboElem
 
 Name_3.Name = "Name"
 Name_3.Parent = ComboElem
 Name_3.AnchorPoint = Vector2.new(0, 0.5)
+Name_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name_3.BackgroundTransparency = 1
 Name_3.BorderSizePixel = 0
-Name_3.Position = UDim2.new(0.04, 0, 0.5, 0)
-Name_3.Size = UDim2.new(0.68, 0, 0.9, 0)
-Name_3.Font = Enum.Font.TitilliumWeb
+Name_3.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_3.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_3.Font = Enum.Font.Gotham -- Changed font
 Name_3.Text = "Enabled"
 Name_3.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_3.TextScaled = true
 Name_3.TextSize = 14
 Name_3.TextWrapped = true
 Name_3.TextXAlignment = Enum.TextXAlignment.Left
-Name_3.TextYAlignment = Enum.TextYAlignment.Center
-
-UIGradient_3.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))
-}
-UIGradient_3.Rotation = 180
-UIGradient_3.Parent = ComboElem
+Name_3.TextYAlignment = Enum.TextYAlignment.Center -- Center alignment
+-- Removed UIGradient_3
 
 Img.Name = "Img"
 Img.Parent = ComboElem
 Img.AnchorPoint = Vector2.new(1, 0.5)
+Img.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Img.BackgroundTransparency = 1
-Img.Position = UDim2.new(0.96, 0, 0.5, 0)
-Img.Rotation = 90
-Img.Size = UDim2.new(0.65, 0, 0.75, 0)
+Img.BorderSizePixel = 0
+Img.Position = UDim2.new(0.975, 0, 0.5, 0)
+Img.Rotation = 0 -- Revert rotation
+Img.Size = UDim2.new(0.75, 0, 0.75, 0)
 Img.Font = Enum.Font.FredokaOne
-Img.Text = "^"
-Img.TextColor3 = Color3.fromRGB(255, 255, 255)
+Img.Text = "˅" -- Down arrow
+Img.TextColor3 = Color3.fromRGB(0, 255, 0) -- Bright green accent color
 Img.TextScaled = true
 Img.TextSize = 14
 Img.TextWrapped = true
@@ -332,44 +285,42 @@ Img.TextWrapped = true
 UIAspectRatioConstraint_4.Parent = Img
 
 ComboBox.Name = "ComboBox"
-ComboBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ComboBox.Size = UDim2.new(0.95, 0, 0, 44)
+ComboBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Darker button background
+ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
-UICorner_8.CornerRadius = UDim.new(0.12, 0)
+UICorner_8.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_8.Parent = ComboBox
 
 Name_4.Name = "Name"
 Name_4.Parent = ComboBox
 Name_4.AnchorPoint = Vector2.new(0, 0.5)
+Name_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name_4.BackgroundTransparency = 1.000
 Name_4.BorderSizePixel = 0
-Name_4.Position = UDim2.new(0.04, 0, 0.5, 0)
-Name_4.Size = UDim2.new(0.68, 0, 0.9, 0)
-Name_4.Font = Enum.Font.TitilliumWeb
+Name_4.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_4.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_4.Font = Enum.Font.Gotham -- Changed font
 Name_4.Text = "Enabled"
 Name_4.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_4.TextScaled = true
 Name_4.TextSize = 14
 Name_4.TextWrapped = true
 Name_4.TextXAlignment = Enum.TextXAlignment.Left
-Name_4.TextYAlignment = Enum.TextYAlignment.Center
-
-UIGradient_4.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))
-}
-UIGradient_4.Parent = ComboBox
+Name_4.TextYAlignment = Enum.TextYAlignment.Center -- Center alignment
+-- Removed UIGradient_4
 
 Img_2.Name = "Img"
 Img_2.Parent = ComboBox
 Img_2.AnchorPoint = Vector2.new(1, 0.5)
+Img_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Img_2.BackgroundTransparency = 1
-Img_2.Rotation = 180
-Img_2.Position = UDim2.new(0.96, 0, 0.5, 0)
-Img_2.Size = UDim2.new(0.65, 0, 0.75, 0)
+Img_2.BorderSizePixel = 0
+Img_2.Rotation = 0 -- Revert rotation
+Img_2.Position = UDim2.new(0.975, 0, 0.5, 0)
+Img_2.Size = UDim2.new(0.75, 0, 0.75, 0)
 Img_2.Font = Enum.Font.FredokaOne
-Img_2.Text = "^"
-Img_2.TextColor3 = Color3.fromRGB(255, 0, 0)
+Img_2.Text = "˅" -- Down arrow
+Img_2.TextColor3 = Color3.fromRGB(0, 255, 0) -- Bright green accent color
 Img_2.TextScaled = true
 Img_2.TextSize = 14
 Img_2.TextWrapped = true
@@ -378,44 +329,40 @@ UIAspectRatioConstraint_5.Parent = Img_2
 
 -- Input Box Properties:
 InputBox.Name = "InputBox"
-InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-InputBox.Size = UDim2.new(0.95, 0, 0, 44)
+InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Darker button background
+InputBox.Size = UDim2.new(0.95, 0, 0, 50)
 InputBox.AutoButtonColor = false
 
-UICorner_9.CornerRadius = UDim.new(0.12, 0)
+UICorner_9.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_9.Parent = InputBox
 
 Name_5.Name = "Name"
 Name_5.Parent = InputBox
 Name_5.AnchorPoint = Vector2.new(0, 0.5)
+Name_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Name_5.BackgroundTransparency = 1
 Name_5.BorderSizePixel = 0
-Name_5.Position = UDim2.new(0.04, 0, 0.5, 0)
-Name_5.Size = UDim2.new(0.5, 0, 0.9, 0)
-Name_5.Font = Enum.Font.TitilliumWeb
+Name_5.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_5.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_5.Font = Enum.Font.Gotham -- Changed font
 Name_5.Text = "Input Box"
 Name_5.TextColor3 = Color3.fromRGB(255, 255, 255)
 Name_5.TextScaled = true
 Name_5.TextSize = 14
 Name_5.TextWrapped = true
 Name_5.TextXAlignment = Enum.TextXAlignment.Left
-Name_5.TextYAlignment = Enum.TextYAlignment.Center
-
-UIGradient_5.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))
-}
-UIGradient_5.Parent = InputBox
+Name_5.TextYAlignment = Enum.TextYAlignment.Center -- Center alignment
+-- Removed UIGradient_5
 
 TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
 TextBox.AnchorPoint = Vector2.new(1, 0.5)
-TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Darker background for text box
 TextBox.BackgroundTransparency = 0
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
-TextBox.Size = UDim2.new(0.45, 0, 0.72, 0)
-TextBox.Font = Enum.Font.TitilliumWeb
+TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
+TextBox.Font = Enum.Font.Gotham -- Changed font
 TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 TextBox.PlaceholderText = "Enter text..."
 TextBox.Text = ""
@@ -424,10 +371,10 @@ TextBox.TextScaled = true
 TextBox.TextSize = 14
 TextBox.TextWrapped = true
 
-UICorner_10.CornerRadius = UDim.new(0.12, 0)
+UICorner_10.CornerRadius = UDim.new(0.1, 0) -- Smaller radius
 UICorner_10.Parent = TextBox
 
--- SCRIPT
+-- SCRIPT (Collapse Glitch Fix)
 
 local TweenService = game:GetService("TweenService")
 Close.MouseButton1Click:Connect(function()
@@ -445,7 +392,7 @@ Close.MouseButton1Click:Connect(function()
 
 	task.wait(0.3)
 	Main:TweenSize(
-		UDim2.fromScale(0.085, 0.14),
+		UDim2.new(0.15, 0, 0.175, 0), -- Slightly wider to contain the logo
 		Enum.EasingDirection.Out,
 		Enum.EasingStyle.Quad,
 		0.25, true, nil
@@ -453,11 +400,12 @@ Close.MouseButton1Click:Connect(function()
 
 	task.wait(0.3)
 	for _, obj in pairs(Main:GetChildren()) do
-		-- Keep Intro visible but hide content controls cleanly
-		if obj:IsA("GuiObject") and obj ~= Intro and obj ~= TitleBar and obj ~= Logo then
+		if obj:IsA("GuiObject") and obj ~= Intro and obj ~= Close and obj ~= Title then -- Keep Close and Title visible
 			obj.Visible = false
 		end
 	end
+	
+	Close.Text = "+" -- Change to plus sign to indicate expand
 
 	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0.8}):Play()
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
@@ -472,7 +420,7 @@ Logo.MouseButton1Click:Connect(function()
 
 	task.wait(0.3)
 	Main:TweenSize(
-		UDim2.fromScale(0.28, 0.32),
+		UDim2.fromScale(0.3, 0.3),
 		Enum.EasingDirection.Out,
 		Enum.EasingStyle.Quad,
 		0.25, true, nil
@@ -486,12 +434,15 @@ Logo.MouseButton1Click:Connect(function()
 		Enum.EasingStyle.Quad,
 		0.25, true, nil
 	)
-
+	
+	-- FIX FOR COLLAPSE GLITCH: Ensure all menu elements are made visible again
 	for _, obj in pairs(Main:GetChildren()) do
 		if obj:IsA("GuiObject") and obj ~= Intro then
 			obj.Visible = true
 		end
 	end
+	
+	Close.Text = "_" -- Change back to underscore
 
 	task.wait(0.3)
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
@@ -517,20 +468,8 @@ if not success then
 	Arceus.Parent = game:GetService("Players").LocalPlayer.PlayerGui
 end
 
-local function compute_element_height()
-	-- keep the previous scaling approach but with adjusted base
-	local base = 44
-	local scale = Menu.AbsoluteSize.Y / 210
-	return math.max(32, math.floor(base * scale))
-end
-
-local element_height = compute_element_height()
+local element_height = 50*Menu.AbsoluteSize.Y/210
 local elements = 0
-
--- Update element_height when menu size changes
-Menu:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-	element_height = compute_element_height()
-end)
 
 local function AddSpace(parent)
 	local space = tab:Clone()
@@ -554,7 +493,7 @@ function lib:AddToggle(name, funct, enabled, ...)
 	newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
 	newTog:WaitForChild("Name").Text = name
 
-	newTog.Size = UDim2.new(0.95, 0, 0, element_height)
+	newTog.Size = UDim2.new(0.95, 0, 0, element_height) -- Y1 = 50 : Y2 = X
 	newTog.Name = name
 	newTog.Parent = Menu
 	newTog.LayoutOrder = elements
@@ -614,10 +553,10 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 		end
 	end)
 	
-	-- Also submit when focus lost (click outside)
+	-- Submit on clicking outside the text box
 	textBox.FocusLost:Connect(submitText)
 	
-	-- Click to focus
+	-- Optional: Add a submit button functionality
 	newInput.MouseButton1Click:Connect(function()
 		if not textBox:IsFocused() then
 			textBox:CaptureFocus()
@@ -654,14 +593,14 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 	return inputObj
 end
 
-function lib:AddComboBox(text, options, funct, ...)
+function lib:AddComboBox(text, options, funct, ...) -- ADD CUSTOM ELEMENT INSTEAD
 	local newCombo = ComboBox:Clone()
 	local enabled = false
 	local elems = {}
 	local args = {...}
 
 	local function setBoxState()
-		newCombo:WaitForChild("Img").Rotation = enabled and 0 or 180
+		newCombo:WaitForChild("Img").Rotation = enabled and 180 or 0 -- Invert rotation for consistent dropdown arrow
 		for _, elem in ipairs(elems) do
 			elem.Visible = enabled
 		end
@@ -677,6 +616,7 @@ function lib:AddComboBox(text, options, funct, ...)
 	newCombo.Name = #options > 0 and options[1] or ""
 	newCombo.Parent = Menu
 	newCombo.LayoutOrder = elements
+	newCombo.Parent = Menu
 	newCombo.Visible = true
 
 	elements += 1
@@ -719,8 +659,6 @@ end
 function lib:SetBackgroundColor(r, g ,b)
     Main.BackgroundColor3 = Color3.fromRGB(r, g, b)
     Intro.BackgroundColor3 = Color3.fromRGB(r, g, b)
-    -- also update titlebar to keep contrast
-    TitleBar.BackgroundColor3 = Color3.fromRGB(math.max(0, r-10), math.max(0, g-10), math.max(0, b-10))
 end
 
 function lib:SetTitleColor(r, g, b)
@@ -739,21 +677,16 @@ function lib:SetButtonsColor(r, g ,b)
 	ComboElem.BackgroundColor3 = Color3.fromRGB(r, g, b)
 	ComboBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
 	InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
-	-- ensure content looks consistent
-	ContentFrame.BackgroundTransparency = 1
 end
 
 function lib:SetInputBoxColor(r, g, b)
     InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
-    TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
+    TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-10), math.max(0, g-10), math.max(0, b-10)) -- Slightly darker text box
 end
 
 function lib:SetTheme(theme)
 	if theme == "Default" then
-		lib:SetBackgroundColor(30, 30, 30)
-		lib:SetButtonsColor(40, 40, 40)
-		lib:SetCloseBtnColor(255, 0, 0)
-		lib:SetInputBoxColor(40, 40, 40)
+		-- Default theme (as modified above)
 	elseif theme == "TomorrowNightBlue" then
 		lib:SetButtonsColor(74, 208, 238)
 		lib:SetCloseBtnColor(74, 208, 238)
@@ -778,43 +711,6 @@ function lib:SetTheme(theme)
 		error("Theme not found.")
 	end
 end
-
--- Minimize behavior (Silent Aim style) - avoids glitch by explicitly toggling content visibility
-local minimized = false
-local originalSize = Main.Size
-local originalPosition = Main.Position
-
-local function setMinimized(state)
-	minimized = state
-	if minimized then
-		-- shrink to titlebar height and hide content
-		Main:TweenSize(UDim2.new(originalSize.X.Scale, 0, 0, 28), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true)
-		-- explicitly hide content children so nothing stays visible
-		for _, child in ipairs(ContentFrame:GetDescendants()) do
-			if child:IsA("GuiObject") then
-				child.Visible = false
-			end
-		end
-		ContentFrame.Visible = false
-		Minimize.Text = "+"
-	else
-		-- restore size and show content
-		Main:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true)
-		ContentFrame.Visible = true
-		for _, child in ipairs(ContentFrame:GetDescendants()) do
-			if child:IsA("GuiObject") then
-				-- restore visibility for elements that are normally visible; we set .Visible true here;
-				-- individual elements like ComboElem (collapsed entries) will still control their own visibility
-				child.Visible = true
-			end
-		end
-		Minimize.Text = "_"
-	end
-end
-
-Minimize.MouseButton1Click:Connect(function()
-	setMinimized(not minimized)
-end)
 
 -- INIT
 
