@@ -50,6 +50,11 @@ local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
 
+-- Add Dragging Effect Instances
+local DragOutline = Instance.new("UIStroke")
+local DragGlow = Instance.new("Frame")
+local UICorner_11 = Instance.new("UICorner")
+
 -- Properties:
 
 Arceus.Name = "Arceus"
@@ -68,12 +73,180 @@ Main.BorderSizePixel = 0
 Main.Position = UDim2.new(0.5, 0, -0.2, 0) --UDim2.new(0.5, 0, 0.5, 0)
 Main.Size = UDim2.new(0.3, 0, 0.3, 0)
 
+-- Create the drag outline effect
+DragOutline.Name = "DragOutline"
+DragOutline.Parent = Main
+DragOutline.Color = Color3.fromRGB(255, 255, 255)
+DragOutline.Transparency = 1 -- Start fully transparent
+DragOutline.Thickness = 2 -- Base thickness
+DragOutline.LineJoinMode = Enum.LineJoinMode.Round
+DragOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Create glow effect frame
+DragGlow.Name = "DragGlow"
+DragGlow.Parent = Main
+DragGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DragGlow.BackgroundTransparency = 1 -- Start transparent
+DragGlow.BorderSizePixel = 0
+DragGlow.Size = UDim2.new(1, 0, 1, 0)
+DragGlow.ZIndex = -1 -- Place behind the main frame
+
+UICorner_11.CornerRadius = UDim.new(0.1, 0)
+UICorner_11.Parent = DragGlow
+
+-- Variables for drag speed tracking
+local lastDragTime = tick()
+local lastDragPosition = Main.Position
+local currentDragSpeed = 0
+local maxDragSpeed = 0
+local isDragging = false
+local dragAnimation = nil
+
+-- Function to update drag outline based on speed
+local function updateDragOutline()
+    if not isDragging then
+        -- Fade out effect when not dragging
+        local fadeOutTween = game:GetService("TweenService"):Create(DragOutline, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Transparency = 1,
+            Thickness = 2
+        })
+        fadeOutTween:Play()
+        
+        game:GetService("TweenService"):Create(DragGlow, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 1
+        }):Play()
+        return
+    end
+    
+    -- Calculate intensity based on drag speed (capped at reasonable values)
+    local intensity = math.clamp(currentDragSpeed / 500, 0, 1) -- Adjust divisor for sensitivity
+    local thickness = 2 + (intensity * 8) -- From 2 to 10 thickness
+    local transparency = 0.3 - (intensity * 0.25) -- From 0.3 to 0.05 transparency
+    local glowTransparency = 0.8 - (intensity * 0.6) -- From 0.8 to 0.2 glow transparency
+    
+    -- Update outline properties
+    DragOutline.Thickness = thickness
+    DragOutline.Transparency = transparency
+    
+    -- Update glow effect
+    DragGlow.BackgroundTransparency = glowTransparency
+    
+    -- Create pulsing effect
+    local pulse = math.sin(tick() * 10) * 0.1 + 1 -- Pulse between 0.9 and 1.1
+    DragGlow.Size = UDim2.new(pulse, 0, pulse, 0)
+    DragGlow.Position = UDim2.new((1 - pulse) / 2, 0, (1 - pulse) / 2, 0)
+end
+
+-- Function to start drag tracking
+local function onDragStart()
+    isDragging = true
+    lastDragTime = tick()
+    lastDragPosition = Main.Position
+    
+    -- Start animation loop
+    if dragAnimation then
+        dragAnimation:Disconnect()
+    end
+    
+    dragAnimation = game:GetService("RunService").RenderStepped:Connect(function()
+        if isDragging then
+            updateDragOutline()
+        end
+    end)
+end
+
+-- Function to update drag speed
+local function updateDragSpeed()
+    local currentTime = tick()
+    local timeDelta = currentTime - lastDragTime
+    
+    if timeDelta > 0 then
+        local currentPosition = Main.Position
+        local positionDelta = Vector2.new(
+            math.abs(currentPosition.X.Offset - lastDragPosition.X.Offset),
+            math.abs(currentPosition.Y.Offset - lastDragPosition.Y.Offset)
+        )
+        
+        -- Calculate speed in pixels per second
+        currentDragSpeed = (positionDelta.X + positionDelta.Y) / timeDelta
+        
+        -- Update max speed for reference
+        if currentDragSpeed > maxDragSpeed then
+            maxDragSpeed = currentDragSpeed
+        end
+        
+        -- Update last values
+        lastDragTime = currentTime
+        lastDragPosition = currentPosition
+    end
+end
+
+-- Function to stop drag tracking
+local function onDragStop()
+    isDragging = false
+    
+    if dragAnimation then
+        dragAnimation:Disconnect()
+        dragAnimation = nil
+    end
+    
+    -- Reset drag speed
+    currentDragSpeed = 0
+    
+    -- Fade out effects
+    updateDragOutline()
+end
+
+-- Connect drag events
+Main.MouseEnter:Connect(function()
+    if Main.Draggable then
+        Main.Draggable = true -- Ensure draggable is enabled
+    end
+end)
+
+-- Track when user starts dragging
+local userInputService = game:GetService("UserInputService")
+local isMouseDownOnMain = false
+
+Main.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isMouseDownOnMain = true
+        onDragStart()
+    end
+end)
+
+Main.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isMouseDownOnMain = false
+        onDragStop()
+    end
+end)
+
+-- Update drag speed while dragging
+game:GetService("RunService").Heartbeat:Connect(function()
+    if isDragging and isMouseDownOnMain then
+        updateDragSpeed()
+    end
+end)
+
+-- Handle when user releases mouse outside the frame
+userInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if isMouseDownOnMain then
+            isMouseDownOnMain = false
+            onDragStop()
+        end
+    end
+end)
+
 UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
 
 task.spawn(function()
 	Main.BackgroundTransparency = 1
 	Title.TextTransparency = 1
+    DragOutline.Transparency = 1 -- Start outline as transparent
+    DragGlow.BackgroundTransparency = 1 -- Start glow as transparent
 
 	for i = 1, 20 do
 		Main.BackgroundTransparency = 1 - (i/20)
@@ -386,145 +559,76 @@ UICorner_10.CornerRadius = UDim.new(0.2, 0)
 UICorner_10.Parent = TextBox
 
 -- SCRIPT
+
 local TweenService = game:GetService("TweenService")
-
--- Helper function for smoother fade transitions
-local function createFadeTween(object, transparency, duration, easingStyle)
-    if object:IsA("GuiObject") then
-        local tweenInfo = TweenInfo.new(
-            duration or 0.25,
-            Enum.EasingStyle[easingStyle or "Linear"],
-            Enum.EasingDirection.In
-        )
-        return TweenService:Create(object, tweenInfo, {BackgroundTransparency = transparency})
-    end
-end
-
-local function createImageFadeTween(object, transparency, duration, easingStyle)
-    if object:IsA("ImageLabel") or object:IsA("ImageButton") then
-        local tweenInfo = TweenInfo.new(
-            duration or 0.25,
-            Enum.EasingStyle[easingStyle or "Linear"],
-            Enum.EasingDirection.In
-        )
-        return TweenService:Create(object, tweenInfo, {ImageTransparency = transparency})
-    end
-end
-
 Close.MouseButton1Click:Connect(function()
-    Logo.Active = true
+	Logo.Active = true
+	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
+
+	task.wait(0.3)
+	Logo:TweenSizeAndPosition(
+		UDim2.fromScale(0.75, 0.75),
+		UDim2.fromScale(0.5, 0.5),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.25, true, nil
+	)
+
+	task.wait(0.3)
+	Main:TweenSize(
+		UDim2.fromScale(0.1, 0.175),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.25, true, nil
+	)
+
+	task.wait(0.3)
+	for _, obj in pairs(Main:GetChildren()) do
+		if obj:IsA("GuiObject") and obj ~= Intro then
+			obj.Visible = false
+		end
+	end
+
+	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0.8}):Play()
+	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0.8}):Play()
     
-    -- Fade in Intro background
-    createFadeTween(Intro, 0):Play()
-    
-    task.wait(0.3)
-    
-    Logo:TweenSizeAndPosition(
-        UDim2.fromScale(0.75, 0.75),
-        UDim2.fromScale(0.5, 0.5),
-        Enum.EasingDirection.Out,
-        Enum.EasingStyle.Quad,
-        0.25, true, nil
-    )
-    
-    task.wait(0.3)
-    
-    Main:TweenSize(
-        UDim2.fromScale(0.1, 0.175),
-        Enum.EasingDirection.Out,
-        Enum.EasingStyle.Quad,
-        0.25, true, nil
-    )
-    
-    task.wait(0.3)
-    
-    -- Fade out child objects
-    for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro then
-            if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-                createFadeTween(obj, 1, 0.25, "Linear"):Play()
-            elseif obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-                local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-                TweenService:Create(obj, tweenInfo, {TextTransparency = 1}):Play()
-            end
-            -- Hide after fade completes
-            task.wait(0.25)
-            obj.Visible = false
-            -- Reset transparency for next time
-            if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-                obj.BackgroundTransparency = 0
-            elseif obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-                obj.TextTransparency = 0
-            end
-        end
-    end
-    
-    -- Simultaneous fade out effects
-    createImageFadeTween(Logo, 0.8):Play()
-    createFadeTween(Intro, 1):Play()
-    createFadeTween(Main, 0.8):Play()
+    -- Also fade out drag effects
+    TweenService:Create(DragOutline, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Transparency = 1}):Play()
+    TweenService:Create(DragGlow, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
 end)
 
 Logo.MouseButton1Click:Connect(function()
-    Logo.Active = false
-    
-    -- Reset transparencies before fade in
-    Logo.ImageTransparency = 1
-    Intro.BackgroundTransparency = 1
-    Main.BackgroundTransparency = 1
-    
-    -- Make child objects visible with transparency first
-    for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro then
-            if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-                obj.BackgroundTransparency = 1
-            elseif obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-                obj.TextTransparency = 1
-            end
-            obj.Visible = true
-        end
-    end
-    
-    -- Simultaneous fade in effects
-    createImageFadeTween(Logo, 0):Play()
-    createFadeTween(Intro, 0):Play()
-    createFadeTween(Main, 0):Play()
-    
-    -- Fade in child objects
-    for _, obj in pairs(Main:GetChildren()) do
-        if obj:IsA("GuiObject") and obj ~= Intro then
-            if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-                createFadeTween(obj, 0, 0.25, "Linear"):Play()
-            elseif obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-                local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-                TweenService:Create(obj, tweenInfo, {TextTransparency = 0}):Play()
-            end
-        end
-    end
-    
-    task.wait(0.3)
-    
-    Main:TweenSize(
-        UDim2.fromScale(0.3, 0.3),
-        Enum.EasingDirection.Out,
-        Enum.EasingStyle.Quad,
-        0.25, true, nil
-    )
-    
-    task.wait(0.3)
-    
-    Logo:TweenSizeAndPosition(
-        UDim2.fromScale(0.175, 0.175),
-        UDim2.fromScale(0.075, 0.15),
-        Enum.EasingDirection.Out,
-        Enum.EasingStyle.Quad,
-        0.25, true, nil
-    )
-    
-    task.wait(0.3)
-    
-    -- Final fade out of Intro background
-    createFadeTween(Intro, 1):Play()
+	Logo.Active = false
+	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0}):Play()
+	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
+
+	task.wait(0.3)
+	Main:TweenSize(
+		UDim2.fromScale(0.3, 0.3),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.25, true, nil
+	)
+
+	task.wait(0.3)
+	Logo:TweenSizeAndPosition(
+		UDim2.fromScale(0.175, 0.175),
+		UDim2.fromScale(0.075, 0.15),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.25, true, nil
+	)
+
+	for _, obj in pairs(Main:GetChildren()) do
+		if obj:IsA("GuiObject") and obj ~= Intro then
+			obj.Visible = true
+		end
+	end
+
+	task.wait(0.3)
+	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
 end)
 
 local function uiparent()
@@ -696,7 +800,7 @@ function lib:AddComboBox(text, options, funct, ...) -- ADD CUSTOM ELEMENT INSTEA
 	newCombo.Parent = Menu
 	newCombo.LayoutOrder = elements
 	newCombo.Parent = Menu
-	newCombo.Visible = true
+newCombo.Visible = true
 
 	elements += 1
 	AddSpace(Menu)
@@ -763,6 +867,19 @@ function lib:SetInputBoxColor(r, g, b)
     TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
 end
 
+function lib:SetDragOutlineColor(r, g, b)
+    DragOutline.Color = Color3.fromRGB(r, g, b)
+    DragGlow.BackgroundColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetDragOutlineMaxThickness(thickness)
+    -- This sets the maximum thickness the outline can reach when dragging fast
+    -- The base thickness is 2, and this adds to it
+    if thickness < 2 then thickness = 2 end
+    -- Store this for use in the update function
+    lib.DragMaxThickness = thickness
+end
+
 function lib:SetTheme(theme)
 	if theme == "Default" then
 		
@@ -771,21 +888,25 @@ function lib:SetTheme(theme)
 		lib:SetCloseBtnColor(74, 208, 238)
 		lib:SetBackgroundColor(5, 16, 58)
 		lib:SetInputBoxColor(74, 208, 238)
+		lib:SetDragOutlineColor(74, 208, 238)
 	elseif theme == "HighContrast" then
 		lib:SetBackgroundColor(0, 0, 0)
 		lib:SetButtonsColor(0, 0, 0)
 		lib:SetCloseBtnColor(255, 255, 0)
 		lib:SetInputBoxColor(0, 0, 0)
+		lib:SetDragOutlineColor(255, 255, 0)
 	elseif theme == "Aqua" then
 		lib:SetBackgroundColor(44, 62, 82)
 		lib:SetButtonsColor(52, 74, 95)
 		lib:SetCloseBtnColor(26, 189, 158)
 		lib:SetInputBoxColor(52, 74, 95)
+		lib:SetDragOutlineColor(26, 189, 158)
 	elseif theme == "Ocean" then
 		lib:SetBackgroundColor(26, 32, 58)
 		lib:SetButtonsColor(38, 45, 71)
 		lib:SetCloseBtnColor(86, 76, 251)
 		lib:SetInputBoxColor(38, 45, 71)
+		lib:SetDragOutlineColor(86, 76, 251)
 	else
 		error("Theme not found.")
 	end
