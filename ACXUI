@@ -370,7 +370,7 @@ UIGradient_5.Parent = InputBox
 TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
 TextBox.AnchorPoint = Vector2.new(1, 0.5)
-TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TextBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 TextBox.BackgroundTransparency = 0
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
@@ -384,7 +384,7 @@ TextBox.TextScaled = true
 TextBox.TextSize = 14
 TextBox.TextWrapped = true
 
-UICorner_10.CornerRadius = UDim.new(0.2, 0)
+UICorner_10.CornerRadius = UDim.new(0.25, 0)
 UICorner_10.Parent = TextBox
 
 -- SCRIPT
