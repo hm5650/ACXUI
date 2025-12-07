@@ -41,6 +41,7 @@ local Name_4 = Instance.new("TextLabel")
 local UIGradient_4 = Instance.new("UIGradient")
 local Img_2 = Instance.new("TextLabel")
 local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
+local MainStroke = Instance.new("UIStroke")
 
 -- New Input Box Instances:
 local InputBox = Instance.new("ImageButton")
@@ -49,41 +50,6 @@ local Name_5 = Instance.new("TextLabel")
 local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
-
--- Theme variables
-local currentTheme = "Default"
-local themeColors = {
-    Default = {
-        outline = Color3.fromRGB(255, 255, 255),
-        background = Color3.fromRGB(40, 40, 40),
-        button = Color3.fromRGB(55, 55, 55),
-        accent = Color3.fromRGB(255, 0, 0)
-    },
-    TomorrowNightBlue = {
-        outline = Color3.fromRGB(74, 208, 238),
-        background = Color3.fromRGB(5, 16, 58),
-        button = Color3.fromRGB(74, 208, 238),
-        accent = Color3.fromRGB(74, 208, 238)
-    },
-    HighContrast = {
-        outline = Color3.fromRGB(255, 255, 0),
-        background = Color3.fromRGB(0, 0, 0),
-        button = Color3.fromRGB(0, 0, 0),
-        accent = Color3.fromRGB(255, 255, 0)
-    },
-    Aqua = {
-        outline = Color3.fromRGB(26, 189, 158),
-        background = Color3.fromRGB(44, 62, 82),
-        button = Color3.fromRGB(52, 74, 95),
-        accent = Color3.fromRGB(26, 189, 158)
-    },
-    Ocean = {
-        outline = Color3.fromRGB(86, 76, 251),
-        background = Color3.fromRGB(26, 32, 58),
-        button = Color3.fromRGB(38, 45, 71),
-        accent = Color3.fromRGB(86, 76, 251)
-    }
-}
 
 -- Properties:
 
@@ -99,46 +65,34 @@ Main.Active = true
 Main.Draggable = true
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Main.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.5, 0, -0.2, 0) --UDim2.new(0.5, 0, 0.5, 0)
+Main.Position = UDim2.new(0.5, 0, -0.2, 0)
 Main.Size = UDim2.new(0.3, 0, 0.3, 0)
+
+MainStroke.Name = "MainOutline"
+MainStroke.Parent = Main
+MainStroke.Color = Color3.fromRGB(0, 0, 0) -- Black color
+MainStroke.Thickness = 1
+MainStroke.Transparency = 0.4
+MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border -- Applies the stroke to the border of the element
 
 UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
-
--- Create outline frame (container for the stroke)
-local OutlineFrame = Instance.new("Frame")
-OutlineFrame.Name = "OutlineFrame"
-OutlineFrame.Parent = Main
-OutlineFrame.BackgroundTransparency = 1
-OutlineFrame.Size = UDim2.new(1, 0, 1, 0)
-OutlineFrame.ZIndex = 0
-
--- Create the UIStroke for dragging outline
-local DragOutline = Instance.new("UIStroke")
-DragOutline.Parent = OutlineFrame
-DragOutline.Color = Color3.fromRGB(255, 255, 255)
-DragOutline.Thickness = 3
-DragOutline.Transparency = 1
-DragOutline.LineJoinMode = Enum.LineJoinMode.Round
 
 task.spawn(function()
 	Main.BackgroundTransparency = 1
 	Title.TextTransparency = 1
 
 	for i = 1, 20 do
-		Main.BackgroundTransparency = 0.8 - (i/20) * 0.6 -- Adjusted for 0.2 transparency
+		Main.BackgroundTransparency = 1 - (i/20)
 		Title.TextTransparency = 1 - (i/20)
 		task.wait(0.02)
 	end
-    Main.BackgroundTransparency = 0.2 -- Ensure it ends at 0.2
 end)
 
 Intro.Name = "Intro"
 Intro.Parent = Main
 Intro.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Intro.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Intro.ClipsDescendants = true
 Intro.Size = UDim2.new(1, 0, 1, 0)
 Intro.ZIndex = 2
@@ -199,8 +153,8 @@ UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 Toggle.Name = "Toggle"
 Toggle.Visible = false
+--Toggle.Parent = Arceus
 Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-Toggle.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_3.CornerRadius = UDim.new(0.25, 0)
@@ -210,7 +164,6 @@ Enabled.Name = "Enabled"
 Enabled.Parent = Toggle
 Enabled.AnchorPoint = Vector2.new(1, 0.5)
 Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Enabled.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
 Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
 
@@ -223,7 +176,6 @@ Check.Name = "Check"
 Check.Parent = Enabled
 Check.AnchorPoint = Vector2.new(0.5, 0.5)
 Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Check.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Check.Position = UDim2.new(0.5, 0, 0.5, 0)
 Check.Size = UDim2.new(0.65, 0, 0.65, 0)
 
@@ -253,8 +205,8 @@ UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.from
 UIGradient.Parent = Toggle
 
 Button.Name = "Button"
+--Button.Parent = Arceus
 Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-Button.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Button.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_6.CornerRadius = UDim.new(0.25, 0)
@@ -282,6 +234,7 @@ UIGradient_2.Parent = Button
 
 tab.Name = "Tab"
 tab.Visible = false
+--tab.Parent = Arceus
 tab.BackgroundTransparency = 1
 tab.Size = UDim2.new(0.95, 0, 0.025, 0)
 
@@ -302,7 +255,6 @@ Close.Parent = Main
 
 ComboElem.Name = "ComboElem"
 ComboElem.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-ComboElem.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_7.CornerRadius = UDim.new(0.25, 0)
@@ -349,7 +301,6 @@ UIAspectRatioConstraint_4.Parent = Img
 
 ComboBox.Name = "ComboBox"
 ComboBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-ComboBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_8.CornerRadius = UDim.new(0.25, 0)
@@ -396,7 +347,6 @@ UIAspectRatioConstraint_5.Parent = Img_2
 -- Input Box Properties:
 InputBox.Name = "InputBox"
 InputBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-InputBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 InputBox.Size = UDim2.new(0.95, 0, 0, 50)
 InputBox.AutoButtonColor = false
 
@@ -427,7 +377,7 @@ TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
 TextBox.AnchorPoint = Vector2.new(1, 0.5)
 TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-TextBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
+TextBox.BackgroundTransparency = 0
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
 TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
@@ -446,59 +396,6 @@ UICorner_10.Parent = TextBox
 -- SCRIPT
 
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-
--- Function to handle dragging outline
-local function updateDragOutline(isDragging)
-    local themeColor = themeColors[currentTheme].outline
-    local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    if isDragging then
-        local glowTween = TweenService:Create(DragOutline, tweenInfo, {
-            Transparency = 0,
-            Thickness = 4,
-            Color = themeColor
-        })
-        glowTween:Play()
-    else
-        local fadeTween = TweenService:Create(DragOutline, tweenInfo, {
-            Transparency = 1,
-            Thickness = 3
-        })
-        fadeTween:Play()
-    end
-end
-
--- Connect dragging events
-local isDragging = false
-
-local function onInputBegan(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        updateDragOutline(true)
-    end
-end
-
-local function onInputEnded(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-        updateDragOutline(false)
-    end
-end
-
--- Connect input events
-Main.InputBegan:Connect(onInputBegan)
-Main.InputEnded:Connect(onInputEnded)
-
--- Also handle when mouse leaves the frame while dragging
-Main.MouseLeave:Connect(function()
-    if isDragging then
-        isDragging = false
-        updateDragOutline(false)
-    end
-end)
-
--- Handle close button
 Close.MouseButton1Click:Connect(function()
 	Logo.Active = true
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
@@ -522,7 +419,7 @@ Close.MouseButton1Click:Connect(function()
 
 	task.wait(0.3)
 	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro and obj.Name ~= "OutlineFrame" then
+		if obj:IsA("GuiObject") and obj ~= Intro then
 			obj.Visible = false
 		end
 	end
@@ -536,7 +433,7 @@ Logo.MouseButton1Click:Connect(function()
 	Logo.Active = false
 	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0}):Play()
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0.2}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
 
 	task.wait(0.3)
 	Main:TweenSize(
@@ -556,7 +453,7 @@ Logo.MouseButton1Click:Connect(function()
 	)
 
 	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro and obj.Name ~= "OutlineFrame" then
+		if obj:IsA("GuiObject") and obj ~= Intro then
 			obj.Visible = true
 		end
 	end
@@ -801,52 +698,33 @@ function lib:SetInputBoxColor(r, g, b)
     TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
 end
 
--- Function to set outline color
-function lib:SetOutlineColor(r, g, b)
-    local color = Color3.fromRGB(r, g, b)
-    DragOutline.Color = color
-    themeColors[currentTheme].outline = color
-end
-
-function lib:SetTransparency(value)
-    -- Set transparency for main frame and all elements
-    Main.BackgroundTransparency = value
-    Intro.BackgroundTransparency = value
-    Toggle.BackgroundTransparency = value
-    Button.BackgroundTransparency = value
-    ComboElem.BackgroundTransparency = value
-    ComboBox.BackgroundTransparency = value
-    InputBox.BackgroundTransparency = value
-    TextBox.BackgroundTransparency = value
-    Enabled.BackgroundTransparency = value
-    Check.BackgroundTransparency = value
-end
-
 function lib:SetTheme(theme)
-    if themeColors[theme] then
-        currentTheme = theme
-        local colors = themeColors[theme]
-        
-        -- Apply theme colors
-        lib:SetBackgroundColor(colors.background.R * 255, colors.background.G * 255, colors.background.B * 255)
-        lib:SetButtonsColor(colors.button.R * 255, colors.button.G * 255, colors.button.B * 255)
-        lib:SetCloseBtnColor(colors.accent.R * 255, colors.accent.G * 255, colors.accent.B * 255)
-        lib:SetInputBoxColor(colors.button.R * 255, colors.button.G * 255, colors.button.B * 255)
-        lib:SetOutlineColor(colors.outline.R * 255, colors.outline.G * 255, colors.outline.B * 255)
-        
-        -- Set input box text field color
-        TextBox.BackgroundColor3 = Color3.fromRGB(
-            math.max(0, colors.background.R * 255 - 15),
-            math.max(0, colors.background.G * 255 - 15),
-            math.max(0, colors.background.B * 255 - 15)
-        )
-    else
-        error("Theme not found.")
-    end
+	if theme == "Default" then
+		
+	elseif theme == "TomorrowNightBlue" then
+		lib:SetButtonsColor(74, 208, 238)
+		lib:SetCloseBtnColor(74, 208, 238)
+		lib:SetBackgroundColor(5, 16, 58)
+		lib:SetInputBoxColor(74, 208, 238)
+	elseif theme == "HighContrast" then
+		lib:SetBackgroundColor(0, 0, 0)
+		lib:SetButtonsColor(0, 0, 0)
+		lib:SetCloseBtnColor(255, 255, 0)
+		lib:SetInputBoxColor(0, 0, 0)
+	elseif theme == "Aqua" then
+		lib:SetBackgroundColor(44, 62, 82)
+		lib:SetButtonsColor(52, 74, 95)
+		lib:SetCloseBtnColor(26, 189, 158)
+		lib:SetInputBoxColor(52, 74, 95)
+	elseif theme == "Ocean" then
+		lib:SetBackgroundColor(26, 32, 58)
+		lib:SetButtonsColor(38, 45, 71)
+		lib:SetCloseBtnColor(86, 76, 251)
+		lib:SetInputBoxColor(38, 45, 71)
+	else
+		error("Theme not found.")
+	end
 end
-
--- Set initial transparency to 0.2 for all elements
-lib:SetTransparency(0.2)
 
 -- INIT
 
