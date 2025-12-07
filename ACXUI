@@ -1,15 +1,8 @@
--- Arceus X UI Lib – Premium Visual Overhaul (2025 Edition)
--- Only UI enhanced. All functions & instance names unchanged.
-
 local lib = {}
 
 local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
 
--- Services
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-
--- Instances (same as original)
+-- Instances:
 local Arceus = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -49,7 +42,7 @@ local UIGradient_4 = Instance.new("UIGradient")
 local Img_2 = Instance.new("TextLabel")
 local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
 
--- Input Box
+-- New Input Box Instances:
 local InputBox = Instance.new("ImageButton")
 local UICorner_9 = Instance.new("UICorner")
 local Name_5 = Instance.new("TextLabel")
@@ -57,377 +50,882 @@ local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
 
--- === VISUAL UPGRADES ===
+-- Properties:
 
 Arceus.Name = "Arceus"
-Arceus.ResetOnSpawn = false
+Arceus.Enabled = true
+Arceus.ResetOnSpawn = true
 Arceus.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Arceus.DisplayOrder = 999999999
 
--- Main Frame – Glassmorphism + Glow
 Main.Name = "Main"
 Main.Parent = Arceus
 Main.Active = true
 Main.Draggable = true
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-Main.BackgroundTransparency = 0.35  -- More glass-like
-Main.Position = UDim2.new(0.5, 0, -0.2, 0)
-Main.Size = UDim2.new(0.32, 0, 0.36, 0)
+Main.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+-- subtle transparency by default
+Main.BackgroundTransparency = 0.12
 Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.5, 0, -0.2, 0)
+Main.Size = UDim2.new(0.3, 0, 0.3, 0)
 
-UICorner.CornerRadius = UDim.new(0.06, 0)
+UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
 
--- Outer Glow (UIStroke)
+-- Outline stroke for Main (UIStroke)
 local MainStroke = Instance.new("UIStroke")
-MainStroke.Transparency = 0.7
-MainStroke.Thickness = 4
-MainStroke.Color = Color3.fromRGB(255, 50, 50)
-MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 MainStroke.Parent = Main
+MainStroke.Color = Color3.fromRGB(18, 18, 18)
+MainStroke.Thickness = 2
+MainStroke.Transparency = 0.45
 
--- Inner subtle border
-local InnerStroke = Instance.new("UIStroke")
-InnerStroke.Transparency = 0.85
-InnerStroke.Thickness = 1.5
-InnerStroke.Color = Color3.fromRGB(80, 80, 100)
-InnerStroke.Parent = Main
-
--- Intro (smoother logo reveal)
 Intro.Name = "Intro"
 Intro.Parent = Main
-Intro.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+Intro.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Intro.ClipsDescendants = true
+Intro.Size = UDim2.new(1, 0, 1, 0)
+Intro.ZIndex = 2
+-- Intro starts opaque so logo animation looks good
 Intro.BackgroundTransparency = 0
-Intro.Size = UDim2.new(1,0,1,0)
-Intro.ZIndex = 10
-UICorner_2.CornerRadius = UDim.new(0.06, 0)
+
+UICorner_2.CornerRadius = UDim.new(0.1, 0)
 UICorner_2.Parent = Intro
 
--- Logo
 Logo.Parent = Intro
+Logo.AnchorPoint = Vector2.new(0.5, 0.5)
+Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Logo.BackgroundTransparency = 1
+Logo.BorderSizePixel = 0
 Logo.Position = UDim2.new(0.5, 0, 0.5, 0)
 Logo.Size = UDim2.new(0.75, 0, 0.75, 0)
+Logo.ZIndex = 2
 Logo.Image = "http://www.roblox.com/asset/?id=9178187770"
-Logo.ZIndex = 11
+Logo.ScaleType = Enum.ScaleType.Fit
+Logo.Active = false
+
 UIAspectRatioConstraint.Parent = Logo
 
--- Title – Better font & glow
+Title.Name = "Title"
 Title.Parent = Main
-Title.Position = UDim2.new(0.975, 0, 0.07, 0)
-Title.Size = UDim2.new(0.85, 0, 0.14, 0)
+Title.AnchorPoint = Vector2.new(1, 0)
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Title.BackgroundTransparency = 1
-Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold)
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Text = Script_Title
+Title.BorderSizePixel = 0
+Title.Position = UDim2.new(0.975, 0, 0.075, 0)
+Title.Size = UDim2.new(0.85, 0, 0.155, 0)
+Title.Font = Enum.Font.TitilliumWeb
+Title.FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Bold)
 Title.RichText = true
+Title.Text = Script_Title
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
+Title.TextSize = 14
+Title.TextWrapped = true
 Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextYAlignment = Enum.TextYAlignment.Center
+-- title subtle transparency for cleaner look
+Title.TextTransparency = 0
 
--- Subtle title glow
-local TitleGlow = Instance.new("UIStroke", Title)
-TitleGlow.Color = Color3.fromRGB(255, 80, 80)
-TitleGlow.Thickness = 2
-TitleGlow.Transparency = 0.7
-
--- Menu
+Menu.Name = "Menu"
 Menu.Parent = Main
-Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
-Menu.Size = UDim2.new(0.94, 0, 0.68, 0)
+Menu.Active = true
+Menu.AnchorPoint = Vector2.new(0.5, 1)
+Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Menu.BackgroundTransparency = 1
 Menu.AutomaticCanvasSize = Enum.AutomaticSize.Y
-Menu.ScrollBarThickness = 5
-Menu.ScrollBarImageColor3 = Color3.fromRGB(120, 120, 140)
+Menu.BorderSizePixel = 0
+Menu.Position = UDim2.new(0.5, 0, 0.95, 0)
+Menu.Size = UDim2.new(0.95, 0, 0.65, 0)
+Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
+Menu.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
+Menu.ScrollBarThickness = 8
 
 UIListLayout.Parent = Menu
-UIListLayout.Padding = UDim.new(0, 8)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Close Button – Bigger & Pulsing
-Close.Parent = Main
-Close.Position = UDim2.new(0.92, 0, 0.06, 0)
-Close.Size = UDim2.new(0.12, 0, 0.12, 0)
+Toggle.Name = "Toggle"
+Toggle.Visible = false
+Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+-- more transparent button backgrounds by default
+Toggle.BackgroundTransparency = 0.14
+Toggle.Size = UDim2.new(0.95, 0, 0, 50)
+
+UICorner_3.CornerRadius = UDim.new(0.25, 0)
+UICorner_3.Parent = Toggle
+
+-- outline for interactive elements
+local function addStroke(parent, thickness, transparency)
+	local s = Instance.new("UIStroke")
+	s.Parent = parent
+	s.Thickness = thickness or 1
+	s.Transparency = transparency or 0.6
+	s.Color = Color3.fromRGB(18,18,18)
+	return s
+end
+
+addStroke(Toggle, 1, 0.6)
+
+Enabled.Name = "Enabled"
+Enabled.Parent = Toggle
+Enabled.AnchorPoint = Vector2.new(1, 0.5)
+Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
+Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
+
+UIAspectRatioConstraint_2.Parent = Enabled
+
+UICorner_4.CornerRadius = UDim.new(0.3, 0)
+UICorner_4.Parent = Enabled
+
+Check.Name = "Check"
+Check.Parent = Enabled
+Check.AnchorPoint = Vector2.new(0.5, 0.5)
+Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Check.Position = UDim2.new(0.5, 0, 0.5, 0)
+Check.Size = UDim2.new(0.65, 0, 0.65, 0)
+
+UIAspectRatioConstraint_3.Parent = Check
+
+UICorner_5.CornerRadius = UDim.new(0.3, 0)
+UICorner_5.Parent = Check
+
+Name.Name = "Name"
+Name.Parent = Toggle
+Name.AnchorPoint = Vector2.new(0, 0.5)
+Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name.BackgroundTransparency = 1
+Name.BorderSizePixel = 0
+Name.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name.Font = Enum.Font.TitilliumWeb
+Name.Text = "Script"
+Name.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name.TextScaled = true
+Name.TextSize = 14
+Name.TextWrapped = true
+Name.TextXAlignment = Enum.TextXAlignment.Left
+Name.TextYAlignment = Enum.TextYAlignment.Bottom
+Name.TextTransparency = 0
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient.Parent = Toggle
+
+Button.Name = "Button"
+Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+Button.BackgroundTransparency = 0.14
+Button.Size = UDim2.new(0.95, 0, 0, 50)
+
+UICorner_6.CornerRadius = UDim.new(0.25, 0)
+UICorner_6.Parent = Button
+
+addStroke(Button, 1, 0.6)
+
+Name_2.Name = "Name"
+Name_2.Parent = Button
+Name_2.AnchorPoint = Vector2.new(0, 0.5)
+Name_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_2.BackgroundTransparency = 1
+Name_2.BorderSizePixel = 0
+Name_2.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_2.Size = UDim2.new(0.95, 0, 0.82, 0)
+Name_2.Font = Enum.Font.TitilliumWeb
+Name_2.Text = "Enabled"
+Name_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_2.TextScaled = true
+Name_2.TextSize = 14
+Name_2.TextWrapped = true
+Name_2.TextXAlignment = Enum.TextXAlignment.Left
+Name_2.TextYAlignment = Enum.TextYAlignment.Bottom
+Name_2.TextTransparency = 0
+
+UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_2.Parent = Button
+
+tab.Name = "Tab"
+tab.Visible = false
+tab.BackgroundTransparency = 1
+tab.Size = UDim2.new(0.95, 0, 0.025, 0)
+
+Close.Name = "Close"
+Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Close.BackgroundTransparency = 1
-Close.Text = "×"
-Close.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold)
-Close.TextColor3 = Color3.fromRGB(255, 80, 80)
+Close.BorderSizePixel = 0
+Close.Position = UDim2.new(0.8, 0, 0.1, 0)
+Close.Size = UDim2.new(0.15, 0, 0.125, 0)
+Close.Font = Enum.Font.FredokaOne
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 0, 0)
 Close.TextScaled = true
+Close.TextSize = 14
+Close.TextWrapped = true
+Close.TextXAlignment = Enum.TextXAlignment.Right
+Close.Parent = Main
+Close.TextTransparency = 0
 
--- Hover scale effect helper
-local function addHoverEffect(button, scaleUp)
-	scaleUp = scaleUp or 1.04
-	local originalSize = button.Size
-	button.MouseEnter:Connect(function()
-		TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Size = originalSize * scaleUp}):Play()
-		if button:FindFirstChild("UIStroke") then
-			TweenService:Create(button.UIStroke, TweenInfo.new(0.2), {Transparency = 0.4}):Play()
-		end
-	end)
-	button.MouseLeave:Connect(function()
-		TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Size = originalSize}):Play()
-		if button:FindFirstChild("UIStroke") then
-			TweenService:Create(button.UIStroke, TweenInfo.new(0.2), {Transparency = 0.6}):Play()
-		end
-	end)
-end
+ComboElem.Name = "ComboElem"
+ComboElem.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboElem.BackgroundTransparency = 0.14
+ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
 
--- Universal element style
-local function styleElement(elem)
-	elem.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-	elem.BackgroundTransparency = 0.3
-	elem.Size = UDim2.new(0.95, 0, 0, 54)
+UICorner_7.CornerRadius = UDim.new(0.25, 0)
+UICorner_7.Parent = ComboElem
 
-	local corner = elem:FindFirstChild("UICorner") or Instance.new("UICorner", elem)
-	corner.CornerRadius = UDim.new(0.3, 0)
+addStroke(ComboElem, 1, 0.6)
 
-	local stroke = Instance.new("UIStroke", elem)
-	stroke.Thickness = 1.4
-	stroke.Transparency = 0.6
-	stroke.Color = Color3.fromRGB(100, 100, 140)
+Name_3.Name = "Name"
+Name_3.Parent = ComboElem
+Name_3.AnchorPoint = Vector2.new(0, 0.5)
+Name_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_3.BackgroundTransparency = 1
+Name_3.BorderSizePixel = 0
+Name_3.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_3.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_3.Font = Enum.Font.TitilliumWeb
+Name_3.Text = "Enabled"
+Name_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_3.TextScaled = true
+Name_3.TextSize = 14
+Name_3.TextWrapped = true
+Name_3.TextXAlignment = Enum.TextXAlignment.Left
+Name_3.TextYAlignment = Enum.TextYAlignment.Bottom
+Name_3.TextTransparency = 0
 
-	local gradient = Instance.new("UIGradient", elem)
-	gradient.Color = ColorSequence.new{
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(140, 140, 180))
-	}
-	gradient.Transparency = NumberSequence.new{
-		NumberSequenceKeypoint.new(0, 0.7),
-		NumberSequenceKeypoint.new(1, 0.85)
-	}
-	gradient.Rotation = 90
+UIGradient_3.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_3.Rotation = 180
+UIGradient_3.Parent = ComboElem
 
-	addHoverEffect(elem, 1.03)
-end
+Img.Name = "Img"
+Img.Parent = ComboElem
+Img.AnchorPoint = Vector2.new(1, 0.5)
+Img.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Img.BackgroundTransparency = 1
+Img.BorderSizePixel = 0
+Img.Position = UDim2.new(0.975, 0, 0.5, 0)
+Img.Rotation = 90
+Img.Size = UDim2.new(0.75, 0, 0.75, 0)
+Img.Font = Enum.Font.FredokaOne
+Img.Text = "^"
+Img.TextColor3 = Color3.fromRGB(255, 255, 255)
+Img.TextScaled = true
+Img.TextSize = 14
+Img.TextWrapped = true
+Img.TextTransparency = 0
 
--- Apply to templates
-styleElement(Toggle)
-styleElement(Button)
-styleElement(ComboBox)
-styleElement(ComboElem)
-styleElement(InputBox)
+UIAspectRatioConstraint_4.Parent = Img
 
--- Toggle – Smooth sliding check
-Toggle.Enabled.Check.Position = UDim2.new(0.5, 0, 0.5, 0)
-Toggle.Enabled.Check.Size = UDim2.new(0, 26, 0, 26)
-Toggle.Enabled.Check.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
-local checkCorner = Instance.new("UICorner", Toggle.Enabled.Check)
-checkCorner.CornerRadius = UDim.new(1, 0)
+ComboBox.Name = "ComboBox"
+ComboBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboBox.BackgroundTransparency = 0.14
+ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
--- Input Box – Cleaner text field
-TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-TextBox.BackgroundTransparency = 0.4
-TextBox.Size = UDim2.new(0.38, 0, 0.65, 0)
+UICorner_8.CornerRadius = UDim.new(0.25, 0)
+UICorner_8.Parent = ComboBox
+
+addStroke(ComboBox, 1, 0.6)
+
+Name_4.Name = "Name"
+Name_4.Parent = ComboBox
+Name_4.AnchorPoint = Vector2.new(0, 0.5)
+Name_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_4.BackgroundTransparency = 1.000
+Name_4.BorderSizePixel = 0
+Name_4.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_4.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_4.Font = Enum.Font.TitilliumWeb
+Name_4.Text = "Enabled"
+Name_4.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_4.TextScaled = true
+Name_4.TextSize = 14
+Name_4.TextWrapped = true
+Name_4.TextXAlignment = Enum.TextXAlignment.Left
+Name_4.TextYAlignment = Enum.TextYAlignment.Bottom
+Name_4.TextTransparency = 0
+
+UIGradient_4.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_4.Parent = ComboBox
+
+Img_2.Name = "Img"
+Img_2.Parent = ComboBox
+Img_2.AnchorPoint = Vector2.new(1, 0.5)
+Img_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Img_2.BackgroundTransparency = 1
+Img_2.BorderSizePixel = 0
+Img_2.Rotation = 180
+Img_2.Position = UDim2.new(0.975, 0, 0.5, 0)
+Img_2.Size = UDim2.new(0.75, 0, 0.75, 0)
+Img_2.Font = Enum.Font.FredokaOne
+Img_2.Text = "^"
+Img_2.TextColor3 = Color3.fromRGB(255, 0, 0)
+Img_2.TextScaled = true
+Img_2.TextSize = 14
+Img_2.TextWrapped = true
+Img_2.TextTransparency = 0
+
+UIAspectRatioConstraint_5.Parent = Img_2
+
+-- Input Box Properties:
+InputBox.Name = "InputBox"
+InputBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+InputBox.BackgroundTransparency = 0.14
+InputBox.Size = UDim2.new(0.95, 0, 0, 50)
+InputBox.AutoButtonColor = false
+
+UICorner_9.CornerRadius = UDim.new(0.25, 0)
+UICorner_9.Parent = InputBox
+
+addStroke(InputBox, 1, 0.6)
+
+Name_5.Name = "Name"
+Name_5.Parent = InputBox
+Name_5.AnchorPoint = Vector2.new(0, 0.5)
+Name_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Name_5.BackgroundTransparency = 1
+Name_5.BorderSizePixel = 0
+Name_5.Position = UDim2.new(0.05, 0, 0.5, 0)
+Name_5.Size = UDim2.new(0.75, 0, 0.8, 0)
+Name_5.Font = Enum.Font.TitilliumWeb
+Name_5.Text = "Input Box"
+Name_5.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name_5.TextScaled = true
+Name_5.TextSize = 14
+Name_5.TextWrapped = true
+Name_5.TextXAlignment = Enum.TextXAlignment.Left
+Name_5.TextYAlignment = Enum.TextYAlignment.Bottom
+Name_5.TextTransparency = 0
+
+UIGradient_5.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 180, 180))}
+UIGradient_5.Parent = InputBox
+
+TextBox.Name = "TextBox"
+TextBox.Parent = InputBox
+TextBox.AnchorPoint = Vector2.new(1, 0.5)
+TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+-- slightly darker text box background
+TextBox.BackgroundTransparency = 0.06
+TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
-TextBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 200)
+TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
+TextBox.Font = Enum.Font.TitilliumWeb
+TextBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
+TextBox.PlaceholderText = "Enter text..."
+TextBox.Text = ""
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-UICorner_10.CornerRadius = UDim.new(0.4, 0)
+TextBox.TextScaled = true
+TextBox.TextSize = 14
+TextBox.TextWrapped = true
 
--- ComboBox Arrow
-Img.Text = "▼"
-Img_2.Text = "▲"
-Img.TextColor3 = Color3.fromRGB(200, 200, 255)
-Img_2.TextColor3 = Color3.fromRGB(255, 100, 100)
+UICorner_10.CornerRadius = UDim.new(0.2, 0)
+UICorner_10.Parent = TextBox
 
--- === SMOOTH ANIMATIONS ===
+-- SCRIPT
 
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+-- store original transparencies so fade-ins restore them
 local originalTransparency = {}
 
 local function recordTrans(obj)
 	if not obj then return end
 	originalTransparency[obj] = {
-		BackgroundTransparency = obj:IsA("GuiObject") and obj.BackgroundTransparency,
-		TextTransparency = (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and obj.TextTransparency,
-		ImageTransparency = (obj:IsA("ImageLabel") or obj:IsA("ImageButton")) and obj.ImageTransparency
+		BackgroundTransparency = (obj:IsA("GuiObject") and obj.BackgroundTransparency) or nil,
+		TextTransparency = (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and obj.TextTransparency or nil,
+		ImageTransparency = (obj:IsA("ImageLabel") or obj:IsA("ImageButton")) and obj.ImageTransparency or nil
 	}
 end
 
+-- record initial transparencies for children of Main (and Main itself)
+recordTrans(Arceus)
+recordTrans(Main)
+recordTrans(Intro)
+recordTrans(Logo)
+recordTrans(Title)
 for _, v in pairs(Main:GetDescendants()) do
-	if v:IsA("GuiObject") or v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
+	if v:IsA("GuiObject") or v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("ImageLabel") or v:IsA("ImageButton") or v:IsA("TextBox") then
 		recordTrans(v)
 	end
 end
-recordTrans(Main)
 
-local function fadeIn(obj, t) 
-	t = t or 0.3
-	local info = TweenInfo.new(t, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+local function tween(obj, props, info)
+	if not obj or not obj.Parent then return end
+	TweenService:Create(obj, info or TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+-- Fade helpers: fade to transparencies of 1 (out) or restore (in)
+local function fadeOutObject(obj, time)
+	if not obj or not obj.Parent then return end
+	local info = TweenInfo.new(time or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 	if obj:IsA("GuiObject") then
-		TweenService:Create(obj, info, {BackgroundTransparency = originalTransparency[obj].BackgroundTransparency or 0}):Play()
+		pcall(function() tween(obj, {BackgroundTransparency = 1}, info) end)
 	end
 	if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-		TweenService:Create(obj, info, {TextTransparency = 0}):Play()
+		pcall(function() tween(obj, {TextTransparency = 1}, info) end)
+	end
+	if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+		pcall(function() tween(obj, {ImageTransparency = 1}, info) end)
 	end
 end
 
-local function fadeOut(obj, t)
-	t = t or 0.25
-	local info = TweenInfo.new(t, Enum.EasingStyle.Quad)
-	if obj:IsA("GuiObject") then TweenService:Create(obj, info, {BackgroundTransparency = 1}):Play() end
-	if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then TweenService:Create(obj, info, {TextTransparency = 1}):Play() end
-	if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then TweenService:Create(obj, info, {ImageTransparency = 1}):Play() end
+local function fadeInObject(obj, time)
+	if not obj then return end
+	local info = TweenInfo.new(time or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local orig = originalTransparency[obj] or {}
+	if obj:IsA("GuiObject") and orig.BackgroundTransparency ~= nil then
+		pcall(function() tween(obj, {BackgroundTransparency = orig.BackgroundTransparency}, info) end)
+	end
+	if (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and orig.TextTransparency ~= nil then
+		pcall(function() tween(obj, {TextTransparency = orig.TextTransparency}, info) end)
+	end
+	if (obj:IsA("ImageLabel") or obj:IsA("ImageButton")) and orig.ImageTransparency ~= nil then
+		pcall(function() tween(obj, {ImageTransparency = orig.ImageTransparency}, info) end)
+	end
 end
 
--- Close Animation – Ultra smooth collapse
+-- Helper to fade whole GUI subtree (non-blocking)
+local function fadeOutTree(root, time)
+	time = time or 0.25
+	for _, obj in pairs(root:GetDescendants()) do
+		if obj:IsA("GuiObject") or obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("ImageLabel") or obj:IsA("ImageButton") or obj:IsA("TextBox") then
+			-- don't fade the Intro immediately when shrinking to logo (handled separately)
+			fadeOutObject(obj, time)
+		end
+	end
+end
+
+local function fadeInTree(root, time)
+	time = time or 0.25
+	for _, obj in pairs(root:GetDescendants()) do
+		if obj:IsA("GuiObject") or obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("ImageLabel") or obj:IsA("ImageButton") or obj:IsA("TextBox") then
+			fadeInObject(obj, time)
+		end
+	end
+end
+
+-- Updated Close behavior: smooth fade + scale/shape animations
 Close.MouseButton1Click:Connect(function()
-	TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Size = UDim2.new(0.11, 0, 0.19, 0)}):Play()
-	TweenService:Create(Logo, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Size = UDim2.new(0.8, 0, 0.8, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.4), {BackgroundTransparency = 0.75}):Play()
+	Logo.Active = true
 
-	for _, v in pairs(Menu:GetChildren()) do
-		if v:IsA("GuiObject") and v.Visible then
-			fadeOut(v, 0.3)
-			task.delay(0.3, function() v.Visible = false end)
+	-- reveal intro and fade main background slightly for focus
+	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+
+	-- shrink UI with fading children
+	task.wait(0.28)
+	Logo:TweenSizeAndPosition(
+		UDim2.fromScale(0.75, 0.75),
+		UDim2.fromScale(0.5, 0.5),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.25, true, nil
+	)
+
+	task.wait(0.28)
+	Main:TweenSize(
+		UDim2.fromScale(0.105, 0.185),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.28, true, nil
+	)
+
+	task.wait(0.2)
+	-- fade out interactive children (excluding Intro so logo remains)
+	for _, obj in pairs(Main:GetChildren()) do
+		if obj:IsA("GuiObject") and obj ~= Intro then
+			-- fade each child, then set Visible=false after tween completes
+			spawn(function()
+				fadeOutObject(obj, 0.25)
+				task.wait(0.28)
+				-- keep Intro visible; hide others
+				if obj ~= Intro then
+					pcall(function() obj.Visible = false end)
+				end
+			end)
 		end
 	end
 
-	task.wait(0.4)
-	Intro.BackgroundTransparency = 1
+	-- reduce image visibility and hide intro background for a crisp compact logo
+	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {ImageTransparency = 0.8}):Play()
+	TweenService:Create(Intro, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
+	-- slightly increase main transparency so compact UI feels lighter
+	TweenService:Create(Main, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {BackgroundTransparency = 0.9}):Play()
 end)
 
--- Open Animation
+-- Updated Logo click behavior: fade children back in smoothly
 Logo.MouseButton1Click:Connect(function()
-	for _, v in pairs(Menu:GetChildren()) do
-		if v:IsA("GuiObject") then
-			v.Visible = true
-			fadeIn(v, 0.4)
+	Logo.Active = false
+	-- reveal the logo image clearly
+	TweenService:Create(Logo, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+	-- bring intro back briefly for transition
+	TweenService:Create(Intro, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+	-- make main visible (reduce transparency)
+	TweenService:Create(Main, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = originalTransparency[Main] and originalTransparency[Main].BackgroundTransparency or 0.12}):Play()
+
+	task.wait(0.25)
+	Main:TweenSize(
+		UDim2.fromScale(0.3, 0.3),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.28, true, nil
+	)
+
+	task.wait(0.28)
+	Logo:TweenSizeAndPosition(
+		UDim2.fromScale(0.175, 0.175),
+		UDim2.fromScale(0.075, 0.15),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.28, true, nil
+	)
+
+	-- show and fade-in children
+	for _, obj in pairs(Main:GetChildren()) do
+		if obj:IsA("GuiObject") and obj ~= Intro then
+			obj.Visible = true
+			-- reset the recorded original transparencies for new elements if missing
+			if not originalTransparency[obj] then
+				recordTrans(obj)
+			end
+			spawn(function()
+				fadeInObject(obj, 0.28)
+			end)
 		end
 	end
 
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-		Size = UDim2.new(0.32, 0, 0.36, 0),
-		BackgroundTransparency = 0.35
-	}):Play()
-
-	TweenService:Create(Logo, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-		Size = UDim2.new(0.18, 0, 0.18, 0),
-		Position = UDim2.new(0.075, 0, 0.15, 0)
-	}):Play()
+	task.wait(0.3)
+	-- hide intro to reveal the full UI
+	TweenService:Create(Intro, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 end)
 
--- Entrance Animation
-Main.Position = UDim2.new(0.5, 0, 1.3, 0)
-Main:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), "Out", "Quint", 1.2, true)
-
-task.wait(0.8)
-Logo:TweenSizeAndPosition(UDim2.new(0.18, 0, 0.18, 0), UDim2.new(0.075, 0, 0.15, 0), "Out", "Quint", 0.9, true)
-task.wait(0.9)
-TweenService:Create(Intro, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
-
--- Parent to gethui() or PlayerGui
 local function uiparent()
-	local s, p = pcall(function() return gethui() end)
-	return s and p or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	local success, parent = pcall(function()
+		return gethui()
+	end)
+
+	if not success then
+		return game:GetService("CoreGui")
+	end
+
+	return parent
 end
-Arceus.Parent = uiparent()
 
--- === ALL ORIGINAL FUNCTIONS BELOW (UNCHANGED LOGIC) ===
+local success, err = pcall(function()
+	Arceus.Parent = uiparent()
+end)
 
+if not success then
+	Arceus.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+end
+
+local element_height = 50*Menu.AbsoluteSize.Y/210
 local elements = 0
-local element_height = 54
 
-local function AddSpace(p) 
-	local s = tab:Clone()
-	s.Parent = p
-	s.Visible = true
-	s.LayoutOrder = elements
+local function AddSpace(parent)
+	local space = tab:Clone()
+	space.Parent = parent
+	space.LayoutOrder = elements
+	space.Visible = true
+
 	elements += 1
 end
 
 function lib:AddToggle(name, funct, enabled, ...)
-	local tog = Toggle:Clone()
-	tog.Visible = true
-	tog.Parent = Menu
-	tog.LayoutOrder = elements
-	tog.Size = UDim2.new(0.95, 0, 0, element_height)
-	tog.Name = name
+	local newTog = Toggle:Clone()
+	local args = {...}
 
-	local check = tog.Enabled.Check
-	check.Visible = enabled == true
-
-	tog.MouseButton1Click:Connect(function()
+	newTog.MouseButton1Click:Connect(function()
 		enabled = not enabled
-		TweenService:Create(check, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {
-			Position = enabled and UDim2.new(0.78, 0, 0.5, 0) or UDim2.new(0.22, 0, 0.5, 0),
-			BackgroundColor3 = enabled and Color3.fromRGB(255, 80, 80) or Color3.fromRGB(80, 80, 100)
-		}):Play()
-		check.Visible = true
-		funct(enabled, ...)
+		newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
+		funct(enabled, unpack(args))
 	end)
 
-	tog.NameLabel.Text = name
-	styleElement(tog)
+	newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
+	newTog:WaitForChild("Name").Text = name
+
+	newTog.Size = UDim2.new(0.95, 0, 0, element_height)
+	newTog.Name = name
+	newTog.Parent = Menu
+	newTog.LayoutOrder = elements
+	newTog.Visible = true
+
+	-- ensure the new cloned element has expected visual defaults recorded
+	recordTrans(newTog)
+	for _, d in pairs(newTog:GetDescendants()) do
+		if (d:IsA("GuiObject") or d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("ImageLabel") or d:IsA("ImageButton") or d:IsA("TextBox")) then
+			recordTrans(d)
+		end
+	end
+
 	elements += 1
 	AddSpace(Menu)
-	return tog
+
+	return newTog
 end
 
 function lib:AddButton(name, funct, ...)
-	local btn = Button:Clone()
-	btn.Visible = true
-	btn.Parent = Menu
-	btn.LayoutOrder = elements
-	btn.Size = UDim2.new(0.95, 0, 0, element_height)
-	btn.Name = name
-	btn.NameLabel.Text = name
+	local newBut = Button:Clone()
+	local args = {...}
 
-	btn.MouseButton1Click:Connect(function() funct(...) end)
-	styleElement(btn)
-	addHoverEffect(btn, 1.05)
+	newBut.MouseButton1Click:Connect(function()
+		funct(unpack(args))
+	end)
+
+	newBut:WaitForChild("Name").Text = name
+	newBut.Size = UDim2.new(0.95, 0, 0, element_height)
+	newBut.Name = name
+	newBut.Parent = Menu
+	newBut.LayoutOrder = elements
+	newBut.Visible = true
+
+	recordTrans(newBut)
+	for _, d in pairs(newBut:GetDescendants()) do
+		if (d:IsA("GuiObject") or d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("ImageLabel") or d:IsA("ImageButton") or d:IsA("TextBox")) then
+			recordTrans(d)
+		end
+	end
+
 	elements += 1
 	AddSpace(Menu)
-	return btn
+
+	return newBut
 end
 
 function lib:AddInputBox(name, funct, placeholder, default, ...)
-	local input = InputBox:Clone()
-	input.Visible = true
-	input.Parent = Menu
-	input.LayoutOrder = elements
-	input.Size = UDim2.new(0.95, 0, 0, element_height)
-	input.Name = name
-	input.NameLabel.Text = name
-	if placeholder then input.TextBox.PlaceholderText = placeholder end
-	if default then input.TextBox.Text = default end
-
-	input.TextBox.FocusLost:Connect(function(enter)
-		if enter then funct(input.TextBox.Text, ...) end
+	local newInput = InputBox:Clone()
+	local args = {...}
+	
+	newInput:WaitForChild("Name").Text = name
+	
+	local textBox = newInput:WaitForChild("TextBox")
+	
+	if placeholder then
+		textBox.PlaceholderText = placeholder
+	end
+	if default then
+		textBox.Text = default
+	end
+	
+	-- Function to handle text submission
+	local function submitText()
+		local text = textBox.Text
+		funct(text, unpack(args))
+	end
+	
+	-- Submit on Enter key
+	textBox.FocusLost:Connect(function(enterPressed)
+		if enterPressed then
+			submitText()
+		end
 	end)
-
-	styleElement(input)
+	
+	-- Submit on clicking outside the text box (or just losing focus generally)
+	textBox.FocusLost:Connect(submitText)
+	
+	-- Optional: Allow clicking the frame to focus the textbox
+	newInput.MouseButton1Click:Connect(function()
+		if not textBox:IsFocused() then
+			textBox:CaptureFocus()
+		end
+	end)
+	
+	newInput.Size = UDim2.new(0.95, 0, 0, element_height)
+	newInput.Name = name
+	newInput.Parent = Menu
+	newInput.LayoutOrder = elements
+	newInput.Visible = true
+	
+	-- record visual defaults for the cloned input
+	recordTrans(newInput)
+	for _, d in pairs(newInput:GetDescendants()) do
+		if (d:IsA("GuiObject") or d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("ImageLabel") or d:IsA("ImageButton") or d:IsA("TextBox")) then
+			recordTrans(d)
+		end
+	end
+	
 	elements += 1
 	AddSpace(Menu)
-	return input
+	
+	local inputObj = {
+		Frame = newInput,
+		TextBox = textBox,
+		GetText = function()
+			return textBox.Text
+		end,
+		SetText = function(newText)
+			textBox.Text = newText or ""
+		end,
+		Clear = function()
+			textBox.Text = ""
+		end,
+		SetPlaceholder = function(placeholderText)
+			textBox.PlaceholderText = placeholderText or "Enter text..."
+		end
+	}
+	
+	return inputObj
 end
 
-function lib:AddComboBox(text, options, funct, ...)
-	local combo = ComboBox:Clone()
-	combo.Visible = true
-	combo.Parent = Menu
-	combo.LayoutOrder = elements
-	combo.Size = UDim2.new(0.95, 0, 0, element_height)
-	combo.NameLabel.Text = text .. ": " .. (options[1] or "")
+function lib:AddComboBox(text, options, funct, ...) -- ADD CUSTOM ELEMENT INSTEAD
+	local newCombo = ComboBox:Clone()
+	local enabled = false
+	local elems = {}
+	local args = {...}
 
-	local open = false
-	combo.MouseButton1Click:Connect(function()
-		open = not open
-		TweenService:Create(combo.Img, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Rotation = open and 0 or 180}):Play()
-		-- elements below will be shown/hidden by user logic
+	local function setBoxState()
+		newCombo:WaitForChild("Img").Rotation = enabled and 0 or 180
+		for _, elem in ipairs(elems) do
+			if enabled then
+				-- Show and fade in
+				elem.Visible = true
+				fadeInObject(elem, 0.18)
+			else
+				-- Fade out and hide
+				spawn(function()
+					fadeOutObject(elem, 0.18)
+					task.wait(0.18)
+					elem.Visible = false
+				end)
+			end
+		end
+	end
+
+	newCombo.MouseButton1Click:Connect(function()
+		enabled = not enabled
+		setBoxState()
 	end)
 
-	styleElement(combo)
+	newCombo:WaitForChild("Name").Text = text .. ": " .. (#options > 0 and options[1] or "")
+	newCombo.Size = UDim2.new(0.95, 0, 0, element_height)
+	newCombo.Name = #options > 0 and options[1] or ""
+	newCombo.Parent = Menu
+	newCombo.LayoutOrder = elements
+	newCombo.Parent = Menu
+	newCombo.Visible = true
+
+	recordTrans(newCombo)
+	for _, d in pairs(newCombo:GetDescendants()) do
+		recordTrans(d)
+	end
+
 	elements += 1
 	AddSpace(Menu)
-	return combo
+
+	for _, name in ipairs(options) do
+		local newElem = ComboElem:Clone()
+		table.insert(elems, newElem)
+
+		newElem.MouseButton1Click:Connect(function()
+			newCombo:WaitForChild("Name").Text = text .. ": " .. name
+			enabled = false
+			setBoxState()
+
+			funct(name, unpack(args))
+		end)
+
+		newElem:WaitForChild("Name").Text = name
+		newElem.Size = UDim2.new(0.95, 0, 0, element_height)
+		newElem.Name = name
+		newElem.Parent = Menu
+		newElem.LayoutOrder = elements
+		newElem.Visible = false -- Start hidden, will be faded in later
+
+		recordTrans(newElem)
+		for _, d in pairs(newElem:GetDescendants()) do
+			recordTrans(d)
+		end
+
+		elements += 1
+		AddSpace(Menu)
+	end
+
+	return newCombo
 end
 
--- Keep all your original customization functions
-function lib:SetTitle(txt) Title.Text = txt end
-function lib:SetIcon(id) Logo.Image = "rbxassetid://" .. id end
-function lib:SetBackgroundColor(r,g,b)
-	Main.BackgroundColor3 = Color3.fromRGB(r,g,b)
-	Intro.BackgroundColor3 = Color3.fromRGB(r,g,b)
+function lib:SetTitle(txt)
+    Title.Text = txt
 end
 
--- Add more if needed...
+function lib:SetIcon(img)
+    Logo.Image = img
+end
+
+function lib:SetBackgroundColor(r, g ,b)
+    Main.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    Intro.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    -- update stroke color to be slightly darker than background
+    MainStroke.Color = Color3.fromRGB(math.max(0, r-20), math.max(0, g-20), math.max(0, b-20))
+end
+
+function lib:SetTitleColor(r, g, b)
+    Title.TextColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetCloseBtnColor(r, g, b)
+    Close.TextColor3 = Color3.fromRGB(r, g, b)
+	Img_2.TextColor3 = Color3.fromRGB(r, g, b)
+	Check.BackgroundColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetButtonsColor(r, g ,b)
+    Toggle.BackgroundColor3 = Color3.fromRGB(r, g, b)
+	Button.BackgroundColor3 = Color3.fromRGB(r, g, b)
+	ComboElem.BackgroundColor3 = Color3.fromRGB(r, g, b)
+	ComboBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
+	InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
+end
+
+function lib:SetInputBoxColor(r, g, b)
+    InputBox.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    -- set internal textbox color to be slightly darker for depth
+    TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
+end
+
+function lib:SetTheme(theme)
+	if theme == "Default" then
+		
+	elseif theme == "TomorrowNightBlue" then
+		lib:SetButtonsColor(74, 208, 238)
+		lib:SetCloseBtnColor(74, 208, 238)
+		lib:SetBackgroundColor(5, 16, 58)
+		lib:SetInputBoxColor(74, 208, 238)
+	elseif theme == "HighContrast" then
+		lib:SetBackgroundColor(0, 0, 0)
+		lib:SetButtonsColor(0, 0, 0)
+		lib:SetCloseBtnColor(255, 255, 0)
+		lib:SetInputBoxColor(0, 0, 0)
+	elseif theme == "Aqua" then
+		lib:SetBackgroundColor(44, 62, 82)
+		lib:SetButtonsColor(52, 74, 95)
+		lib:SetCloseBtnColor(26, 189, 158)
+		lib:SetInputBoxColor(52, 74, 95)
+	elseif theme == "Ocean" then
+		lib:SetBackgroundColor(26, 32, 58)
+		lib:SetButtonsColor(38, 45, 71)
+		lib:SetCloseBtnColor(86, 76, 251)
+		lib:SetInputBoxColor(38, 45, 71)
+	else
+		error("Theme not found.")
+	end
+end
+
+-- INIT animations (smoother intro & fade)
+Main:TweenPosition(
+	UDim2.fromScale(0.5, 0.5),
+	Enum.EasingDirection.In,
+	Enum.EasingStyle.Quad,
+	1, true, nil
+)
+
+task.wait(1.2)
+Logo:TweenSizeAndPosition(
+	UDim2.fromScale(0.175, 0.175),
+	UDim2.fromScale(0.075, 0.15),
+	Enum.EasingDirection.In,
+	Enum.EasingStyle.Quad,
+	0.9, true, nil
+)
+
+task.wait(1.1)
+-- smooth fade of intro background to transparent so UI appears clean
+	TweenService:Create(Intro, TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 
 return lib
