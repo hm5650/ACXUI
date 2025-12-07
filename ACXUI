@@ -50,10 +50,11 @@ local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
 
--- Add Dragging Effect Instances
-local DragOutline = Instance.new("UIStroke")
-local DragGlow = Instance.new("Frame")
+-- New Outline Instances for Dragging Effect
+local OutlineFrame = Instance.new("Frame")
 local UICorner_11 = Instance.new("UICorner")
+local UIGradient_6 = Instance.new("UIGradient")
+local UIStroke = Instance.new("UIStroke")
 
 -- Properties:
 
@@ -69,195 +70,61 @@ Main.Active = true
 Main.Draggable = true
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Main.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.5, 0, -0.2, 0) --UDim2.new(0.5, 0, 0.5, 0)
+Main.Position = UDim2.new(0.5, 0, -0.2, 0)
 Main.Size = UDim2.new(0.3, 0, 0.3, 0)
-
--- Create the drag outline effect
-DragOutline.Name = "DragOutline"
-DragOutline.Parent = Main
-DragOutline.Color = Color3.fromRGB(255, 255, 255)
-DragOutline.Transparency = 1 -- Start fully transparent
-DragOutline.Thickness = 2 -- Base thickness
-DragOutline.LineJoinMode = Enum.LineJoinMode.Round
-DragOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
--- Create glow effect frame
-DragGlow.Name = "DragGlow"
-DragGlow.Parent = Main
-DragGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-DragGlow.BackgroundTransparency = 1 -- Start transparent
-DragGlow.BorderSizePixel = 0
-DragGlow.Size = UDim2.new(1, 0, 1, 0)
-DragGlow.ZIndex = -1 -- Place behind the main frame
-
-UICorner_11.CornerRadius = UDim.new(0.1, 0)
-UICorner_11.Parent = DragGlow
-
--- Variables for drag speed tracking
-local lastDragTime = tick()
-local lastDragPosition = Main.Position
-local currentDragSpeed = 0
-local maxDragSpeed = 0
-local isDragging = false
-local dragAnimation = nil
-
--- Function to update drag outline based on speed
-local function updateDragOutline()
-    if not isDragging then
-        -- Fade out effect when not dragging
-        local fadeOutTween = game:GetService("TweenService"):Create(DragOutline, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Transparency = 1,
-            Thickness = 2
-        })
-        fadeOutTween:Play()
-        
-        game:GetService("TweenService"):Create(DragGlow, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 1
-        }):Play()
-        return
-    end
-    
-    -- Calculate intensity based on drag speed (capped at reasonable values)
-    local intensity = math.clamp(currentDragSpeed / 500, 0, 1) -- Adjust divisor for sensitivity
-    local thickness = 2 + (intensity * 8) -- From 2 to 10 thickness
-    local transparency = 0.3 - (intensity * 0.25) -- From 0.3 to 0.05 transparency
-    local glowTransparency = 0.8 - (intensity * 0.6) -- From 0.8 to 0.2 glow transparency
-    
-    -- Update outline properties
-    DragOutline.Thickness = thickness
-    DragOutline.Transparency = transparency
-    
-    -- Update glow effect
-    DragGlow.BackgroundTransparency = glowTransparency
-    
-    -- Create pulsing effect
-    local pulse = math.sin(tick() * 10) * 0.1 + 1 -- Pulse between 0.9 and 1.1
-    DragGlow.Size = UDim2.new(pulse, 0, pulse, 0)
-    DragGlow.Position = UDim2.new((1 - pulse) / 2, 0, (1 - pulse) / 2, 0)
-end
-
--- Function to start drag tracking
-local function onDragStart()
-    isDragging = true
-    lastDragTime = tick()
-    lastDragPosition = Main.Position
-    
-    -- Start animation loop
-    if dragAnimation then
-        dragAnimation:Disconnect()
-    end
-    
-    dragAnimation = game:GetService("RunService").RenderStepped:Connect(function()
-        if isDragging then
-            updateDragOutline()
-        end
-    end)
-end
-
--- Function to update drag speed
-local function updateDragSpeed()
-    local currentTime = tick()
-    local timeDelta = currentTime - lastDragTime
-    
-    if timeDelta > 0 then
-        local currentPosition = Main.Position
-        local positionDelta = Vector2.new(
-            math.abs(currentPosition.X.Offset - lastDragPosition.X.Offset),
-            math.abs(currentPosition.Y.Offset - lastDragPosition.Y.Offset)
-        )
-        
-        -- Calculate speed in pixels per second
-        currentDragSpeed = (positionDelta.X + positionDelta.Y) / timeDelta
-        
-        -- Update max speed for reference
-        if currentDragSpeed > maxDragSpeed then
-            maxDragSpeed = currentDragSpeed
-        end
-        
-        -- Update last values
-        lastDragTime = currentTime
-        lastDragPosition = currentPosition
-    end
-end
-
--- Function to stop drag tracking
-local function onDragStop()
-    isDragging = false
-    
-    if dragAnimation then
-        dragAnimation:Disconnect()
-        dragAnimation = nil
-    end
-    
-    -- Reset drag speed
-    currentDragSpeed = 0
-    
-    -- Fade out effects
-    updateDragOutline()
-end
-
--- Connect drag events
-Main.MouseEnter:Connect(function()
-    if Main.Draggable then
-        Main.Draggable = true -- Ensure draggable is enabled
-    end
-end)
-
--- Track when user starts dragging
-local userInputService = game:GetService("UserInputService")
-local isMouseDownOnMain = false
-
-Main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isMouseDownOnMain = true
-        onDragStart()
-    end
-end)
-
-Main.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isMouseDownOnMain = false
-        onDragStop()
-    end
-end)
-
--- Update drag speed while dragging
-game:GetService("RunService").Heartbeat:Connect(function()
-    if isDragging and isMouseDownOnMain then
-        updateDragSpeed()
-    end
-end)
-
--- Handle when user releases mouse outside the frame
-userInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        if isMouseDownOnMain then
-            isMouseDownOnMain = false
-            onDragStop()
-        end
-    end
-end)
 
 UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
 
+-- Create Outline Frame for Dragging Effect
+OutlineFrame.Name = "OutlineFrame"
+OutlineFrame.Parent = Main
+OutlineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+OutlineFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+OutlineFrame.BackgroundTransparency = 1
+OutlineFrame.BorderSizePixel = 0
+OutlineFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+OutlineFrame.Size = UDim2.new(1.02, 0, 1.02, 0) -- Slightly larger than Main
+OutlineFrame.Visible = false
+OutlineFrame.ZIndex = -1
+
+UICorner_11.CornerRadius = UDim.new(0.1, 0)
+UICorner_11.Parent = OutlineFrame
+
+UIStroke.Name = "UIStroke"
+UIStroke.Parent = OutlineFrame
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+UIStroke.Thickness = 3
+UIStroke.Transparency = 0
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+UIGradient_6.Name = "UIGradient"
+UIGradient_6.Parent = UIStroke
+UIGradient_6.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(200, 200, 255)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
+}
+UIGradient_6.Rotation = 45
+
 task.spawn(function()
 	Main.BackgroundTransparency = 1
 	Title.TextTransparency = 1
-    DragOutline.Transparency = 1 -- Start outline as transparent
-    DragGlow.BackgroundTransparency = 1 -- Start glow as transparent
 
 	for i = 1, 20 do
 		Main.BackgroundTransparency = 1 - (i/20)
 		Title.TextTransparency = 1 - (i/20)
 		task.wait(0.02)
 	end
+	Main.BackgroundTransparency = 0.2 -- Ensure it stays at 0.2 after animation
 end)
 
 Intro.Name = "Intro"
 Intro.Parent = Main
 Intro.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Intro.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Intro.ClipsDescendants = true
 Intro.Size = UDim2.new(1, 0, 1, 0)
 Intro.ZIndex = 2
@@ -313,13 +180,12 @@ Menu.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
 Menu.ScrollBarThickness = Menu.AbsoluteSize.X/25
 
 UIListLayout.Parent = Menu
---UIListLayout.Padding = UDim.new(0.025, 0)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 Toggle.Name = "Toggle"
 Toggle.Visible = false
---Toggle.Parent = Arceus
 Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+Toggle.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Toggle.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_3.CornerRadius = UDim.new(0.25, 0)
@@ -329,6 +195,7 @@ Enabled.Name = "Enabled"
 Enabled.Parent = Toggle
 Enabled.AnchorPoint = Vector2.new(1, 0.5)
 Enabled.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Enabled.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Enabled.Position = UDim2.new(0.975, 0, 0.5, 0)
 Enabled.Size = UDim2.new(0.75, 0, 0.75, 0)
 
@@ -341,6 +208,7 @@ Check.Name = "Check"
 Check.Parent = Enabled
 Check.AnchorPoint = Vector2.new(0.5, 0.5)
 Check.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Check.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Check.Position = UDim2.new(0.5, 0, 0.5, 0)
 Check.Size = UDim2.new(0.65, 0, 0.65, 0)
 
@@ -370,8 +238,8 @@ UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.from
 UIGradient.Parent = Toggle
 
 Button.Name = "Button"
---Button.Parent = Arceus
 Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+Button.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 Button.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_6.CornerRadius = UDim.new(0.25, 0)
@@ -399,7 +267,6 @@ UIGradient_2.Parent = Button
 
 tab.Name = "Tab"
 tab.Visible = false
---tab.Parent = Arceus
 tab.BackgroundTransparency = 1
 tab.Size = UDim2.new(0.95, 0, 0.025, 0)
 
@@ -420,6 +287,7 @@ Close.Parent = Main
 
 ComboElem.Name = "ComboElem"
 ComboElem.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboElem.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 ComboElem.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_7.CornerRadius = UDim.new(0.25, 0)
@@ -466,6 +334,7 @@ UIAspectRatioConstraint_4.Parent = Img
 
 ComboBox.Name = "ComboBox"
 ComboBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+ComboBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 ComboBox.Size = UDim2.new(0.95, 0, 0, 50)
 
 UICorner_8.CornerRadius = UDim.new(0.25, 0)
@@ -512,6 +381,7 @@ UIAspectRatioConstraint_5.Parent = Img_2
 -- Input Box Properties:
 InputBox.Name = "InputBox"
 InputBox.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+InputBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 InputBox.Size = UDim2.new(0.95, 0, 0, 50)
 InputBox.AutoButtonColor = false
 
@@ -542,7 +412,7 @@ TextBox.Name = "TextBox"
 TextBox.Parent = InputBox
 TextBox.AnchorPoint = Vector2.new(1, 0.5)
 TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-TextBox.BackgroundTransparency = 0
+TextBox.BackgroundTransparency = 0.2 -- Set transparency to 0.2
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
 TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
@@ -561,6 +431,116 @@ UICorner_10.Parent = TextBox
 -- SCRIPT
 
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+-- Dragging Outline Effect Variables
+local isDragging = false
+local dragStartPos = Vector2.new(0, 0)
+local frameStartPos = Vector2.new(0, 0)
+local currentThemeColor = Color3.fromRGB(255, 255, 255)
+local pulseConnection = nil
+
+-- Function to update outline color based on theme
+local function updateOutlineColor(color)
+    currentThemeColor = color
+    UIGradient_6.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0.00, color),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(
+            math.min(255, color.R * 255 * 0.8),
+            math.min(255, color.G * 255 * 0.8),
+            math.min(255, color.B * 255 * 0.8)
+        )),
+        ColorSequenceKeypoint.new(1.00, color)
+    }
+    
+    if OutlineFrame.Visible then
+        UIStroke.Color = color
+    end
+end
+
+-- Function to start pulsing outline
+local function startPulseOutline()
+    if pulseConnection then
+        pulseConnection:Disconnect()
+    end
+    
+    OutlineFrame.Visible = true
+    OutlineFrame.BackgroundTransparency = 1
+    UIStroke.Transparency = 0
+    
+    local pulseTime = 0
+    pulseConnection = RunService.RenderStepped:Connect(function(deltaTime)
+        if not isDragging then
+            pulseConnection:Disconnect()
+            pulseConnection = nil
+            
+            -- Fade out when not dragging
+            local fadeTween = TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = 1
+            })
+            fadeTween:Play()
+            
+            fadeTween.Completed:Connect(function()
+                if not isDragging then
+                    OutlineFrame.Visible = false
+                end
+            end)
+            return
+        end
+        
+        pulseTime = pulseTime + deltaTime * 2
+        local pulseValue = (math.sin(pulseTime) + 1) / 2
+        UIStroke.Thickness = 2 + pulseValue * 2
+    end)
+end
+
+-- Mouse events for dragging with outline effect
+local function setupDragging()
+    local dragging = false
+    local dragInput, dragStart, startPos
+    
+    local function update(input)
+        local delta = input.Position - dragStart
+        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    
+    Main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            isDragging = true
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+            
+            -- Show and start pulsing outline
+            OutlineFrame.Visible = true
+            UIStroke.Transparency = 0
+            UIStroke.Thickness = 3
+            startPulseOutline()
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    isDragging = false
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    Main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+            dragInput = input
+        end
+    end)
+    
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end
+
+setupDragging()
+
 Close.MouseButton1Click:Connect(function()
 	Logo.Active = true
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
@@ -592,10 +572,6 @@ Close.MouseButton1Click:Connect(function()
 	TweenService:Create(Logo, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageTransparency = 0.8}):Play()
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
 	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0.8}):Play()
-    
-    -- Also fade out drag effects
-    TweenService:Create(DragOutline, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Transparency = 1}):Play()
-    TweenService:Create(DragGlow, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
 end)
 
 Logo.MouseButton1Click:Connect(function()
@@ -676,7 +652,7 @@ function lib:AddToggle(name, funct, enabled, ...)
 	newTog:WaitForChild("Enabled"):WaitForChild("Check").Visible = enabled
 	newTog:WaitForChild("Name").Text = name
 
-	newTog.Size = UDim2.new(0.95, 0, 0, element_height) -- Y1 = 50 : Y2 = X
+	newTog.Size = UDim2.new(0.95, 0, 0, element_height)
 	newTog.Name = name
 	newTog.Parent = Menu
 	newTog.LayoutOrder = elements
@@ -723,23 +699,19 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 	
 	local textBox = newInput.TextBox
 	
-	-- Function to handle text submission
 	local function submitText()
 		local text = textBox.Text
 		funct(text, unpack(args))
 	end
 	
-	-- Submit on Enter key
 	textBox.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
 			submitText()
 		end
 	end)
 	
-	-- Submit on clicking outside the text box
 	textBox.FocusLost:Connect(submitText)
 	
-	-- Optional: Add a submit button functionality
 	newInput.MouseButton1Click:Connect(function()
 		if not textBox:IsFocused() then
 			textBox:CaptureFocus()
@@ -755,7 +727,6 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 	elements += 1
 	AddSpace(Menu)
 	
-	-- Return the input box and text box for external control
 	local inputObj = {
 		Frame = newInput,
 		TextBox = textBox,
@@ -776,7 +747,7 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 	return inputObj
 end
 
-function lib:AddComboBox(text, options, funct, ...) -- ADD CUSTOM ELEMENT INSTEAD
+function lib:AddComboBox(text, options, funct, ...)
 	local newCombo = ComboBox:Clone()
 	local enabled = false
 	local elems = {}
@@ -800,7 +771,7 @@ function lib:AddComboBox(text, options, funct, ...) -- ADD CUSTOM ELEMENT INSTEA
 	newCombo.Parent = Menu
 	newCombo.LayoutOrder = elements
 	newCombo.Parent = Menu
-newCombo.Visible = true
+	newCombo.Visible = true
 
 	elements += 1
 	AddSpace(Menu)
@@ -867,50 +838,59 @@ function lib:SetInputBoxColor(r, g, b)
     TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
 end
 
-function lib:SetDragOutlineColor(r, g, b)
-    DragOutline.Color = Color3.fromRGB(r, g, b)
-    DragGlow.BackgroundColor3 = Color3.fromRGB(r, g, b)
-end
-
-function lib:SetDragOutlineMaxThickness(thickness)
-    -- This sets the maximum thickness the outline can reach when dragging fast
-    -- The base thickness is 2, and this adds to it
-    if thickness < 2 then thickness = 2 end
-    -- Store this for use in the update function
-    lib.DragMaxThickness = thickness
-end
-
 function lib:SetTheme(theme)
+    local themeColor = Color3.fromRGB(255, 255, 255)
+    
 	if theme == "Default" then
-		
+		-- Keep default colors
 	elseif theme == "TomorrowNightBlue" then
 		lib:SetButtonsColor(74, 208, 238)
 		lib:SetCloseBtnColor(74, 208, 238)
 		lib:SetBackgroundColor(5, 16, 58)
 		lib:SetInputBoxColor(74, 208, 238)
-		lib:SetDragOutlineColor(74, 208, 238)
+        themeColor = Color3.fromRGB(74, 208, 238)
 	elseif theme == "HighContrast" then
 		lib:SetBackgroundColor(0, 0, 0)
 		lib:SetButtonsColor(0, 0, 0)
 		lib:SetCloseBtnColor(255, 255, 0)
 		lib:SetInputBoxColor(0, 0, 0)
-		lib:SetDragOutlineColor(255, 255, 0)
+        themeColor = Color3.fromRGB(255, 255, 0)
 	elseif theme == "Aqua" then
 		lib:SetBackgroundColor(44, 62, 82)
 		lib:SetButtonsColor(52, 74, 95)
 		lib:SetCloseBtnColor(26, 189, 158)
 		lib:SetInputBoxColor(52, 74, 95)
-		lib:SetDragOutlineColor(26, 189, 158)
+        themeColor = Color3.fromRGB(26, 189, 158)
 	elseif theme == "Ocean" then
 		lib:SetBackgroundColor(26, 32, 58)
 		lib:SetButtonsColor(38, 45, 71)
 		lib:SetCloseBtnColor(86, 76, 251)
 		lib:SetInputBoxColor(38, 45, 71)
-		lib:SetDragOutlineColor(86, 76, 251)
+        themeColor = Color3.fromRGB(86, 76, 251)
 	else
 		error("Theme not found.")
 	end
+    
+    -- Update outline color to match theme
+    updateOutlineColor(themeColor)
 end
+
+-- Set transparency for all elements to 0.2
+function lib:SetTransparency(value)
+    Main.BackgroundTransparency = value
+    Intro.BackgroundTransparency = value
+    Toggle.BackgroundTransparency = value
+    Enabled.BackgroundTransparency = value
+    Check.BackgroundTransparency = value
+    Button.BackgroundTransparency = value
+    ComboElem.BackgroundTransparency = value
+    ComboBox.BackgroundTransparency = value
+    InputBox.BackgroundTransparency = value
+    TextBox.BackgroundTransparency = value
+end
+
+-- Force 0.2 transparency on initialization
+lib:SetTransparency(0.2)
 
 -- INIT
 
