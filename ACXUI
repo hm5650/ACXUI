@@ -6,7 +6,6 @@ local Script_Title = "Arceus X <font color=\"rgb(255, 0, 0)\">|</font> Ui Lib"
 local Arceus = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
-local DragOutline = Instance.new("UIStroke") -- NEW: Outline for dragging
 local Intro = Instance.new("Frame")
 local UICorner_2 = Instance.new("UICorner")
 local Logo = Instance.new("ImageButton")
@@ -108,62 +107,21 @@ Main.Size = UDim2.new(0.3, 0, 0.3, 0)
 UICorner.CornerRadius = UDim.new(0.1, 0)
 UICorner.Parent = Main
 
--- NEW: Create outline for dragging
-DragOutline.Parent = Main
+-- Create outline frame (container for the stroke)
+local OutlineFrame = Instance.new("Frame")
+OutlineFrame.Name = "OutlineFrame"
+OutlineFrame.Parent = Main
+OutlineFrame.BackgroundTransparency = 1
+OutlineFrame.Size = UDim2.new(1, 0, 1, 0)
+OutlineFrame.ZIndex = 0
+
+-- Create the UIStroke for dragging outline
+local DragOutline = Instance.new("UIStroke")
+DragOutline.Parent = OutlineFrame
 DragOutline.Color = Color3.fromRGB(255, 255, 255)
-DragOutline.Thickness = 2
+DragOutline.Thickness = 3
 DragOutline.Transparency = 1
 DragOutline.LineJoinMode = Enum.LineJoinMode.Round
-DragOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
--- Function to handle dragging outline
-local function updateDragOutline(isDragging)
-    local themeColor = themeColors[currentTheme].outline
-    local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    if isDragging then
-        local glowTween = game:GetService("TweenService"):Create(DragOutline, tweenInfo, {
-            Transparency = 0,
-            Thickness = 3,
-            Color = themeColor
-        })
-        glowTween:Play()
-    else
-        local fadeTween = game:GetService("TweenService"):Create(DragOutline, tweenInfo, {
-            Transparency = 1,
-            Thickness = 2
-        })
-        fadeTween:Play()
-    end
-end
-
--- Connect dragging events
-local isDragging = false
-local lastMousePosition
-
-Main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        updateDragOutline(true)
-        lastMousePosition = game:GetService("UserInputService"):GetMouseLocation()
-    end
-end)
-
-Main.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-        updateDragOutline(false)
-    end
-end)
-
--- Also detect when dragging stops through UserInputService
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        if isDragging then
-            updateDragOutline(true)
-        end
-    end
-end)
 
 task.spawn(function()
 	Main.BackgroundTransparency = 1
@@ -488,6 +446,59 @@ UICorner_10.Parent = TextBox
 -- SCRIPT
 
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+-- Function to handle dragging outline
+local function updateDragOutline(isDragging)
+    local themeColor = themeColors[currentTheme].outline
+    local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    if isDragging then
+        local glowTween = TweenService:Create(DragOutline, tweenInfo, {
+            Transparency = 0,
+            Thickness = 4,
+            Color = themeColor
+        })
+        glowTween:Play()
+    else
+        local fadeTween = TweenService:Create(DragOutline, tweenInfo, {
+            Transparency = 1,
+            Thickness = 3
+        })
+        fadeTween:Play()
+    end
+end
+
+-- Connect dragging events
+local isDragging = false
+
+local function onInputBegan(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = true
+        updateDragOutline(true)
+    end
+end
+
+local function onInputEnded(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = false
+        updateDragOutline(false)
+    end
+end
+
+-- Connect input events
+Main.InputBegan:Connect(onInputBegan)
+Main.InputEnded:Connect(onInputEnded)
+
+-- Also handle when mouse leaves the frame while dragging
+Main.MouseLeave:Connect(function()
+    if isDragging then
+        isDragging = false
+        updateDragOutline(false)
+    end
+end)
+
+-- Handle close button
 Close.MouseButton1Click:Connect(function()
 	Logo.Active = true
 	TweenService:Create(Intro, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = 0}):Play()
@@ -511,7 +522,7 @@ Close.MouseButton1Click:Connect(function()
 
 	task.wait(0.3)
 	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro then
+		if obj:IsA("GuiObject") and obj ~= Intro and obj.Name ~= "OutlineFrame" then
 			obj.Visible = false
 		end
 	end
@@ -545,7 +556,7 @@ Logo.MouseButton1Click:Connect(function()
 	)
 
 	for _, obj in pairs(Main:GetChildren()) do
-		if obj:IsA("GuiObject") and obj ~= Intro then
+		if obj:IsA("GuiObject") and obj ~= Intro and obj.Name ~= "OutlineFrame" then
 			obj.Visible = true
 		end
 	end
@@ -790,7 +801,7 @@ function lib:SetInputBoxColor(r, g, b)
     TextBox.BackgroundColor3 = Color3.fromRGB(math.max(0, r-15), math.max(0, g-15), math.max(0, b-15))
 end
 
--- NEW: Function to set outline color
+-- Function to set outline color
 function lib:SetOutlineColor(r, g, b)
     local color = Color3.fromRGB(r, g, b)
     DragOutline.Color = color
