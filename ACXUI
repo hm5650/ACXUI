@@ -49,6 +49,8 @@ local Name_5 = Instance.new("TextLabel")
 local UIGradient_5 = Instance.new("UIGradient")
 local TextBox = Instance.new("TextBox")
 local UICorner_10 = Instance.new("UICorner")
+local MinLabel = Instance.new("TextLabel")
+local MaxLabel = Instance.new("TextLabel")
 
 -- Properties:
 
@@ -387,6 +389,41 @@ TextBox.TextWrapped = true
 UICorner_10.CornerRadius = UDim.new(0.25, 0)
 UICorner_10.Parent = TextBox
 
+-- Min and Max Labels for Input Box
+MinLabel.Name = "MinLabel"
+MinLabel.Parent = InputBox
+MinLabel.AnchorPoint = Vector2.new(1, 0)
+MinLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MinLabel.BackgroundTransparency = 1
+MinLabel.BorderSizePixel = 0
+MinLabel.Position = UDim2.new(0.55, 0, 0.1, 0)
+MinLabel.Size = UDim2.new(0.15, 0, 0.3, 0)
+MinLabel.Font = Enum.Font.TitilliumWeb
+MinLabel.Text = "Min: 0"
+MinLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+MinLabel.TextScaled = true
+MinLabel.TextSize = 8
+MinLabel.TextWrapped = true
+MinLabel.TextXAlignment = Enum.TextXAlignment.Right
+MinLabel.Visible = false
+
+MaxLabel.Name = "MaxLabel"
+MaxLabel.Parent = InputBox
+MaxLabel.AnchorPoint = Vector2.new(1, 1)
+MaxLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MaxLabel.BackgroundTransparency = 1
+MaxLabel.BorderSizePixel = 0
+MaxLabel.Position = UDim2.new(0.55, 0, 0.9, 0)
+MaxLabel.Size = UDim2.new(0.15, 0, 0.3, 0)
+MaxLabel.Font = Enum.Font.TitilliumWeb
+MaxLabel.Text = "Max: 100"
+MaxLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+MaxLabel.TextScaled = true
+MaxLabel.TextSize = 8
+MaxLabel.TextWrapped = true
+MaxLabel.TextXAlignment = Enum.TextXAlignment.Right
+MaxLabel.Visible = false
+
 -- SCRIPT
 
 local TweenService = game:GetService("TweenService")
@@ -534,9 +571,26 @@ function lib:AddButton(name, funct, ...)
 	return newBut
 end
 
-function lib:AddInputBox(name, funct, placeholder, default, ...)
+function lib:AddInputBox(name, funct, placeholder, default, options, ...)
 	local newInput = InputBox:Clone()
 	local args = {...}
+	
+	-- Parse options for min and max values
+	local minValue = nil
+	local maxValue = nil
+	local isNumberOnly = false
+	
+	if options then
+		if options.min ~= nil then
+			minValue = options.min
+		end
+		if options.max ~= nil then
+			maxValue = options.max
+		end
+		if options.isNumber ~= nil then
+			isNumberOnly = options.isNumber
+		end
+	end
 	
 	newInput:WaitForChild("Name").Text = name
 	if placeholder then
@@ -546,25 +600,111 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 		newInput.TextBox.Text = default
 	end
 	
+	-- Show min and max labels if values are provided
+	if minValue ~= nil or maxValue ~= nil then
+		newInput.MinLabel.Visible = true
+		newInput.MaxLabel.Visible = true
+		
+		if minValue ~= nil then
+			newInput.MinLabel.Text = "Min: " .. tostring(minValue)
+		end
+		if maxValue ~= nil then
+			newInput.MaxLabel.Text = "Max: " .. tostring(maxValue)
+		end
+		
+		-- Adjust text box position to accommodate labels
+		newInput.TextBox.Position = UDim2.new(0.95, 0, 0.5, 0)
+		newInput.TextBox.Size = UDim2.new(0.35, 0, 0.6, 0)
+	end
+	
 	local textBox = newInput.TextBox
+	
+	-- Function to validate input based on min/max constraints
+	local function validateInput(inputText)
+		if isNumberOnly then
+			-- Remove non-numeric characters
+			local numericText = inputText:gsub("[^%-%d%.]", "")
+			
+			-- Ensure only one decimal point
+			local decimalCount = 0
+			local cleanedText = ""
+			for i = 1, #numericText do
+				local char = numericText:sub(i, i)
+				if char == "." then
+					decimalCount = decimalCount + 1
+					if decimalCount <= 1 then
+						cleanedText = cleanedText .. char
+					end
+				elseif char == "-" then
+					-- Only allow minus at the beginning
+					if i == 1 then
+						cleanedText = cleanedText .. char
+					end
+				else
+					cleanedText = cleanedText .. char
+				end
+			end
+			
+			inputText = cleanedText
+			
+			-- Apply min/max constraints if they exist
+			if inputText ~= "" and inputText ~= "-" and inputText ~= "." then
+				local numValue = tonumber(inputText)
+				if numValue then
+					if minValue ~= nil and numValue < minValue then
+						inputText = tostring(minValue)
+					elseif maxValue ~= nil and numValue > maxValue then
+						inputText = tostring(maxValue)
+					end
+				end
+			end
+		end
+		
+		return inputText
+	end
 	
 	-- Function to handle text submission
 	local function submitText()
 		local text = textBox.Text
+		local validatedText = validateInput(text)
+		
+		if text ~= validatedText then
+			textBox.Text = validatedText
+			text = validatedText
+		end
+		
 		funct(text, unpack(args))
 	end
+	
+	-- Function to handle real-time validation for number input
+	local function handleTextChanged()
+		if isNumberOnly then
+			local cursorPos = textBox.CursorPosition
+			local text = textBox.Text
+			local validatedText = validateInput(text)
+			
+			if text ~= validatedText then
+				textBox.Text = validatedText
+				-- Try to restore cursor position
+				textBox.CursorPosition = math.min(cursorPos, #validatedText + 1)
+			end
+		end
+	end
+	
+	-- Connect text changed event for real-time validation
+	textBox:GetPropertyChangedSignal("Text"):Connect(handleTextChanged)
 	
 	-- Submit on Enter key
 	textBox.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
 			submitText()
+		else
+			-- Still validate on focus lost
+			handleTextChanged()
 		end
 	end)
 	
 	-- Submit on clicking outside the text box
-	textBox.FocusLost:Connect(submitText)
-	
-	-- Optional: Add a submit button functionality
 	newInput.MouseButton1Click:Connect(function()
 		if not textBox:IsFocused() then
 			textBox:CaptureFocus()
@@ -589,14 +729,46 @@ function lib:AddInputBox(name, funct, placeholder, default, ...)
 		end,
 		SetText = function(newText)
 			textBox.Text = newText or ""
+			handleTextChanged()
 		end,
 		Clear = function()
 			textBox.Text = ""
 		end,
 		SetPlaceholder = function(placeholderText)
 			textBox.PlaceholderText = placeholderText or "Enter text..."
+		end,
+		SetMinValue = function(minVal)
+			minValue = minVal
+			newInput.MinLabel.Visible = minVal ~= nil
+			if minVal ~= nil then
+				newInput.MinLabel.Text = "Min: " .. tostring(minVal)
+			end
+			handleTextChanged()
+		end,
+		SetMaxValue = function(maxVal)
+			maxValue = maxVal
+			newInput.MaxLabel.Visible = maxVal ~= nil
+			if maxVal ~= nil then
+				newInput.MaxLabel.Text = "Max: " .. tostring(maxVal)
+			end
+			handleTextChanged()
+		end,
+		SetNumberOnly = function(numberOnly)
+			isNumberOnly = numberOnly
+			if numberOnly then
+				handleTextChanged()
+			end
+		end,
+		GetMinValue = function()
+			return minValue
+		end,
+		GetMaxValue = function()
+			return maxValue
 		end
 	}
+	
+	-- Apply initial validation
+	handleTextChanged()
 	
 	return inputObj
 end
